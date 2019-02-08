@@ -1,7 +1,42 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ICOMautomagic.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Top" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Left" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="COMport" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM3</Value>
+    </Setting>
+    <Setting Name="LowerEdgesCW" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1810,3500,5352,7000,10100,14000,18068,21000,24890,28000,50000</Value>
+    </Setting>
+    <Setting Name="UpperEdgesCW" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1840,3570,5366,7040,10130,14070,18109,21070,24920,28070,50150</Value>
+    </Setting>
+    <Setting Name="RefLevelsCW" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-8,-7,-6,-5,-4,-6,-6,-6,-6,-6,-6</Value>
+    </Setting>
+    <Setting Name="LowerEdgesPh" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1840,3600,5353,7040,10100,14100,18111,21150,24931,28300,50100</Value>
+    </Setting>
+    <Setting Name="UpperEdgesPh" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2000,3800,5366,7200,10150,14350,18168,21450,24990,28600,50500</Value>
+    </Setting>
+    <Setting Name="RefLevelsPh" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-3,-3,-3,-3,-3,-3,-3,-3,-3,-3,-3</Value>
+    </Setting>
+    <Setting Name="LowerEdgesDig" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1840,3570,5352,7040,10130,14070,18089,21070,24910,28070,50300</Value>
+    </Setting>
+    <Setting Name="UpperEdgesDig" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1860,3600,5366,7080,10150,14100,18109,21150,24932,28110,50350</Value>
+    </Setting>
+    <Setting Name="RefLevelsDig" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
