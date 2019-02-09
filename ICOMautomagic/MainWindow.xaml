@@ -14,8 +14,8 @@
         <Label Content="Upper" HorizontalAlignment="Left" Margin="150,36,0,0" VerticalAlignment="Top" Height="28"/>
         <Label x:Name="BandModeLabel" Content="QRG: No data" HorizontalAlignment="Left" Margin="23,6,0,0" VerticalAlignment="Top" Width="146" Height="26"/>
         <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="377,6,0,0" VerticalAlignment="Top" Width="70"/>
-        <Button x:Name="ResetButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="289,40,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="377,40,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="ResetButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="289,40,0,0" VerticalAlignment="Top" Width="75" Click="OnBandModeButton"/>
+        <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="377,40,0,0" VerticalAlignment="Top" Width="75" Click="OnZoomButton"/>
 
     </Grid>
 </Window>

@@ -82,6 +82,8 @@ namespace ICOMautomagic
         public const int ListenPort = 12060;
         public static string ComPort = "COM2";
         public static byte TrxAddress = 0x98;
+        public static int ZoomRange = 20; // Range of waterfall zoom in kHz
+        public static int RefAdjust = 4; // Adjustment of ref level when zooming
         public static byte EdgeSet = 0x03; // which scope edge should be manipulated
         public static byte ResponseTime = 100; // Milliseconds to wait before reading response from radio
         public static byte[] ReadBuffer = new byte[100]; // Dummy read buffer. Much larger than needed.
@@ -116,7 +118,7 @@ namespace ICOMautomagic
         int[] lowerEdgePh = new int[52]; int[] upperEdgePh = new int[52]; int[] refLevelPh = new int[52];
         int[] lowerEdgeDig = new int[52]; int[] upperEdgeDig = new int[52]; int[] refLevelDig = new int[52];
 
-        public int currentLowerEdge, currentUpperEdge, currentRefLevel, newMHz, currentMHz = 0;
+        public int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
         public string currentMode = "", newMode = "";
 
         SerialPort port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
@@ -157,6 +159,8 @@ namespace ICOMautomagic
             refLevelDig = Properties.Settings.Default.RefLevelsDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
             InitializeComponent();
+
+            ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
 
             Task.Run(async () =>
             {
@@ -271,6 +275,24 @@ namespace ICOMautomagic
 
                     SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
                 }
+        }
+
+        private void OnBandModeButton(object sender, RoutedEventArgs e)
+        {
+            if (currentLowerEdge != 0)
+            {
+                SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                SetupRadio_Reflevel(currentRefLevel);
+            }
+        }
+
+        private void OnZoomButton(object sender, RoutedEventArgs e)
+        {
+            if (currentFrequency != 0)
+            {
+                SetupRadio_Edges(currentFrequency - ZoomRange / 2, currentFrequency + ZoomRange / 2, RadioEdgeSet[currentMHz]);
+                SetupRadio_Reflevel(currentRefLevel + RefAdjust);
+            }
         }
 
         private void SaveLocation(object sender, EventArgs e)
