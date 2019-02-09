@@ -54,236 +54,6 @@ namespace ICOMautomagic
         public int ActiveRadioNr { get; set; }
     }
 
-    [XmlRoot(ElementName = "AppInfo")]
-    public class AppInfo
-    {
-        [XmlElement(ElementName = "dbname")]
-        public string Dbname { get; set; }
-        [XmlElement(ElementName = "contestnr")]
-        public string Contestnr { get; set; }
-        [XmlElement(ElementName = "contestname")]
-        public string Contestname { get; set; }
-        [XmlElement(ElementName = "StationName")]
-        public string StationName { get; set; }
-    }
-
-    [XmlRoot(ElementName = "spot")]
-    public class Spot
-    {
-        [XmlElement(ElementName = "StationName")]
-        public string StationName { get; set; }
-        [XmlElement(ElementName = "dxcall")]
-        public string Dxcall { get; set; }
-        [XmlElement(ElementName = "frequency")]
-        public string Frequency { get; set; }
-        [XmlElement(ElementName = "spottercall")]
-        public string Spottercall { get; set; }
-        [XmlElement(ElementName = "comment")]
-        public string Comment { get; set; }
-        [XmlElement(ElementName = "action")]
-        public string Action { get; set; }
-        [XmlElement(ElementName = "status")]
-        public string Status { get; set; }
-        [XmlElement(ElementName = "statuslist")]
-        public string Statuslist { get; set; }
-        [XmlElement(ElementName = "timestamp")]
-        public string Timestamp { get; set; }
-    }
-
-    [XmlRoot(ElementName = "contactinfo")]
-    public class Contactinfo
-    {
-        [XmlElement(ElementName = "contestname")]
-        public string Contestname { get; set; }
-        [XmlElement(ElementName = "contestnr")]
-        public string Contestnr { get; set; }
-        [XmlElement(ElementName = "timestamp")]
-        public string Timestamp { get; set; }
-        [XmlElement(ElementName = "mycall")]
-        public string Mycall { get; set; }
-        [XmlElement(ElementName = "band")]
-        public string Band { get; set; }
-        [XmlElement(ElementName = "rxfreq")]
-        public string Rxfreq { get; set; }
-        [XmlElement(ElementName = "txfreq")]
-        public string Txfreq { get; set; }
-        [XmlElement(ElementName = "operator")]
-        public string Operator { get; set; }
-        [XmlElement(ElementName = "mode")]
-        public string Mode { get; set; }
-        [XmlElement(ElementName = "call")]
-        public string Call { get; set; }
-        [XmlElement(ElementName = "countryprefix")]
-        public string Countryprefix { get; set; }
-        [XmlElement(ElementName = "wpxprefix")]
-        public string Wpxprefix { get; set; }
-        [XmlElement(ElementName = "stationprefix")]
-        public string Stationprefix { get; set; }
-        [XmlElement(ElementName = "continent")]
-        public string Continent { get; set; }
-        [XmlElement(ElementName = "snt")]
-        public string Snt { get; set; }
-        [XmlElement(ElementName = "sntnr")]
-        public string Sntnr { get; set; }
-        [XmlElement(ElementName = "rcv")]
-        public string Rcv { get; set; }
-        [XmlElement(ElementName = "rcvnr")]
-        public string Rcvnr { get; set; }
-        [XmlElement(ElementName = "gridsquare")]
-        public string Gridsquare { get; set; }
-        [XmlElement(ElementName = "exchange1")]
-        public string Exchange1 { get; set; }
-        [XmlElement(ElementName = "section")]
-        public string Section { get; set; }
-        [XmlElement(ElementName = "comment")]
-        public string Comment { get; set; }
-        [XmlElement(ElementName = "qth")]
-        public string Qth { get; set; }
-        [XmlElement(ElementName = "name")]
-        public string Name { get; set; }
-        [XmlElement(ElementName = "power")]
-        public string Power { get; set; }
-        [XmlElement(ElementName = "misctext")]
-        public string Misctext { get; set; }
-        [XmlElement(ElementName = "zone")]
-        public string Zone { get; set; }
-        [XmlElement(ElementName = "prec")]
-        public string Prec { get; set; }
-        [XmlElement(ElementName = "ck")]
-        public string Ck { get; set; }
-        [XmlElement(ElementName = "ismultiplier1")]
-        public string Ismultiplier1 { get; set; }
-        [XmlElement(ElementName = "ismultiplier2")]
-        public string Ismultiplier2 { get; set; }
-        [XmlElement(ElementName = "ismultiplier3")]
-        public string Ismultiplier3 { get; set; }
-        [XmlElement(ElementName = "points")]
-        public string Points { get; set; }
-        [XmlElement(ElementName = "radionr")]
-        public string Radionr { get; set; }
-        [XmlElement(ElementName = "RoverLocation")]
-        public string RoverLocation { get; set; }
-        [XmlElement(ElementName = "RadioInterfaced")]
-        public string RadioInterfaced { get; set; }
-        [XmlElement(ElementName = "NetworkedCompNr")]
-        public string NetworkedCompNr { get; set; }
-        [XmlElement(ElementName = "IsOriginal")]
-        public string IsOriginal { get; set; }
-        [XmlElement(ElementName = "NetBiosName")]
-        public string NetBiosName { get; set; }
-        [XmlElement(ElementName = "IsRunQSO")]
-        public string IsRunQSO { get; set; }
-        [XmlElement(ElementName = "Run1Run2")]
-        public string Run1Run2 { get; set; }
-        [XmlElement(ElementName = "ContactType")]
-        public string ContactType { get; set; }
-        [XmlElement(ElementName = "StationName")]
-        public string StationName { get; set; }
-    }
-
-    [XmlRoot(ElementName = "class")]
-    public class Class
-    {
-        [XmlAttribute(AttributeName = "power")]
-        public string Power { get; set; }
-        [XmlAttribute(AttributeName = "assisted")]
-        public string Assisted { get; set; }
-        [XmlAttribute(AttributeName = "transmitter")]
-        public string Transmitter { get; set; }
-        [XmlAttribute(AttributeName = "ops")]
-        public string Ops { get; set; }
-        [XmlAttribute(AttributeName = "bands")]
-        public string Bands { get; set; }
-        [XmlAttribute(AttributeName = "mode")]
-        public string Mode { get; set; }
-        [XmlAttribute(AttributeName = "overlay")]
-        public string Overlay { get; set; }
-    }
-
-    [XmlRoot(ElementName = "qth")]
-    public class Qth
-    {
-        [XmlElement(ElementName = "dxcccountry")]
-        public string Dxcccountry { get; set; }
-        [XmlElement(ElementName = "cqzone")]
-        public string Cqzone { get; set; }
-        [XmlElement(ElementName = "iaruzone")]
-        public string Iaruzone { get; set; }
-        [XmlElement(ElementName = "arrlsection")]
-        public string Arrlsection { get; set; }
-        [XmlElement(ElementName = "grid6")]
-        public string Grid6 { get; set; }
-    }
-
-    [XmlRoot(ElementName = "qso")]
-    public class Qso
-    {
-        [XmlAttribute(AttributeName = "band")]
-        public string Band { get; set; }
-        [XmlAttribute(AttributeName = "mode")]
-        public string Mode { get; set; }
-        [XmlText]
-        public string Text { get; set; }
-    }
-
-    [XmlRoot(ElementName = "mult")]
-    public class Mult
-    {
-        [XmlAttribute(AttributeName = "band")]
-        public string Band { get; set; }
-        [XmlAttribute(AttributeName = "mode")]
-        public string Mode { get; set; }
-        [XmlAttribute(AttributeName = "type")]
-        public string Type { get; set; }
-        [XmlText]
-        public string Text { get; set; }
-    }
-
-    [XmlRoot(ElementName = "point")]
-    public class Point
-    {
-        [XmlAttribute(AttributeName = "band")]
-        public string Band { get; set; }
-        [XmlAttribute(AttributeName = "mode")]
-        public string Mode { get; set; }
-        [XmlText]
-        public string Text { get; set; }
-    }
-
-    [XmlRoot(ElementName = "breakdown")]
-    public class Breakdown
-    {
-        [XmlElement(ElementName = "qso")]
-        public List<Qso> Qso { get; set; }
-        [XmlElement(ElementName = "mult")]
-        public List<Mult> Mult { get; set; }
-        [XmlElement(ElementName = "point")]
-        public List<Point> Point { get; set; }
-    }
-
-    [XmlRoot(ElementName = "dynamicresults")]
-    public class Dynamicresults
-    {
-        [XmlElement(ElementName = "contest")]
-        public string Contest { get; set; }
-        [XmlElement(ElementName = "call")]
-        public string Call { get; set; }
-        [XmlElement(ElementName = "ops")]
-        public string Ops { get; set; }
-        [XmlElement(ElementName = "class")]
-        public Class Class { get; set; }
-        [XmlElement(ElementName = "club")]
-        public string Club { get; set; }
-        [XmlElement(ElementName = "qth")]
-        public Qth Qth { get; set; }
-        [XmlElement(ElementName = "breakdown")]
-        public Breakdown Breakdown { get; set; }
-        [XmlElement(ElementName = "score")]
-        public string Score { get; set; }
-        [XmlElement(ElementName = "timestamp")]
-        public string Timestamp { get; set; }
-    }
-
     // Helper class to parse XML datagrams
     public static class XmlConvert
     {
@@ -338,9 +108,6 @@ namespace ICOMautomagic
         { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 11,
             11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
-        bool Debug = false;
-
-
         // Waterfall edges and per mode/band segment ref levels 
         // _scopedge[Radionumber-1, i, modeindex, lower/upper/ref level]
         // converted at initialization to ScopeEdge[Radionumber-1, megaHertz, modeindex, lower/upper/ref level]
@@ -349,7 +116,7 @@ namespace ICOMautomagic
         int[] lowerEdgePh = new int[52]; int[] upperEdgePh = new int[52]; int[] refLevelPh = new int[52];
         int[] lowerEdgeDig = new int[52]; int[] upperEdgeDig = new int[52]; int[] refLevelDig = new int[52];
 
-        public int currentLowerEdge, currentUpperEdge, currentRefLevel, newMHz = 0, currentMHz = 0;
+        public int currentLowerEdge, currentUpperEdge, currentRefLevel, newMHz, currentMHz = 0;
         public string currentMode = "", newMode = "";
 
         SerialPort port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
@@ -372,12 +139,11 @@ namespace ICOMautomagic
                 }
             }
 
-
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
             this.Left = Properties.Settings.Default.Left;
 
-            // Fetch lower and upper edges and ref levels from saved settings, clumsy due to limitations in WPF settings
+            // Fetch lower and upper edges and ref levels from saved settings, ugly due to limitations in WPF settings
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
@@ -404,13 +170,7 @@ namespace ICOMautomagic
 
                         XDocument doc = XDocument.Parse(message);
 
-                        if (doc.Element("AppInfo") != null)
-                        {
-                            AppInfo appInfo = new AppInfo();
-                            appInfo = XmlConvert.DeserializeObject<AppInfo>(message);
-                            // Do something with appInfo data
-                        }
-                        else if (doc.Element("RadioInfo") != null)
+                        if (doc.Element("RadioInfo") != null)
                         {
                             RadioInfo radioInfo = new RadioInfo();
                             radioInfo = XmlConvert.DeserializeObject<RadioInfo>(message);
@@ -453,100 +213,67 @@ namespace ICOMautomagic
                                         LowerEdgeTextbox.Text = currentLowerEdge.ToString();
                                         UpperEdgeTextbox.Text = currentUpperEdge.ToString();
                                         RefLevelSlider.Value = currentRefLevel;
-                                    }
 
-                                    SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
-                                    SetupRadio_Reflevel(currentRefLevel);
+                                        SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[newMHz]);
+                                        SetupRadio_Reflevel(currentRefLevel);
+
+                                    }
 
                                     currentMHz = newMHz;
                                     currentMode = newMode;
                                 }));
                             }
                         }
-                        else if (doc.Element("dynamicresults") != null)
-                        {
-                            Dynamicresults dynamicResults = new Dynamicresults();
-                            dynamicResults = XmlConvert.DeserializeObject<Dynamicresults>(message);
-                        }
                     }
                 }
             });
         }
 
-        private void LowerEdgeTextboxKeydown(object sender, KeyEventArgs e)
-        {
-            int lower_edge = 0, upper_edge = 0; 
-
-            if ((e.Key == Key.Return) || (e.Key == Key.Tab)) {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
-                    UpperEdgeTextbox.Focus();
-
-                    try
-                    {
-                        lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
-                        upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
-                    }
-                    catch { };
-
-                    switch (currentMode)
-                    {
-                        case "CW":
-                            lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
-                            break;
-                        case "Phone":
-                            lowerEdgePh[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgePh[bandIndex[currentMHz]] = upper_edge;
-                            break;
-                        default:
-                            lowerEdgeDig[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeDig[bandIndex[currentMHz]] = upper_edge;
-                            break;
-                    }
-                }));
-                SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
-            }
-        }
-
-        private void UpperEdgeTextboxKeydown(object sender, KeyEventArgs e)
+        private void EdgeTextboxKeydown(object sender, KeyEventArgs e)
         {
             int lower_edge = 0, upper_edge = 0;
 
-            if ((e.Key == Key.Return) || (e.Key == Key.Tab))
-            {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+
+                if (e.Key == Key.Return)
                 {
-                    RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
-                    LowerEdgeTextbox.Focus();
-
-                    try
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-                        lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
-                        upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
-                    }
-                    catch { };
+                        RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
 
-                    switch (currentMode)
-                    {
-                        case "CW":
-                            lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
-                            break;
-                        case "Phone":
-                            lowerEdgePh[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgePh[bandIndex[currentMHz]] = upper_edge;
-                            break;
-                        default:
-                            lowerEdgeDig[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeDig[bandIndex[currentMHz]] = upper_edge;
-                            break;
-                    }
-                }));
-                SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
-            }
+                        if (sender == LowerEdgeTextbox)
+                            UpperEdgeTextbox.Focus();
+                        else
+                            LowerEdgeTextbox.Focus();
+
+                        try
+                        {
+                            lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
+                            upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
+                        }
+                        catch { };
+
+                        switch (currentMode)
+                        {
+                            case "CW":
+                                lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
+                                upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
+                                break;
+                            case "Phone":
+                                lowerEdgePh[bandIndex[currentMHz]] = lower_edge;
+                                upperEdgePh[bandIndex[currentMHz]] = upper_edge;
+                                break;
+                            default:
+                                lowerEdgeDig[bandIndex[currentMHz]] = lower_edge;
+                                upperEdgeDig[bandIndex[currentMHz]] = upper_edge;
+                                break;
+                        }
+                    }));
+
+                    SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
+                }
         }
+
+
 
         private void SaveLocation(object sender, EventArgs e)
         {
@@ -630,7 +357,7 @@ namespace ICOMautomagic
             //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
 
             port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
-            //System.Threading.Thread.Sleep(ResponseTime); // Wait
+            System.Threading.Thread.Sleep(ResponseTime); // Wait
             //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
         }
 

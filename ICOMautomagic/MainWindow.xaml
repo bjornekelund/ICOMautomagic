@@ -8,8 +8,8 @@
         Title="ICOM Automagic" Height="142.405" Width="470.433" LocationChanged="SaveLocation" Closed="SaveSettings">
     <Grid>
         <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="209,18,0,0" VerticalAlignment="Top" Width="171" ValueChanged="OnSliderChanged" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" TickFrequency="5"/>
-        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="23" Margin="71,59,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" KeyDown="LowerEdgeTextboxKeydown"/>
-        <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="23" Margin="261,59,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" KeyDown="UpperEdgeTextboxKeydown"/>
+        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="23" Margin="71,59,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" KeyDown="EdgeTextboxKeydown"/>
+        <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="23" Margin="261,59,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" KeyDown="EdgeTextboxKeydown"/>
         <Label Content="Lower" HorizontalAlignment="Left" Margin="23,58,0,0" VerticalAlignment="Top"/>
         <Label Content="Upper" HorizontalAlignment="Left" Margin="203,58,0,0" VerticalAlignment="Top"/>
         <Label x:Name="BandModeLabel" Content="QRG: No data" HorizontalAlignment="Left" Margin="23,14,0,0" VerticalAlignment="Top" Width="146"/>
