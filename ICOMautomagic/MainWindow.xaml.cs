@@ -206,7 +206,7 @@ namespace ICOMautomagic
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     BandModeLabel.Content = string.Format("{0,4} {1,8}", bandName[newMHz], newMode);
-                                    RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+                                    RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
 
                                     if ((newMHz != currentMHz) || (newMode != currentMode))
                                     {
@@ -238,7 +238,7 @@ namespace ICOMautomagic
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-                        RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
 
                         if (sender == LowerEdgeTextbox)
                             UpperEdgeTextbox.Focus();
@@ -272,8 +272,6 @@ namespace ICOMautomagic
                     SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
                 }
         }
-
-
 
         private void SaveLocation(object sender, EventArgs e)
         {
