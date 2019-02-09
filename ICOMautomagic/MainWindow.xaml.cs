@@ -16,8 +16,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Threading.Tasks;
-
-//using N1MMdemoClient.Properties;
+using System.IO.Ports;
 
 namespace ICOMautomagic
 {
@@ -310,7 +309,17 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
-        public const int listenPort = 12060;
+        public const int ListenPort = 12060;
+        public static string ComPort = "COM2";
+        public static byte TrxAddress = 0x98;
+        public static byte EdgeSet = 0x03; // which scope edge should be manipulated
+        public static byte ResponseTime = 100; // Milliseconds to wait before reading response from radio
+        public static byte[] ReadBuffer = new byte[100]; // Dummy read buffer. Much larger than needed.
+
+        // Pre-baked CI-V commands
+        public static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
+        public static byte[] CIVSetEdgeSet = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x16, 0x0, EdgeSet, 0xFD };
+        public static byte[] CIVSetRefLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xFD };
 
         // Maps MHz to band name
         public static string[] bandName = new string[52] 
@@ -331,31 +340,38 @@ namespace ICOMautomagic
 
         bool Debug = false;
 
-        // Defines which of the radio's three edge sets is manipulated by script 
-        public static byte UsedEdgeSet = 0x03;        
-
-        // Predefined CI-V command strings
-        public byte[] IcomSetFixedMode = new byte[] { 0x27, 0x14, 0x0, 0x1 };
-        public byte[] IcomSetEdgeSet = new byte[] { 0x27, 0x16, 0x0, UsedEdgeSet };
-        public byte[] IcomSetEdges = new byte[] { 0x27, 0x1E, 0x00, UsedEdgeSet, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        byte[] IcomSetRefLevel = new byte[6] { 0x27, 0x19, 0x00, 0x00, 0x00, 0x00 };
 
         // Waterfall edges and per mode/band segment ref levels 
         // _scopedge[Radionumber-1, i, modeindex, lower/upper/ref level]
         // converted at initialization to ScopeEdge[Radionumber-1, megaHertz, modeindex, lower/upper/ref level]
         // Mode is CW, Digital, Phone, Band = 0, 1, 2, 3
-        int[] lowerEdgeCW = new int[52]; int[] upperEdgeCW = new int[52]; double[] refLevelCW = new double[52];
-        int[] lowerEdgePh = new int[52]; int[] upperEdgePh = new int[52]; double[] refLevelPh = new double[52];
-        int[] lowerEdgeDig = new int[52]; int[] upperEdgeDig = new int[52]; double[] refLevelDig = new double[52];
+        int[] lowerEdgeCW = new int[52]; int[] upperEdgeCW = new int[52]; int[] refLevelCW = new int[52];
+        int[] lowerEdgePh = new int[52]; int[] upperEdgePh = new int[52]; int[] refLevelPh = new int[52];
+        int[] lowerEdgeDig = new int[52]; int[] upperEdgeDig = new int[52]; int[] refLevelDig = new int[52];
 
-        public int currentLowerEdge, currentUpperEdge, newMHz = 0, currentMHz = 0;
-        public double currentRefLevel;
+        public int currentLowerEdge, currentUpperEdge, currentRefLevel, newMHz = 0, currentMHz = 0;
         public string currentMode = "", newMode = "";
+
+        SerialPort port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
 
         public MainWindow()
         {
             string message;
+
+            try
+            {
+                port.Open();
+            }
+            catch
+            {
+                MessageBoxResult result = MessageBox.Show("Could not open serial port " + ComPort, 
+                    "ICOM Automagic", MessageBoxButton.OK, MessageBoxImage.Question);
+                if (result == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+
 
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
@@ -364,21 +380,21 @@ namespace ICOMautomagic
             // Fetch lower and upper edges and ref levels from saved settings, clumsy due to limitations in WPF settings
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Double.Parse(s)).ToArray();
+            refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
             lowerEdgePh = Properties.Settings.Default.LowerEdgesPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgePh = Properties.Settings.Default.UpperEdgesPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelPh = Properties.Settings.Default.RefLevelsPh.Split(';').Select(s => Double.Parse(s)).ToArray();
+            refLevelPh = Properties.Settings.Default.RefLevelsPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
             lowerEdgeDig = Properties.Settings.Default.LowerEdgesDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeDig = Properties.Settings.Default.UpperEdgesDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelDig = Properties.Settings.Default.RefLevelsDig.Split(';').Select(s => Double.Parse(s)).ToArray();
+            refLevelDig = Properties.Settings.Default.RefLevelsDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
             InitializeComponent();
 
             Task.Run(async () =>
             {
-                using (var udpClient = new UdpClient(listenPort))
+                using (var udpClient = new UdpClient(ListenPort))
                 {
                     while (true)
                     {
@@ -438,7 +454,10 @@ namespace ICOMautomagic
                                         UpperEdgeTextbox.Text = currentUpperEdge.ToString();
                                         RefLevelSlider.Value = currentRefLevel;
                                     }
-                                    // Update radio
+
+                                    SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                                    SetupRadio_Reflevel(currentRefLevel);
+
                                     currentMHz = newMHz;
                                     currentMode = newMode;
                                 }));
@@ -456,64 +475,76 @@ namespace ICOMautomagic
 
         private void LowerEdgeTextboxKeydown(object sender, KeyEventArgs e)
         {
+            int lower_edge = 0, upper_edge = 0; 
+
             if ((e.Key == Key.Return) || (e.Key == Key.Tab)) {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+                    UpperEdgeTextbox.Focus();
 
                     try
                     {
-                        switch (currentMode)
-                        {
-                            case "CW":
-                                lowerEdgeCW[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
-                                upperEdgeCW[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
-                                break;
-                            case "Phone":
-                                lowerEdgePh[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
-                                upperEdgePh[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
-                                break;
-                            default:
-                                lowerEdgeDig[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
-                                upperEdgeDig[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
-                                break;
-                        }
+                        lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
+                        upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
                     }
                     catch { };
-                    UpperEdgeTextbox.Focus();
+
+                    switch (currentMode)
+                    {
+                        case "CW":
+                            lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
+                            break;
+                        case "Phone":
+                            lowerEdgePh[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgePh[bandIndex[currentMHz]] = upper_edge;
+                            break;
+                        default:
+                            lowerEdgeDig[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeDig[bandIndex[currentMHz]] = upper_edge;
+                            break;
+                    }
                 }));
+                SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
             }
         }
 
         private void UpperEdgeTextboxKeydown(object sender, KeyEventArgs e)
         {
+            int lower_edge = 0, upper_edge = 0;
+
             if ((e.Key == Key.Return) || (e.Key == Key.Tab))
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+                    LowerEdgeTextbox.Focus();
+
                     try
                     {
-                        switch (currentMode)
-                        {
-                            case "CW":
-                                lowerEdgeCW[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
-                                upperEdgeCW[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
-                                break;
-                            case "Phone":
-                                lowerEdgePh[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
-                                upperEdgePh[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
-                                break;
-                            default:
-                                lowerEdgeDig[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
-                                upperEdgeDig[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
-                                break;
-                        }
+                        lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
+                        upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
                     }
                     catch { };
 
-                    LowerEdgeTextbox.Focus();
+                    switch (currentMode)
+                    {
+                        case "CW":
+                            lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
+                            break;
+                        case "Phone":
+                            lowerEdgePh[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgePh[bandIndex[currentMHz]] = upper_edge;
+                            break;
+                        default:
+                            lowerEdgeDig[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeDig[bandIndex[currentMHz]] = upper_edge;
+                            break;
+                    }
                 }));
+                SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
             }
         }
 
@@ -563,6 +594,57 @@ namespace ICOMautomagic
             {
                 //RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
             }));
+
+            SetupRadio_Reflevel((int)currentRefLevel);
+        }
+
+        void SetupRadio_Edges(int lower_edge, int upper_edge, int ICOMedgeSegment)
+        {
+            byte[] CIVSetEdges = new byte[19]
+            {
+                0xFE, 0xFE, TrxAddress, 0xE0,
+                0x27, 0x1E,
+                (byte)((ICOMedgeSegment / 10) * 16 + (ICOMedgeSegment % 10)),
+                EdgeSet,
+                0x00, // Lower 10Hz & 1Hz
+                (byte)((lower_edge % 10) * 16 + 0), // 1kHz & 100Hz
+                (byte)(((lower_edge / 100) % 10) * 16 + ((lower_edge / 10) % 10)), // 100kHz & 10kHz
+                (byte)(((lower_edge / 10000) % 10) * 16 + (lower_edge / 1000) % 10), // 10MHz & 1MHz
+                0x00, // 1GHz & 100MHz
+                0x00, // // Upper 10Hz & 1Hz 
+                (byte)((upper_edge % 10) * 16 + 0), // 1kHz & 100Hz
+                (byte)(((upper_edge / 100) % 10) * 16 + (upper_edge / 10) % 10), // 100kHz & 10kHz
+                (byte)(((upper_edge / 10000) % 10) * 16 + (upper_edge / 1000) % 10), // 10MHz & 1MHz
+                0x00, // 1GHz & 100MHz
+                0xFD
+            };
+
+            //DisplayWaterfallEdges.Content = lower_edge.ToString("N0") + " - " + upper_edge.ToString("N0") + "kHz";
+
+            port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
+            //System.Threading.Thread.Sleep(ResponseTime); // Wait
+            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+
+            port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
+            //System.Threading.Thread.Sleep(ResponseTime); // Wait
+            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+
+            port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
+            //System.Threading.Thread.Sleep(ResponseTime); // Wait
+            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+        }
+
+        void SetupRadio_Reflevel(int ref_level) 
+        {
+            int absRefLevel = (ref_level >= 0) ? ref_level : -ref_level;
+
+            CIVSetRefLevel[7] = (byte)((absRefLevel / 10) * 16 + absRefLevel % 10);
+            CIVSetRefLevel[9] = (ref_level >= 0) ? (byte)0 : (byte)1;
+            
+            port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
+            //System.Threading.Thread.Sleep(ResponseTime); // Wait
+            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+
         }
 
     }
