@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("ICOMautomagic")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SM7IUN")]
 [assembly: AssemblyProduct("ICOMautomagic")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © Björn Ekelund SM7IUN 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

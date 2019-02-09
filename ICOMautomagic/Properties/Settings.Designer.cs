@@ -61,7 +61,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1810,3500,5352,7000,10100,14000,18068,21000,24890,28000,50000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1810;3500;5352;7000;10100;14000;18068;21000;24890;28000;50000")]
         public string LowerEdgesCW {
             get {
                 return ((string)(this["LowerEdgesCW"]));
@@ -73,7 +73,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1840,3570,5366,7040,10130,14070,18109,21070,24920,28070,50150")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5366;7040;10130;14070;18109;21070;24920;28070;50150")]
         public string UpperEdgesCW {
             get {
                 return ((string)(this["UpperEdgesCW"]));
@@ -85,7 +85,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-8,-7,-6,-5,-4,-6,-6,-6,-6,-6,-6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6")]
         public string RefLevelsCW {
             get {
                 return ((string)(this["RefLevelsCW"]));
@@ -97,7 +97,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1840,3600,5353,7040,10100,14100,18111,21150,24931,28300,50100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1840;3600;5353;7040;10100;14100;18111;21150;24931;28300;50100")]
         public string LowerEdgesPh {
             get {
                 return ((string)(this["LowerEdgesPh"]));
@@ -109,7 +109,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000,3800,5366,7200,10150,14350,18168,21450,24990,28600,50500")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000;3800;5366;7200;10150;14350;18168;21450;24990;28600;50500")]
         public string UpperEdgesPh {
             get {
                 return ((string)(this["UpperEdgesPh"]));
@@ -121,7 +121,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3,-3,-3,-3,-3,-3,-3,-3,-3,-3,-3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
         public string RefLevelsPh {
             get {
                 return ((string)(this["RefLevelsPh"]));
@@ -133,7 +133,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1840,3570,5352,7040,10130,14070,18089,21070,24910,28070,50300")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5352;7040;10130;14070;18089;21070;24910;28070;50300")]
         public string LowerEdgesDig {
             get {
                 return ((string)(this["LowerEdgesDig"]));
@@ -145,7 +145,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1860,3600,5366,7080,10150,14100,18109,21150,24932,28110,50350")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1860;3600;5366;7080;10150;14100;18109;21150;24932;28110;50350")]
         public string UpperEdgesDig {
             get {
                 return ((string)(this["UpperEdgesDig"]));
@@ -157,7 +157,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9")]
         public string RefLevelsDig {
             get {
                 return ((string)(this["RefLevelsDig"]));

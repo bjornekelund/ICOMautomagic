@@ -14,6 +14,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using System.Threading.Tasks;
 
 //using N1MMdemoClient.Properties;
@@ -307,8 +308,6 @@ namespace ICOMautomagic
         }
     }
 
-
-
     public partial class MainWindow : Window
     {
         public const int listenPort = 12060;
@@ -333,13 +332,7 @@ namespace ICOMautomagic
         bool Debug = false;
 
         // Defines which of the radio's three edge sets is manipulated by script 
-        public static byte UsedEdgeSet = 0x03;
-
-        // Waterfall capability of radio 1 and radio 2
-        public bool[] WaterfallCapable = new bool[] {
-                true, // Radio 1
-                true  // Radio 2
-            };
+        public static byte UsedEdgeSet = 0x03;        
 
         // Predefined CI-V command strings
         public byte[] IcomSetFixedMode = new byte[] { 0x27, 0x14, 0x0, 0x1 };
@@ -356,58 +349,30 @@ namespace ICOMautomagic
         int[] lowerEdgePh = new int[52]; int[] upperEdgePh = new int[52]; double[] refLevelPh = new double[52];
         int[] lowerEdgeDig = new int[52]; int[] upperEdgeDig = new int[52]; double[] refLevelDig = new double[52];
 
-        //    // Radio 1
-        //   {{{ 1810,  1840,  -6}, { 1840,  1860,  -6}, { 1840,  2000,  -6}, { 1800,  2000, -10}},
-        //    {{ 3500,  3570, -14}, { 3570,  3600, -11}, { 3600,  3800, -17}, { 3500,  3800, -18}},
-        //    {{ 5352,  5366,  -5}, { 5352,  5366,  -5}, { 5352,  5366,  -5}, { 5352,  5366,  -5}},
-        //    {{ 7000,  7040,  -6}, { 7040,  7080,  -6}, { 7040,  7200, -14}, { 7000,  7200, -15}},
-        //    {{10100, 10130,   4}, {10130, 10150,   4}, {10100, 10150,   4}, {10100, 10150,   4}},
-        //    {{14000, 14070,  -2}, {14070, 14100,  -1}, {14100, 14350,  -4}, {14000, 14350,  -4}},
-        //    {{18068, 18109,  -2}, {18089, 18109,  -2}, {18111, 18168,  -6}, {18068, 18168,  -9}},
-        //    {{21000, 21070,  -3}, {21070, 21150,  -5}, {21150, 21450, -12}, {21000, 21450, -16}},
-        //    {{24890, 24920,  -1}, {24910, 24932,  -1}, {24931, 24990,  -4}, {24890, 24990,  -7}},
-        //    {{28000, 28070,  -4}, {28070, 28110,   0}, {28300, 28600,  -9}, {28000, 29000,   1}},
-        //    {{50000, 50100,  -4}, {50300, 50350,   0}, {50100, 50500, -11}, {50000, 50500, -15}}},
-        //   // Radio 2
-        //   {{{ 1810, 1840,   -6}, { 1840,  1860,  -6}, { 1840,  2000,  -6}, { 1800,  2000, -10}},
-        //    {{ 3500, 3570,  -14}, { 3570,  3600, -11}, { 3600,  3800, -17}, { 3500,  3800, -18}},
-        //    {{ 5352, 5366,    0}, { 5352,  5366,   0}, { 5352,  5366,   0}, { 5352,  5366,   0}},
-        //    {{ 7000, 7040,    0}, { 7040,  7080,   0}, { 7040,  7200,  -6}, { 7000,  7200,  -8}},
-        //    {{10100, 10130,  10}, {10130, 10150,   6}, {10100, 10150,   4}, {10100, 10150,   4}},
-        //    {{14000, 14070,   0}, {14070, 14100,  -1}, {14100, 14350,  -4}, {14000, 14350,  -6}},
-        //    {{18068, 18109,  -2}, {18089, 18109,  -2}, {18111, 18168,  -6}, {18068, 18168,  -9}},
-        //    {{21000, 21070,   0}, {21070, 21150,  -5}, {21150, 21450,  -6}, {21000, 21450,  -8}},
-        //    {{24890, 24920,   5}, {24910, 24932,   3}, {24931, 24990,   3}, {24890, 24990,   0}},
-        //    {{28000, 28070,  -2}, {28070, 28110,   0}, {28300, 28600,  -9}, {28000, 29000,   1}},
-        //    {{50000, 50100,   0}, {50300, 50350,   0}, {50100, 50500, -11}, {50000, 50500, -15}}}
-        //};
-
-        public int currentLowerEdge, currentUpperEdge, newMHz, currentMHz = 0;
+        public int currentLowerEdge, currentUpperEdge, newMHz = 0, currentMHz = 0;
         public double currentRefLevel;
-        public string currentMode, newMode;
+        public string currentMode = "", newMode = "";
 
         public MainWindow()
         {
             string message;
-            
-
 
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
             this.Left = Properties.Settings.Default.Left;
 
             // Fetch lower and upper edges and ref levels from saved settings, clumsy due to limitations in WPF settings
-            lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(',').Select(s => Double.Parse(s)).ToArray();
+            lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Double.Parse(s)).ToArray();
 
-            lowerEdgePh = Properties.Settings.Default.LowerEdgesCW.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgePh = Properties.Settings.Default.UpperEdgesCW.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            refLevelPh = Properties.Settings.Default.RefLevelsCW.Split(',').Select(s => Double.Parse(s)).ToArray();
+            lowerEdgePh = Properties.Settings.Default.LowerEdgesPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            upperEdgePh = Properties.Settings.Default.UpperEdgesPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelPh = Properties.Settings.Default.RefLevelsPh.Split(';').Select(s => Double.Parse(s)).ToArray();
 
-            lowerEdgeDig = Properties.Settings.Default.LowerEdgesCW.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgeDig = Properties.Settings.Default.UpperEdgesCW.Split(',').Select(s => Int32.Parse(s)).ToArray();
-            refLevelDig = Properties.Settings.Default.RefLevelsCW.Split(',').Select(s => Double.Parse(s)).ToArray();
+            lowerEdgeDig = Properties.Settings.Default.LowerEdgesDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            upperEdgeDig = Properties.Settings.Default.UpperEdgesDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelDig = Properties.Settings.Default.RefLevelsDig.Split(';').Select(s => Double.Parse(s)).ToArray();
 
             InitializeComponent();
 
@@ -433,41 +398,50 @@ namespace ICOMautomagic
                         {
                             RadioInfo radioInfo = new RadioInfo();
                             radioInfo = XmlConvert.DeserializeObject<RadioInfo>(message);
-                            newMHz = (int)(radioInfo.Freq / 100000f);
-                            newMode = radioInfo.Mode; 
-                            
-                            switch (radioInfo.Mode) {
-                                case "CW":
-                                    currentRefLevel = refLevelCW[bandIndex[newMHz]];
-                                    currentUpperEdge = upperEdgeCW[bandIndex[newMHz]];
-                                    currentLowerEdge = lowerEdgeCW[bandIndex[newMHz]];
-                                    break;
-                                case "USB":
-                                case "LSB":
-                                    currentRefLevel = refLevelPh[bandIndex[newMHz]];
-                                    currentUpperEdge = upperEdgePh[bandIndex[newMHz]];
-                                    currentLowerEdge = lowerEdgePh[bandIndex[newMHz]];
-                                    break;
-                                default:
-                                    currentRefLevel = refLevelDig[bandIndex[newMHz]];
-                                    currentUpperEdge = upperEdgeDig[bandIndex[newMHz]];
-                                    currentLowerEdge = lowerEdgeDig[bandIndex[newMHz]];
-                                    break;
-                            }
 
                             if (radioInfo.ActiveRadioNr == radioInfo.RadioNr)
                             {
+                                newMHz = (int)(radioInfo.Freq / 100000f);
+
+                                switch (radioInfo.Mode)
+                                {
+                                    case "CW":
+                                        currentRefLevel = refLevelCW[bandIndex[newMHz]];
+                                        currentUpperEdge = upperEdgeCW[bandIndex[newMHz]];
+                                        currentLowerEdge = lowerEdgeCW[bandIndex[newMHz]];
+                                        newMode = "CW";
+                                        break;
+                                    case "USB":
+                                    case "LSB":
+                                    case "AM":
+                                        currentRefLevel = refLevelPh[bandIndex[newMHz]];
+                                        currentUpperEdge = upperEdgePh[bandIndex[newMHz]];
+                                        currentLowerEdge = lowerEdgePh[bandIndex[newMHz]];
+                                        newMode = "Phone";
+                                        break;
+                                    default:
+                                        currentRefLevel = refLevelDig[bandIndex[newMHz]];
+                                        currentUpperEdge = upperEdgeDig[bandIndex[newMHz]];
+                                        currentLowerEdge = lowerEdgeDig[bandIndex[newMHz]];
+                                        newMode = "Digital";
+                                        break;
+                                }
+
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
-                                    BandModeLabel.Content = string.Format("{0,4}{1,5}", bandName[newMHz], radioInfo.Mode);
+                                    BandModeLabel.Content = string.Format("{0,4} {1,8}", bandName[newMHz], newMode);
                                     RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
-                                }));
-                                if ((newMHz != currentMHz) || (newMode != currentMode))
-                                {
+
+                                    if ((newMHz != currentMHz) || (newMode != currentMode))
+                                    {
+                                        LowerEdgeTextbox.Text = currentLowerEdge.ToString();
+                                        UpperEdgeTextbox.Text = currentUpperEdge.ToString();
+                                        RefLevelSlider.Value = currentRefLevel;
+                                    }
                                     // Update radio
                                     currentMHz = newMHz;
                                     currentMode = newMode;
-                                }
+                                }));
                             }
                         }
                         else if (doc.Element("dynamicresults") != null)
@@ -477,8 +451,70 @@ namespace ICOMautomagic
                         }
                     }
                 }
-                
             });
+        }
+
+        private void LowerEdgeTextboxKeydown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Return) || (e.Key == Key.Tab)) {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+
+                    try
+                    {
+                        switch (currentMode)
+                        {
+                            case "CW":
+                                lowerEdgeCW[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
+                                upperEdgeCW[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
+                                break;
+                            case "Phone":
+                                lowerEdgePh[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
+                                upperEdgePh[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
+                                break;
+                            default:
+                                lowerEdgeDig[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
+                                upperEdgeDig[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
+                                break;
+                        }
+                    }
+                    catch { };
+                    UpperEdgeTextbox.Focus();
+                }));
+            }
+        }
+
+        private void UpperEdgeTextboxKeydown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Return) || (e.Key == Key.Tab))
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+                    try
+                    {
+                        switch (currentMode)
+                        {
+                            case "CW":
+                                lowerEdgeCW[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
+                                upperEdgeCW[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
+                                break;
+                            case "Phone":
+                                lowerEdgePh[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
+                                upperEdgePh[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
+                                break;
+                            default:
+                                lowerEdgeDig[bandIndex[currentMHz]] = Int32.Parse(LowerEdgeTextbox.Text);
+                                upperEdgeDig[bandIndex[currentMHz]] = Int32.Parse(UpperEdgeTextbox.Text);
+                                break;
+                        }
+                    }
+                    catch { };
+
+                    LowerEdgeTextbox.Focus();
+                }));
+            }
         }
 
         private void SaveLocation(object sender, EventArgs e)
@@ -491,29 +527,31 @@ namespace ICOMautomagic
 
         private void SaveSettings(object sender, EventArgs e)
         {
-            Properties.Settings.Default.LowerEdgesCW = String.Join(",", lowerEdgeCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesCW = String.Join(",", upperEdgeCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsCW = String.Join(",", refLevelCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesCW = String.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsCW = String.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
 
-            Properties.Settings.Default.LowerEdgesPh = String.Join(",", lowerEdgePh.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesPh = String.Join(",", upperEdgePh.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsPh = String.Join(",", refLevelPh.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesPh = String.Join(";", lowerEdgePh.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesPh = String.Join(";", upperEdgePh.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsPh = String.Join(";", refLevelPh.Select(i => i.ToString()).ToArray());
 
-            Properties.Settings.Default.LowerEdgesDig = String.Join(",", lowerEdgePh.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesDig = String.Join(",", upperEdgePh.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsDig = String.Join(",", refLevelPh.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesDig = String.Join(";", lowerEdgeDig.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesDig = String.Join(";", upperEdgeDig.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsDig = String.Join(";", refLevelDig.Select(i => i.ToString()).ToArray());
+
+            Properties.Settings.Default.Save();
         }
 
         void OnSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             currentRefLevel = (int)RefLevelSlider.Value;
+
             switch (currentMode)
             {
                 case "CW":
                     refLevelCW[bandIndex[newMHz]] = currentRefLevel;
                     break;
-                case "USB":
-                case "LSB":
+                case "Phone":
                     refLevelPh[bandIndex[newMHz]] = currentRefLevel;
                     break;
                 default:
@@ -521,10 +559,11 @@ namespace ICOMautomagic
                     break;
             }
 
-            //Application.Current.Dispatcher.Invoke(new Action(() =>
-            //{
-            //    RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
-            //}));
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                //RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+            }));
         }
+
     }
 }
