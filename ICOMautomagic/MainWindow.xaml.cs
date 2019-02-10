@@ -220,11 +220,11 @@ namespace ICOMautomagic
 
                                         SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[newMHz]);
                                         SetupRadio_Reflevel(currentRefLevel);
-
                                     }
 
                                     currentMHz = newMHz;
                                     currentMode = newMode;
+                                    currentFrequency = (int)(radioInfo.Freq / 100f);
                                 }));
                             }
                         }
@@ -339,7 +339,7 @@ namespace ICOMautomagic
 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                //RefLevelLabel.Content = string.Format("{0,4}dB", currentRefLevel);
+                //RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
             }));
 
             SetupRadio_Reflevel((int)currentRefLevel);
