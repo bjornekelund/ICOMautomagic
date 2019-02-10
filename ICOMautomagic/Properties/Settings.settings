@@ -20,23 +20,32 @@
     <Setting Name="RefLevelsCW" Type="System.String" Scope="User">
       <Value Profile="(Default)">-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6</Value>
     </Setting>
-    <Setting Name="LowerEdgesPh" Type="System.String" Scope="User">
+    <Setting Name="LowerEdgesSSB" Type="System.String" Scope="User">
       <Value Profile="(Default)">1840;3600;5353;7040;10100;14100;18111;21150;24931;28300;50100</Value>
     </Setting>
-    <Setting Name="UpperEdgesPh" Type="System.String" Scope="User">
+    <Setting Name="UpperEdgesSSB" Type="System.String" Scope="User">
       <Value Profile="(Default)">2000;3800;5366;7200;10150;14350;18168;21450;24990;28600;50500</Value>
     </Setting>
-    <Setting Name="RefLevelsPh" Type="System.String" Scope="User">
+    <Setting Name="RefLevelsSSB" Type="System.String" Scope="User">
       <Value Profile="(Default)">-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3</Value>
     </Setting>
-    <Setting Name="LowerEdgesDig" Type="System.String" Scope="User">
+    <Setting Name="LowerEdgesDigital" Type="System.String" Scope="User">
       <Value Profile="(Default)">1840;3570;5352;7040;10130;14070;18089;21070;24910;28070;50300</Value>
     </Setting>
-    <Setting Name="UpperEdgesDig" Type="System.String" Scope="User">
+    <Setting Name="UpperEdgesDigital" Type="System.String" Scope="User">
       <Value Profile="(Default)">1860;3600;5366;7080;10150;14100;18109;21150;24932;28110;50350</Value>
     </Setting>
-    <Setting Name="RefLevelsDig" Type="System.String" Scope="User">
+    <Setting Name="RefLevelsDigital" Type="System.String" Scope="User">
       <Value Profile="(Default)">-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9</Value>
+    </Setting>
+    <Setting Name="RefLevelsDigitalZ" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3</Value>
+    </Setting>
+    <Setting Name="RefLevelsCWZ" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3</Value>
+    </Setting>
+    <Setting Name="RefLevelsSSBZ" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

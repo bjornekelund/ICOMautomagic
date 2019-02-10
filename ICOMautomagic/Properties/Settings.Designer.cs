@@ -98,72 +98,108 @@ namespace ICOMautomagic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1840;3600;5353;7040;10100;14100;18111;21150;24931;28300;50100")]
-        public string LowerEdgesPh {
+        public string LowerEdgesSSB {
             get {
-                return ((string)(this["LowerEdgesPh"]));
+                return ((string)(this["LowerEdgesSSB"]));
             }
             set {
-                this["LowerEdgesPh"] = value;
+                this["LowerEdgesSSB"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2000;3800;5366;7200;10150;14350;18168;21450;24990;28600;50500")]
-        public string UpperEdgesPh {
+        public string UpperEdgesSSB {
             get {
-                return ((string)(this["UpperEdgesPh"]));
+                return ((string)(this["UpperEdgesSSB"]));
             }
             set {
-                this["UpperEdgesPh"] = value;
+                this["UpperEdgesSSB"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
-        public string RefLevelsPh {
+        public string RefLevelsSSB {
             get {
-                return ((string)(this["RefLevelsPh"]));
+                return ((string)(this["RefLevelsSSB"]));
             }
             set {
-                this["RefLevelsPh"] = value;
+                this["RefLevelsSSB"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5352;7040;10130;14070;18089;21070;24910;28070;50300")]
-        public string LowerEdgesDig {
+        public string LowerEdgesDigital {
             get {
-                return ((string)(this["LowerEdgesDig"]));
+                return ((string)(this["LowerEdgesDigital"]));
             }
             set {
-                this["LowerEdgesDig"] = value;
+                this["LowerEdgesDigital"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1860;3600;5366;7080;10150;14100;18109;21150;24932;28110;50350")]
-        public string UpperEdgesDig {
+        public string UpperEdgesDigital {
             get {
-                return ((string)(this["UpperEdgesDig"]));
+                return ((string)(this["UpperEdgesDigital"]));
             }
             set {
-                this["UpperEdgesDig"] = value;
+                this["UpperEdgesDigital"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9")]
-        public string RefLevelsDig {
+        public string RefLevelsDigital {
             get {
-                return ((string)(this["RefLevelsDig"]));
+                return ((string)(this["RefLevelsDigital"]));
             }
             set {
-                this["RefLevelsDig"] = value;
+                this["RefLevelsDigital"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        public string RefLevelsDigitalZ {
+            get {
+                return ((string)(this["RefLevelsDigitalZ"]));
+            }
+            set {
+                this["RefLevelsDigitalZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        public string RefLevelsCWZ {
+            get {
+                return ((string)(this["RefLevelsCWZ"]));
+            }
+            set {
+                this["RefLevelsCWZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        public string RefLevelsSSBZ {
+            get {
+                return ((string)(this["RefLevelsSSBZ"]));
+            }
+            set {
+                this["RefLevelsSSBZ"] = value;
             }
         }
     }

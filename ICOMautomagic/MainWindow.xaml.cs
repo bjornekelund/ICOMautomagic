@@ -17,6 +17,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Windows.Media;
 
 namespace ICOMautomagic
 {
@@ -82,11 +83,13 @@ namespace ICOMautomagic
         public const int ListenPort = 12060;
         public static string ComPort = "COM2";
         public static byte TrxAddress = 0x98;
-        public static int ZoomRange = 20; // Range of waterfall zoom in kHz
-        public static int RefAdjust = 4; // Adjustment of ref level when zooming
+        public static int ZoomRange = 20; // Range of zoomed waterfall in kHz
         public static byte EdgeSet = 0x03; // which scope edge should be manipulated
-        public static byte ResponseTime = 100; // Milliseconds to wait before reading response from radio
-        public static byte[] ReadBuffer = new byte[100]; // Dummy read buffer. Much larger than needed.
+        public static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
+        public static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
+
+        //public static byte ResponseTime = 100; // Milliseconds to wait before reading response from radio
+        //public static byte[] ReadBuffer = new byte[100]; // Dummy read buffer. Much larger than needed.
 
         // Pre-baked CI-V commands
         public static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
@@ -114,12 +117,13 @@ namespace ICOMautomagic
         // _scopedge[Radionumber-1, i, modeindex, lower/upper/ref level]
         // converted at initialization to ScopeEdge[Radionumber-1, megaHertz, modeindex, lower/upper/ref level]
         // Mode is CW, Digital, Phone, Band = 0, 1, 2, 3
-        int[] lowerEdgeCW = new int[52]; int[] upperEdgeCW = new int[52]; int[] refLevelCW = new int[52];
-        int[] lowerEdgePh = new int[52]; int[] upperEdgePh = new int[52]; int[] refLevelPh = new int[52];
-        int[] lowerEdgeDig = new int[52]; int[] upperEdgeDig = new int[52]; int[] refLevelDig = new int[52];
+        int[] lowerEdgeCW = new int[52]; int[] upperEdgeCW = new int[52]; int[] refLevelCW = new int[52]; int[] refLevelCWZ = new int[52];
+        int[] lowerEdgeSSB = new int[52]; int[] upperEdgeSSB = new int[52]; int[] refLevelSSB = new int[52]; int[] refLevelSSBZ = new int[52];
+        int[] lowerEdgeDigital = new int[52]; int[] upperEdgeDigital = new int[52]; int[] refLevelDigital = new int[52]; int[] refLevelDigitalZ = new int[52];
 
         public int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
         public string currentMode = "", newMode = "";
+        public bool Zoomed = false;
 
         SerialPort port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
 
@@ -149,18 +153,22 @@ namespace ICOMautomagic
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelCWZ = Properties.Settings.Default.RefLevelsCWZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
-            lowerEdgePh = Properties.Settings.Default.LowerEdgesPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgePh = Properties.Settings.Default.UpperEdgesPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelPh = Properties.Settings.Default.RefLevelsPh.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            lowerEdgeSSB = Properties.Settings.Default.LowerEdgesSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            upperEdgeSSB = Properties.Settings.Default.UpperEdgesSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelSSB = Properties.Settings.Default.RefLevelsSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelSSBZ = Properties.Settings.Default.RefLevelsSSBZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
-            lowerEdgeDig = Properties.Settings.Default.LowerEdgesDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgeDig = Properties.Settings.Default.UpperEdgesDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelDig = Properties.Settings.Default.RefLevelsDig.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
             InitializeComponent();
 
             ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
+            BandModeButton.Background = PassiveButtonColor;
+            ZoomButton.Background = PassiveButtonColor;
 
             Task.Run(async () =>
             {
@@ -182,50 +190,63 @@ namespace ICOMautomagic
                             if (radioInfo.ActiveRadioNr == radioInfo.RadioNr)
                             {
                                 newMHz = (int)(radioInfo.Freq / 100000f);
+                                currentFrequency = (int)(radioInfo.Freq / 100f);
 
                                 switch (radioInfo.Mode)
                                 {
                                     case "CW":
-                                        currentRefLevel = refLevelCW[bandIndex[newMHz]];
-                                        currentUpperEdge = upperEdgeCW[bandIndex[newMHz]];
-                                        currentLowerEdge = lowerEdgeCW[bandIndex[newMHz]];
                                         newMode = "CW";
                                         break;
                                     case "USB":
                                     case "LSB":
-                                    case "AM":
-                                        currentRefLevel = refLevelPh[bandIndex[newMHz]];
-                                        currentUpperEdge = upperEdgePh[bandIndex[newMHz]];
-                                        currentLowerEdge = lowerEdgePh[bandIndex[newMHz]];
-                                        newMode = "Phone";
+                                        newMode = "SSB";
                                         break;
                                     default:
-                                        currentRefLevel = refLevelDig[bandIndex[newMHz]];
-                                        currentUpperEdge = upperEdgeDig[bandIndex[newMHz]];
-                                        currentLowerEdge = lowerEdgeDig[bandIndex[newMHz]];
                                         newMode = "Digital";
                                         break;
                                 }
 
-                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                if ((newMHz != currentMHz) || (newMode != currentMode))
                                 {
-                                    BandModeLabel.Content = string.Format("{0,4} {1,8}", bandName[newMHz], newMode);
-                                    RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
-
-                                    if ((newMHz != currentMHz) || (newMode != currentMode))
+                                    switch (newMode)
                                     {
+                                        case "CW":
+                                            currentRefLevel = refLevelCW[bandIndex[newMHz]];
+                                            currentUpperEdge = upperEdgeCW[bandIndex[newMHz]];
+                                            currentLowerEdge = lowerEdgeCW[bandIndex[newMHz]];
+                                            break;
+                                        case "SSB":
+                                            currentRefLevel = refLevelSSB[bandIndex[newMHz]];
+                                            currentUpperEdge = upperEdgeSSB[bandIndex[newMHz]];
+                                            currentLowerEdge = lowerEdgeSSB[bandIndex[newMHz]];
+                                            break;
+                                        default:
+                                            currentRefLevel = refLevelDigital[bandIndex[newMHz]];
+                                            currentUpperEdge = upperEdgeDigital[bandIndex[newMHz]];
+                                            currentLowerEdge = lowerEdgeDigital[bandIndex[newMHz]];
+                                            break;
+                                    }
+
+                                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                                    {
+                                        BandModeLabel.Content = string.Format("{0,-4}{1,5}", bandName[newMHz], newMode);
+                                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+
+                                        ZoomButton.Background = PassiveButtonColor;
+                                        BandModeButton.Background = ActiveButtonColor;
+
                                         LowerEdgeTextbox.Text = currentLowerEdge.ToString();
                                         UpperEdgeTextbox.Text = currentUpperEdge.ToString();
                                         RefLevelSlider.Value = currentRefLevel;
 
                                         SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[newMHz]);
                                         SetupRadio_Reflevel(currentRefLevel);
-                                    }
 
-                                    currentMHz = newMHz;
-                                    currentMode = newMode;
-                                    currentFrequency = (int)(radioInfo.Freq / 100f);
-                                }));
+                                        currentMHz = newMHz;
+                                        currentMode = newMode;
+                                        Zoomed = false;
+                                    }));
+                                }
                             }
                         }
                     }
@@ -233,48 +254,57 @@ namespace ICOMautomagic
             });
         }
 
-        private void EdgeTextboxKeydown(object sender, KeyEventArgs e)
+        private void OnEdgeTextboxKeydown(object sender, KeyEventArgs e)
         {
             int lower_edge = 0, upper_edge = 0;
 
-
-                if (e.Key == Key.Return)
+            if (e.Key == Key.Return)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    if (sender == LowerEdgeTextbox)
+                        UpperEdgeTextbox.Focus();
+                    else
+                        LowerEdgeTextbox.Focus();
+
+                    try // Catch and ignore parsing errors
                     {
-                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                        lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
+                        upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
+                    }
+                    catch
+                    {
+                        return;
+                    };
 
-                        if (sender == LowerEdgeTextbox)
-                            UpperEdgeTextbox.Focus();
-                        else
-                            LowerEdgeTextbox.Focus();
+                    switch (currentMode)
+                    {
+                        case "CW":
+                            lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
+                            currentRefLevel = refLevelCW[bandIndex[currentMHz]];
+                            break;
+                        case "SSB":
+                            lowerEdgeSSB[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeSSB[bandIndex[currentMHz]] = upper_edge;
+                            currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                            break;
+                        default:
+                            lowerEdgeDigital[bandIndex[currentMHz]] = lower_edge;
+                            upperEdgeDigital[bandIndex[currentMHz]] = upper_edge;
+                            currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
+                            break;
+                    }
+                }));
+                RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
 
-                        try
-                        {
-                            lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
-                            upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
-                        }
-                        catch { };
+                Zoomed = false;
+                ZoomButton.Background = PassiveButtonColor;
+                BandModeButton.Background = ActiveButtonColor;
 
-                        switch (currentMode)
-                        {
-                            case "CW":
-                                lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
-                                upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
-                                break;
-                            case "Phone":
-                                lowerEdgePh[bandIndex[currentMHz]] = lower_edge;
-                                upperEdgePh[bandIndex[currentMHz]] = upper_edge;
-                                break;
-                            default:
-                                lowerEdgeDig[bandIndex[currentMHz]] = lower_edge;
-                                upperEdgeDig[bandIndex[currentMHz]] = upper_edge;
-                                break;
-                        }
-                    }));
-
-                    SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
-                }
+                SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
+                SetupRadio_Reflevel(currentRefLevel);
+            }
         }
 
         private void OnBandModeButton(object sender, RoutedEventArgs e)
@@ -282,8 +312,54 @@ namespace ICOMautomagic
             if (currentLowerEdge != 0)
             {
                 SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+
+                switch (currentMode)
+                {
+                    case "CW":
+                        currentRefLevel = refLevelCW[bandIndex[currentMHz]];
+                        break;
+                    case "SSB":
+                        currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                        break;
+                    default:
+                        currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
+                        break;
+                }
+
                 SetupRadio_Reflevel(currentRefLevel);
+                Zoomed = false;
+
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    if (RefLevelLabel != null)
+                    {
+                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                        RefLevelSlider.Value = currentRefLevel;
+                        ZoomButton.Background = PassiveButtonColor;
+                        BandModeButton.Background = ActiveButtonColor;
+                    }
+                }));
             }
+        }
+
+
+        private void OnClosing(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesCW = String.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsCW = String.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsCWZ = String.Join(";", refLevelCWZ.Select(i => i.ToString()).ToArray());
+
+            Properties.Settings.Default.LowerEdgesSSB = String.Join(";", lowerEdgeSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesSSB = String.Join(";", upperEdgeSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsSSB = String.Join(";", refLevelSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsSSBZ = String.Join(";", refLevelSSBZ.Select(i => i.ToString()).ToArray());
+
+            Properties.Settings.Default.LowerEdgesDigital = String.Join(";", lowerEdgeDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesDigital = String.Join(";", upperEdgeDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsDigital = String.Join(";", refLevelDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsDigitalZ = String.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
+
+            Properties.Settings.Default.Save();
         }
 
         private void OnZoomButton(object sender, RoutedEventArgs e)
@@ -291,11 +367,86 @@ namespace ICOMautomagic
             if (currentFrequency != 0)
             {
                 SetupRadio_Edges(currentFrequency - ZoomRange / 2, currentFrequency + ZoomRange / 2, RadioEdgeSet[currentMHz]);
-                SetupRadio_Reflevel(currentRefLevel + RefAdjust);
+
+                switch (currentMode)
+                {
+                    case "CW":
+                        currentRefLevel = refLevelCWZ[bandIndex[currentMHz]];
+                        break;
+                    case "SSB":
+                        currentRefLevel = refLevelSSBZ[bandIndex[currentMHz]];
+                        break;
+                    default:
+                        currentRefLevel = refLevelDigitalZ[bandIndex[currentMHz]];
+                        break;
+                }
+
+                SetupRadio_Reflevel(currentRefLevel);
+                Zoomed = true;
+
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    if (RefLevelLabel != null)
+                    {
+                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                        RefLevelSlider.Value = currentRefLevel;
+                        ZoomButton.Background = ActiveButtonColor;
+                        BandModeButton.Background = PassiveButtonColor;
+                    }
+                }));
+
             }
         }
 
-        private void SaveLocation(object sender, EventArgs e)
+        // On arrow key modification of slider
+        private void OnSliderKey(object sender, KeyEventArgs e)
+        {
+            UpdateSlider();
+        }
+
+        // On mouse modification of slider
+        private void OnSliderMouse(object sender, MouseButtonEventArgs e)
+        {
+            UpdateSlider();
+        }
+
+
+        void UpdateSlider()
+        {
+            currentRefLevel = (int)(RefLevelSlider.Value + 0.0f);
+            ;
+
+            switch (currentMode)
+            {
+                case "CW":
+                    if (Zoomed)
+                        refLevelCWZ[bandIndex[currentMHz]] = currentRefLevel;
+                    else
+                        refLevelCW[bandIndex[currentMHz]] = currentRefLevel;
+                    break;
+                case "SSB":
+                    if (Zoomed)
+                        refLevelSSBZ[bandIndex[currentMHz]] = currentRefLevel;
+                    else
+                        refLevelSSB[bandIndex[currentMHz]] = currentRefLevel;
+                    break;
+                default:
+                    if (Zoomed)
+                        refLevelDigitalZ[bandIndex[currentMHz]] = currentRefLevel;
+                    else
+                        refLevelDigital[bandIndex[currentMHz]] = currentRefLevel;
+                    break;
+            }
+
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                if (RefLevelLabel != null)
+                    RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+            }));
+
+            SetupRadio_Reflevel((int)currentRefLevel);
+        }
+
+        // On movement of window
+        private void OnLocationChange(object sender, EventArgs e)
         {
             // Remember window location 
             Properties.Settings.Default.Top = this.Top;
@@ -303,48 +454,7 @@ namespace ICOMautomagic
             Properties.Settings.Default.Save();
         }
 
-        private void SaveSettings(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesCW = String.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsCW = String.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
-
-            Properties.Settings.Default.LowerEdgesPh = String.Join(";", lowerEdgePh.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesPh = String.Join(";", upperEdgePh.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsPh = String.Join(";", refLevelPh.Select(i => i.ToString()).ToArray());
-
-            Properties.Settings.Default.LowerEdgesDig = String.Join(";", lowerEdgeDig.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesDig = String.Join(";", upperEdgeDig.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsDig = String.Join(";", refLevelDig.Select(i => i.ToString()).ToArray());
-
-            Properties.Settings.Default.Save();
-        }
-
-        void OnSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            currentRefLevel = (int)RefLevelSlider.Value;
-
-            switch (currentMode)
-            {
-                case "CW":
-                    refLevelCW[bandIndex[newMHz]] = currentRefLevel;
-                    break;
-                case "Phone":
-                    refLevelPh[bandIndex[newMHz]] = currentRefLevel;
-                    break;
-                default:
-                    refLevelDig[bandIndex[newMHz]] = currentRefLevel;
-                    break;
-            }
-
-            Application.Current.Dispatcher.Invoke(new Action(() =>
-            {
-                //RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
-            }));
-
-            SetupRadio_Reflevel((int)currentRefLevel);
-        }
-
+        // Update radio with new waterfall edges
         void SetupRadio_Edges(int lower_edge, int upper_edge, int ICOMedgeSegment)
         {
             byte[] CIVSetEdges = new byte[19]
@@ -370,17 +480,17 @@ namespace ICOMautomagic
 
             port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
             //System.Threading.Thread.Sleep(ResponseTime); // Wait
-            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
 
             port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
             //System.Threading.Thread.Sleep(ResponseTime); // Wait
             //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
 
             port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
-            System.Threading.Thread.Sleep(ResponseTime); // Wait
+            //System.Threading.Thread.Sleep(ResponseTime); // Wait
             //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
         }
 
+        // Update radio with new REF level
         void SetupRadio_Reflevel(int ref_level) 
         {
             int absRefLevel = (ref_level >= 0) ? ref_level : -ref_level;
@@ -393,6 +503,5 @@ namespace ICOMautomagic
             //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
 
         }
-
     }
 }

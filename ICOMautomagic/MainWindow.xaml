@@ -5,17 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ICOMautomagic"
         mc:Ignorable="d"
-        Title="ICOM Automagic" Height="106.905" Width="483.433" LocationChanged="SaveLocation" Closed="SaveSettings">
+        Title="ICOM Automagic" Height="106.905" Width="454.433" LocationChanged="OnLocationChange" Closed="OnClosing">
     <Grid>
-        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="198,6,0,0" VerticalAlignment="Top" Width="171" ValueChanged="OnSliderChanged" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" TickFrequency="5" Height="26"/>
-        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="20" Margin="65,40,0,0" Text="TextBox" VerticalAlignment="Top" Width="65" KeyDown="EdgeTextboxKeydown" MaxLines="1"/>
-        <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="20" Margin="198,40,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="65" KeyDown="EdgeTextboxKeydown"/>
-        <Label Content="Lower" HorizontalAlignment="Left" Margin="23,36,0,0" VerticalAlignment="Top" Height="28"/>
-        <Label Content="Upper" HorizontalAlignment="Left" Margin="150,36,0,0" VerticalAlignment="Top" Height="28"/>
-        <Label x:Name="BandModeLabel" Content="QRG: No data" HorizontalAlignment="Left" Margin="23,6,0,0" VerticalAlignment="Top" Width="146" Height="26"/>
-        <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="377,6,0,0" VerticalAlignment="Top" Width="70"/>
-        <Button x:Name="ResetButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="289,40,0,0" VerticalAlignment="Top" Width="75" Click="OnBandModeButton" Background="PowderBlue"/>
-        <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="377,40,0,0" VerticalAlignment="Top" Width="75" Click="OnZoomButton" Background="LightGreen" BorderBrush="#FF707070"/>
+        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" Width="188" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnSliderMouse" PreviewKeyUp="OnSliderKey" IsSnapToTickEnabled="True"/>
+        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="20" Margin="53,43,0,0" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown" MaxLines="1"/>
+        <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="20" Margin="181,43,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown"/>
+        <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,39,0,0" VerticalAlignment="Top" Height="28"/>
+        <Label Content="kHz   Upper:" HorizontalAlignment="Left" Margin="99,39,0,0" VerticalAlignment="Top" Height="28" Width="77"/>
+        <Label x:Name="BandModeLabel" Content="Band Mode?" HorizontalAlignment="Left" Margin="300,10,0,0" VerticalAlignment="Top" Width="104" Height="26"/>
+        <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="70"/>
+        <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="267,43,0,0" VerticalAlignment="Top" Width="75" Click="OnBandModeButton" Background="LightGray"/>
+        <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="355,43,0,0" VerticalAlignment="Top" Width="75" Click="OnZoomButton" BorderBrush="#FF707070" Background="LightGray"/>
+        <Label Content="kHz" HorizontalAlignment="Left" Margin="227,39,0,0" VerticalAlignment="Top" Height="28" Width="32"/>
 
     </Grid>
 </Window>
