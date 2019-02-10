@@ -80,6 +80,7 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
+        public readonly bool NoRadio = false;
         public const int ListenPort = 12060;
         public static byte TrxAddress = 0x98;
         public static int ZoomRange = 20; // Range of zoomed waterfall in kHz
@@ -141,23 +142,28 @@ namespace ICOMautomagic
             else
                 ComPort = Properties.Settings.Default.COMport;
 
-            port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
-
             ProgramWindow.Title = "ICOM Automatic (" + ComPort + ")";
 
-            try
+
+            if (!NoRadio)
             {
-                port.Open();
-            }
-            catch
-            {
-                MessageBoxResult result = MessageBox.Show("Could not open serial port " + ComPort, 
-                    "ICOM Automagic", MessageBoxButton.OK, MessageBoxImage.Question);
-                if (result == MessageBoxResult.OK)
+                port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
+
+                try
                 {
-                    Application.Current.Shutdown();
+                    port.Open();
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Could not open serial port " + ComPort,
+                        "ICOM Automagic", MessageBoxButton.OK, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        Application.Current.Shutdown();
+                    }
                 }
             }
+
 
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
@@ -508,16 +514,19 @@ namespace ICOMautomagic
 
             //DisplayWaterfallEdges.Content = lower_edge.ToString("N0") + " - " + upper_edge.ToString("N0") + "kHz";
 
-            port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
-            //System.Threading.Thread.Sleep(ResponseTime); // Wait
+            if (!NoRadio)
+            {
+                port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
+                //System.Threading.Thread.Sleep(ResponseTime); // Wait
 
-            port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
-            //System.Threading.Thread.Sleep(ResponseTime); // Wait
-            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+                port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
+                //System.Threading.Thread.Sleep(ResponseTime); // Wait
+                //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
 
-            port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
-            //System.Threading.Thread.Sleep(ResponseTime); // Wait
-            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+                port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
+                //System.Threading.Thread.Sleep(ResponseTime); // Wait
+                //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
+            }
         }
 
         // Update radio with new REF level
@@ -528,7 +537,8 @@ namespace ICOMautomagic
             CIVSetRefLevel[7] = (byte)((absRefLevel / 10) * 16 + absRefLevel % 10);
             CIVSetRefLevel[9] = (ref_level >= 0) ? (byte)0 : (byte)1;
             
-            port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
+            if (!NoRadio)
+                port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
             //System.Threading.Thread.Sleep(ResponseTime); // Wait
             //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
 
