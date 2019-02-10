@@ -49,7 +49,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM2")]
         public string COMport {
             get {
                 return ((string)(this["COMport"]));

@@ -81,12 +81,13 @@ namespace ICOMautomagic
     public partial class MainWindow : Window
     {
         public const int ListenPort = 12060;
-        public static string ComPort = "COM2";
         public static byte TrxAddress = 0x98;
         public static int ZoomRange = 20; // Range of zoomed waterfall in kHz
         public static byte EdgeSet = 0x03; // which scope edge should be manipulated
         public static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
         public static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
+        public static string BandModeLabelFormat = "{0,-4}{1,5}";
+        public static string RefLabelFormat = "Ref: {0:+#;-#;0}dB";
 
         //public static byte ResponseTime = 100; // Milliseconds to wait before reading response from radio
         //public static byte[] ReadBuffer = new byte[100]; // Dummy read buffer. Much larger than needed.
@@ -122,14 +123,27 @@ namespace ICOMautomagic
         int[] lowerEdgeDigital = new int[52]; int[] upperEdgeDigital = new int[52]; int[] refLevelDigital = new int[52]; int[] refLevelDigitalZ = new int[52];
 
         public int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
-        public string currentMode = "", newMode = "";
+        public string currentMode = "", newMode = "", ComPort;
         public bool Zoomed = false;
 
-        SerialPort port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
+        public SerialPort port; 
 
         public MainWindow()
         {
             string message;
+            String[] commandLineArguments = Environment.GetCommandLineArgs();
+
+            InitializeComponent();
+
+            // If there is a command line argument, take it as the COM port 
+            if (commandLineArguments.Length > 1)
+                ComPort = commandLineArguments[1].ToUpper();
+            else
+                ComPort = Properties.Settings.Default.COMport;
+
+            port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
+
+            ProgramWindow.Title = "ICOM Automatic (" + ComPort + ")";
 
             try
             {
@@ -164,7 +178,6 @@ namespace ICOMautomagic
             upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
             refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
-            InitializeComponent();
 
             ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
             BandModeButton.Background = PassiveButtonColor;
@@ -229,16 +242,19 @@ namespace ICOMautomagic
 
                                     Application.Current.Dispatcher.Invoke(new Action(() =>
                                     {
-                                        BandModeLabel.Content = string.Format("{0,-4}{1,5}", bandName[newMHz], newMode);
-                                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                                        BandModeLabel.Content = string.Format(BandModeLabelFormat, bandName[newMHz], newMode);
+                                        RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
 
+                                        // Highlight band-mode button
                                         ZoomButton.Background = PassiveButtonColor;
                                         BandModeButton.Background = ActiveButtonColor;
 
+                                        // Update displayed information
                                         LowerEdgeTextbox.Text = currentLowerEdge.ToString();
                                         UpperEdgeTextbox.Text = currentUpperEdge.ToString();
                                         RefLevelSlider.Value = currentRefLevel;
 
+                                        // Update waterfall edges and ref level in radio
                                         SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[newMHz]);
                                         SetupRadio_Reflevel(currentRefLevel);
 
@@ -254,6 +270,7 @@ namespace ICOMautomagic
             });
         }
 
+        // On hitting a key in upper and lower edge text boxes
         private void OnEdgeTextboxKeydown(object sender, KeyEventArgs e)
         {
             int lower_edge = 0, upper_edge = 0;
@@ -262,6 +279,7 @@ namespace ICOMautomagic
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
+                    // Toggle focus betwen the two entry text boxes
                     if (sender == LowerEdgeTextbox)
                         UpperEdgeTextbox.Focus();
                     else
@@ -296,7 +314,7 @@ namespace ICOMautomagic
                             break;
                     }
                 }));
-                RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
 
                 Zoomed = false;
                 ZoomButton.Background = PassiveButtonColor;
@@ -307,9 +325,10 @@ namespace ICOMautomagic
             }
         }
 
+        // On band-mode button clicked
         private void OnBandModeButton(object sender, RoutedEventArgs e)
         {
-            if (currentLowerEdge != 0)
+            if (currentLowerEdge != 0) // Do nothing if we have not yet received radioInfo
             {
                 SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
 
@@ -332,8 +351,10 @@ namespace ICOMautomagic
                 Application.Current.Dispatcher.Invoke(new Action(() => {
                     if (RefLevelLabel != null)
                     {
-                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                        RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
                         RefLevelSlider.Value = currentRefLevel;
+                        LowerEdgeTextbox.Text = currentLowerEdge.ToString();
+                        UpperEdgeTextbox.Text = currentUpperEdge.ToString();
                         ZoomButton.Background = PassiveButtonColor;
                         BandModeButton.Background = ActiveButtonColor;
                     }
@@ -341,7 +362,7 @@ namespace ICOMautomagic
             }
         }
 
-
+        // Save all settings when closing program
         private void OnClosing(object sender, EventArgs e)
         {
             Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
@@ -359,14 +380,21 @@ namespace ICOMautomagic
             Properties.Settings.Default.RefLevelsDigital = String.Join(";", refLevelDigital.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsDigitalZ = String.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
 
+            Properties.Settings.Default.COMport = ComPort;
+
             Properties.Settings.Default.Save();
         }
 
         private void OnZoomButton(object sender, RoutedEventArgs e)
         {
+            int loweredge, upperedge;
+
             if (currentFrequency != 0)
             {
-                SetupRadio_Edges(currentFrequency - ZoomRange / 2, currentFrequency + ZoomRange / 2, RadioEdgeSet[currentMHz]);
+                loweredge = currentFrequency - ZoomRange / 2;
+                upperedge = loweredge + ZoomRange;
+
+                SetupRadio_Edges(loweredge, upperedge, RadioEdgeSet[currentMHz]);
 
                 switch (currentMode)
                 {
@@ -387,8 +415,10 @@ namespace ICOMautomagic
                 Application.Current.Dispatcher.Invoke(new Action(() => {
                     if (RefLevelLabel != null)
                     {
-                        RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                        RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
                         RefLevelSlider.Value = currentRefLevel;
+                        LowerEdgeTextbox.Text = loweredge.ToString();
+                        UpperEdgeTextbox.Text = upperedge.ToString();
                         ZoomButton.Background = ActiveButtonColor;
                         BandModeButton.Background = PassiveButtonColor;
                     }
@@ -408,7 +438,6 @@ namespace ICOMautomagic
         {
             UpdateSlider();
         }
-
 
         void UpdateSlider()
         {
@@ -439,7 +468,7 @@ namespace ICOMautomagic
 
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 if (RefLevelLabel != null)
-                    RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", currentRefLevel);
+                    RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
             }));
 
             SetupRadio_Reflevel((int)currentRefLevel);

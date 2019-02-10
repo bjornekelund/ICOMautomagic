@@ -1,4 +1,4 @@
-﻿<Window x:Class="ICOMautomagic.MainWindow"
+﻿<Window x:Name="ProgramWindow" x:Class="ICOMautomagic.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,7 +12,7 @@
         <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="20" Margin="181,43,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown"/>
         <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,39,0,0" VerticalAlignment="Top" Height="28"/>
         <Label Content="kHz   Upper:" HorizontalAlignment="Left" Margin="99,39,0,0" VerticalAlignment="Top" Height="28" Width="77"/>
-        <Label x:Name="BandModeLabel" Content="Band Mode?" HorizontalAlignment="Left" Margin="300,10,0,0" VerticalAlignment="Top" Width="104" Height="26"/>
+        <Label x:Name="BandModeLabel" Content="Band Mode?" HorizontalAlignment="Left" Margin="300,10,0,0" VerticalAlignment="Top" Width="104" Height="26" FontWeight="Bold" FontSize="14"/>
         <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="70"/>
         <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="267,43,0,0" VerticalAlignment="Top" Width="75" Click="OnBandModeButton" Background="LightGray"/>
         <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="355,43,0,0" VerticalAlignment="Top" Width="75" Click="OnZoomButton" BorderBrush="#FF707070" Background="LightGray"/>

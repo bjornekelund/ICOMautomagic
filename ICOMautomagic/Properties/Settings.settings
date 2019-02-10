@@ -9,7 +9,7 @@
       <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="COMport" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM3</Value>
+      <Value Profile="(Default)">COM2</Value>
     </Setting>
     <Setting Name="LowerEdgesCW" Type="System.String" Scope="User">
       <Value Profile="(Default)">1810;3500;5352;7000;10100;14000;18068;21000;24890;28000;50000</Value>
