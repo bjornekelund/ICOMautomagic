@@ -219,6 +219,7 @@ namespace ICOMautomagic
                                         break;
                                 }
 
+                                // Only update radio when mode or band changes to not override manual changes
                                 if ((newMHz != currentMHz) || (newMode != currentMode))
                                 {
                                     switch (newMode)
