@@ -80,18 +80,15 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
-        public readonly bool NoRadio = false;
-        public const int ListenPort = 12060;
-        public static byte TrxAddress = 0x98;
+        public readonly bool NoRadio = false; // For debugging with no radio attached
+        public const int ListenPort = 12060; // UDP broadcast port
+        public static byte TrxAddress = 0x98; // Address of IC-7610
         public static int ZoomRange = 20; // Range of zoomed waterfall in kHz
         public static byte EdgeSet = 0x03; // which scope edge should be manipulated
         public static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
         public static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
         public static string BandModeLabelFormat = "{0,-4}{1,5}";
         public static string RefLabelFormat = "Ref: {0:+#;-#;0}dB";
-
-        //public static byte ResponseTime = 100; // Milliseconds to wait before reading response from radio
-        //public static byte[] ReadBuffer = new byte[100]; // Dummy read buffer. Much larger than needed.
 
         // Pre-baked CI-V commands
         public static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
@@ -115,7 +112,7 @@ namespace ICOMautomagic
         { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 11,
             11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
-        // Waterfall edges and per mode/band segment ref levels 
+        // Per mode/band waterfall edges and ref levels. Also one zoomed ref level per band.
         // _scopedge[Radionumber-1, i, modeindex, lower/upper/ref level]
         // converted at initialization to ScopeEdge[Radionumber-1, megaHertz, modeindex, lower/upper/ref level]
         // Mode is CW, Digital, Phone, Band = 0, 1, 2, 3
@@ -123,10 +120,10 @@ namespace ICOMautomagic
         int[] lowerEdgeSSB = new int[52]; int[] upperEdgeSSB = new int[52]; int[] refLevelSSB = new int[52]; int[] refLevelSSBZ = new int[52];
         int[] lowerEdgeDigital = new int[52]; int[] upperEdgeDigital = new int[52]; int[] refLevelDigital = new int[52]; int[] refLevelDigitalZ = new int[52];
 
+        // Global variables
         public int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
         public string currentMode = "", newMode = "", ComPort;
         public bool Zoomed = false;
-
         public SerialPort port; 
 
         public MainWindow()
@@ -143,7 +140,6 @@ namespace ICOMautomagic
                 ComPort = Properties.Settings.Default.COMport;
 
             ProgramWindow.Title = "ICOM Automatic (" + ComPort + ")";
-
 
             if (!NoRadio)
             {
@@ -164,7 +160,6 @@ namespace ICOMautomagic
                 }
             }
 
-
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
             this.Left = Properties.Settings.Default.Left;
@@ -183,7 +178,6 @@ namespace ICOMautomagic
             lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
             refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
-
 
             ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
             BandModeButton.Background = PassiveButtonColor;
@@ -300,7 +294,7 @@ namespace ICOMautomagic
                     catch
                     {
                         return;
-                    };
+                    }
 
                     switch (currentMode)
                     {
@@ -512,20 +506,11 @@ namespace ICOMautomagic
                 0xFD
             };
 
-            //DisplayWaterfallEdges.Content = lower_edge.ToString("N0") + " - " + upper_edge.ToString("N0") + "kHz";
-
             if (!NoRadio)
             {
                 port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
-                //System.Threading.Thread.Sleep(ResponseTime); // Wait
-
                 port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
-                //System.Threading.Thread.Sleep(ResponseTime); // Wait
-                //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
-
                 port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
-                //System.Threading.Thread.Sleep(ResponseTime); // Wait
-                //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
             }
         }
 
@@ -539,9 +524,6 @@ namespace ICOMautomagic
             
             if (!NoRadio)
                 port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
-            //System.Threading.Thread.Sleep(ResponseTime); // Wait
-            //port.Read(ReadBuffer, 0, port.BytesToRead); // Flush response including echo
-
         }
     }
 }
