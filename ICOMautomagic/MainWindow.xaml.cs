@@ -80,7 +80,7 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
-        public readonly bool NoRadio = false; // For debugging with no radio attached
+        public readonly bool NoRadio = true; // For debugging with no radio attached
         public const int ListenPort = 12060; // UDP broadcast port
         public static byte TrxAddress = 0x98; // Address of IC-7610
         public static int ZoomRange = 20; // Range of zoomed waterfall in kHz
@@ -139,10 +139,10 @@ namespace ICOMautomagic
             else
                 ComPort = Properties.Settings.Default.COMport;
 
-            ProgramWindow.Title = "ICOM Automatic (" + ComPort + ")";
 
             if (!NoRadio)
             {
+                ProgramWindow.Title = "ICOM Automagic (" + ComPort + ")";
                 port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
 
                 try
@@ -159,6 +159,8 @@ namespace ICOMautomagic
                     }
                 }
             }
+            else
+                ProgramWindow.Title = "ICOM Automagic (No radio)";
 
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
