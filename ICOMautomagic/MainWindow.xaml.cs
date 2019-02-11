@@ -157,8 +157,6 @@ namespace ICOMautomagic
                     }
                 }
             }
-            else
-                ProgramWindow.Title = "ICOM Automagic (No Radio)";
 
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
