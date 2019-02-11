@@ -80,23 +80,21 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
-        public readonly bool NoRadio = true; // For debugging with no radio attached
-        public const int ListenPort = 12060; // UDP broadcast port
-        public static byte TrxAddress = 0x98; // Address of IC-7610
-        public static int ZoomRange = 20; // Range of zoomed waterfall in kHz
-        public static byte EdgeSet = 0x03; // which scope edge should be manipulated
-        public static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
-        public static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
-        public static string BandModeLabelFormat = "{0,-4}{1,5}";
-        public static string RefLabelFormat = "Ref: {0:+#;-#;0}dB";
+        const bool NoRadio = true; // For debugging with no radio attached
+        const int ListenPort = 12060; // UDP broadcast port
+        const byte TrxAddress = 0x98; // Address of IC-7610
+        const int ZoomRange = 20; // Range of zoomed waterfall in kHz
+        const byte EdgeSet = 0x03; // which scope edge should be manipulated
+        static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
+        static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
 
         // Pre-baked CI-V commands
-        public static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
-        public static byte[] CIVSetEdgeSet = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x16, 0x0, EdgeSet, 0xFD };
-        public static byte[] CIVSetRefLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xFD };
+        static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
+        static byte[] CIVSetEdgeSet = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x16, 0x0, EdgeSet, 0xFD };
+        static byte[] CIVSetRefLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xFD };
 
         // Maps MHz to band name
-        public static string[] bandName = new string[52] 
+        static string[] bandName = new string[52] 
         { "?m", "160m", "?m", "80m", "?m", "60m", "?m", "40m", "?m", "?m", "30m", "?m", "?m",
             "?m", "20m", "?m", "?m", "?m", "17m", "?m", "?m", "15m", "?m", "?m", "12m", "?m",
             "?m", "?m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
@@ -121,10 +119,10 @@ namespace ICOMautomagic
         int[] lowerEdgeDigital = new int[52]; int[] upperEdgeDigital = new int[52]; int[] refLevelDigital = new int[52]; int[] refLevelDigitalZ = new int[52];
 
         // Global variables
-        public int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
-        public string currentMode = "", newMode = "", ComPort;
-        public bool Zoomed = false, RadioInfoReceived = false;
-        public SerialPort port; 
+        int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
+        string currentMode = "", newMode = "", ComPort;
+        bool Zoomed, RadioInfoReceived;
+        SerialPort port; 
 
         public MainWindow()
         {
@@ -185,8 +183,10 @@ namespace ICOMautomagic
             ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
 
             // Set Band-mode button active, Zoom button inactive
+            Zoomed = false;
             BandModeButton.Background = PassiveButtonColor;
             ZoomButton.Background = PassiveButtonColor;
+            RadioInfoReceived = false; // To disable functions until we have info from radio
 
             Task.Run(async () =>
             {
@@ -194,14 +194,14 @@ namespace ICOMautomagic
                 {
                     while (true)
                     {
-                        //IPEndPoint object will allow us to read datagrams sent from any source.
+                        //Wait for UDP packets to arrive 
                         var receivedResults = await udpClient.ReceiveAsync();
                         message = Encoding.ASCII.GetString(receivedResults.Buffer);
-
                         XDocument doc = XDocument.Parse(message);
 
-                        if (doc.Element("RadioInfo") != null)
+                        if (doc.Element("RadioInfo") != null) // If it is a RadioInfo datagram
                         {
+                            // Parse XML into object radioInfo
                             RadioInfo radioInfo = new RadioInfo();
                             radioInfo = XmlConvert.DeserializeObject<RadioInfo>(message);
 
@@ -225,7 +225,7 @@ namespace ICOMautomagic
                                         break;
                                 }
 
-                                // Only update radio when mode or band changes to not override manual changes
+                                // Only auto update radio when mode or band changes to not override manual changes
                                 if ((newMHz != currentMHz) || (newMode != currentMode))
                                 {
                                     currentMHz = newMHz;
@@ -250,28 +250,23 @@ namespace ICOMautomagic
                                             break;
                                     }
 
+                                    // Necessary to get access to UI from task thread
                                     Application.Current.Dispatcher.Invoke(new Action(() =>
                                     {
-
                                         // Highlight band-mode button and exit Zoomed mode if active
+                                        Zoomed = false;
                                         ZoomButton.Background = PassiveButtonColor;
                                         BandModeButton.Background = ActiveButtonColor;
-                                        Zoomed = false;
+                                        // Allow entry in edge text boxes 
                                         LowerEdgeTextbox.IsEnabled = true;
                                         UpperEdgeTextbox.IsEnabled = true;
 
-                                        // Update waterfall edges and ref level in radio
-                                        // Also update UI 
-                                        SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
-                                        LowerEdgeTextbox.Text = currentLowerEdge.ToString();
-                                        UpperEdgeTextbox.Text = currentUpperEdge.ToString();
-
-                                        SetupRadio_Reflevel(currentRefLevel);
-                                        RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
-                                        RefLevelSlider.Value = currentRefLevel;
+                                        // Update UI and waterfall edges and ref level in radio 
+                                        UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                                        UpdateRadioReflevel(currentRefLevel);
 
                                         // Update band/mode display in UI
-                                        BandModeLabel.Content = string.Format(BandModeLabelFormat, bandName[newMHz], newMode);
+                                        BandModeLabel.Content = string.Format("{0} {1}", bandName[newMHz], newMode);
                                     }));
                                 }
                             }
@@ -284,60 +279,55 @@ namespace ICOMautomagic
         // On hitting a key in upper and lower edge text boxes
         private void OnEdgeTextboxKeydown(object sender, KeyEventArgs e)
         {
-            int lower_edge = 0, upper_edge = 0;
+            int lower, upper;
 
             if (!RadioInfoReceived) // Do nothing before we know the radio's frequency
                 return;
 
-            if (e.Key == Key.Return)
+            if (e.Key == Key.Return) // Only parse input when ENTER is hit 
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+
+                try // Parse and ignore input if there are parsing errors
                 {
-                    // Toggle focus betwen the two entry text boxes
-                    if (sender == LowerEdgeTextbox)
-                        UpperEdgeTextbox.Focus();
-                    else
-                        LowerEdgeTextbox.Focus();
+                    lower = Int32.Parse(LowerEdgeTextbox.Text);
+                    upper = Int32.Parse(UpperEdgeTextbox.Text);
+                }
+                catch
+                {
+                    return; // Ignore input if parsing failed
+                }
 
-                    try // Parse and ignore input if there are parsing errors
-                    {
-                        lower_edge = Int32.Parse(LowerEdgeTextbox.Text);
-                        upper_edge = Int32.Parse(UpperEdgeTextbox.Text);
-                    }
-                    catch
-                    {
-                        return;
-                    }
+                // We have a successful parse, assign values
+                currentLowerEdge = lower;
+                currentUpperEdge = upper;
 
-                    switch (currentMode)
-                    {
-                        case "CW":
-                            lowerEdgeCW[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeCW[bandIndex[currentMHz]] = upper_edge;
-                            currentRefLevel = refLevelCW[bandIndex[currentMHz]];
-                            break;
-                        case "SSB":
-                            lowerEdgeSSB[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeSSB[bandIndex[currentMHz]] = upper_edge;
-                            currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
-                            break;
-                        default:
-                            lowerEdgeDigital[bandIndex[currentMHz]] = lower_edge;
-                            upperEdgeDigital[bandIndex[currentMHz]] = upper_edge;
-                            currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
-                            break;
-                    }
-                }));
+                switch (currentMode)
+                {
+                    case "CW":
+                        lowerEdgeCW[bandIndex[currentMHz]] = currentLowerEdge;
+                        upperEdgeCW[bandIndex[currentMHz]] = currentUpperEdge;
+                        currentRefLevel = refLevelCW[bandIndex[currentMHz]];
+                        break;
+                    case "SSB":
+                        lowerEdgeSSB[bandIndex[currentMHz]] = currentLowerEdge;
+                        upperEdgeSSB[bandIndex[currentMHz]] = currentUpperEdge;
+                        currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                        break;
+                    default:
+                        lowerEdgeDigital[bandIndex[currentMHz]] = currentLowerEdge;
+                        upperEdgeDigital[bandIndex[currentMHz]] = currentUpperEdge;
+                        currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
+                        break;
+                }
 
-                // Make band-mode button active and exit Zooomed mode if active
-                ZoomButton.Background = PassiveButtonColor;
-                BandModeButton.Background = ActiveButtonColor;
-                Zoomed = false;
+                UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                UpdateRadioReflevel(currentRefLevel);
 
-                SetupRadio_Edges(lower_edge, upper_edge, RadioEdgeSet[currentMHz]);
-
-                SetupRadio_Reflevel(currentRefLevel);
-                RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
+                // Toggle focus betwen the two entry text boxes
+                if (sender == LowerEdgeTextbox)
+                    UpperEdgeTextbox.Focus();
+                else
+                    LowerEdgeTextbox.Focus();
             }
         }
 
@@ -347,45 +337,42 @@ namespace ICOMautomagic
             if (!RadioInfoReceived) // Do nothing if we have not yet received radioInfo
                 return;
 
-            SetupRadio_Edges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
 
             switch (currentMode)
             {
                 case "CW":
+                    currentLowerEdge = lowerEdgeCW[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgeCW[bandIndex[currentMHz]];
                     currentRefLevel = refLevelCW[bandIndex[currentMHz]];
                     break;
                 case "SSB":
+                    currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
                     currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
                     break;
                 default:
+                    currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgeDigital[bandIndex[currentMHz]];
                     currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
                     break;
             }
 
-            SetupRadio_Reflevel(currentRefLevel);
+            UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+
+            UpdateRadioReflevel(currentRefLevel);
             Zoomed = false;
             LowerEdgeTextbox.IsEnabled = true;
             UpperEdgeTextbox.IsEnabled = true;
 
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                if (RefLevelLabel != null)
-                {
-                    RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
-                    RefLevelSlider.Value = currentRefLevel;
-
-                    LowerEdgeTextbox.Text = currentLowerEdge.ToString();
-                    UpperEdgeTextbox.Text = currentUpperEdge.ToString();
-
-                    ZoomButton.Background = PassiveButtonColor;
-                    BandModeButton.Background = ActiveButtonColor;
-                }
-            }));
-
+            ZoomButton.Background = PassiveButtonColor;
+            BandModeButton.Background = ActiveButtonColor;
         }
 
         // Save all settings when closing program
         private void OnClosing(object sender, EventArgs e)
         {
+            // Ugly but because WPF Settings can not store arrays. 
+            // Each array is turned into a formatted string that can be read back using Parse()
             Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.UpperEdgesCW = String.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsCW = String.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
@@ -408,14 +395,10 @@ namespace ICOMautomagic
 
         private void OnZoomButton(object sender, RoutedEventArgs e)
         {
-            int loweredge, upperedge;
-
             if (RadioInfoReceived)
             {
-                loweredge = currentFrequency - ZoomRange / 2;
-                upperedge = loweredge + ZoomRange;
-
-                SetupRadio_Edges(loweredge, upperedge, RadioEdgeSet[currentMHz]);
+                currentLowerEdge = currentFrequency - ZoomRange / 2;
+                currentUpperEdge= currentLowerEdge + ZoomRange;
 
                 switch (currentMode)
                 {
@@ -430,23 +413,18 @@ namespace ICOMautomagic
                         break;
                 }
 
-                SetupRadio_Reflevel(currentRefLevel);
+                // Set zoomed mode and color buttons accordingly
                 Zoomed = true;
+                ZoomButton.Background = ActiveButtonColor;
+                BandModeButton.Background = PassiveButtonColor;
+
+                // Disable text boxes for entry in Zoomed mode
                 LowerEdgeTextbox.IsEnabled = false;
                 UpperEdgeTextbox.IsEnabled = false;
 
-                Application.Current.Dispatcher.Invoke(new Action(() => {
-                    if (RefLevelLabel != null)
-                    {
-                        RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
-                        RefLevelSlider.Value = currentRefLevel;
-                        LowerEdgeTextbox.Text = loweredge.ToString();
-                        UpperEdgeTextbox.Text = upperedge.ToString();
-                        ZoomButton.Background = ActiveButtonColor;
-                        BandModeButton.Background = PassiveButtonColor;
-                    }
-                }));
-
+                // Update radio and and UI 
+                UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                UpdateRadioReflevel(currentRefLevel);
             }
         }
 
@@ -465,7 +443,6 @@ namespace ICOMautomagic
         void UpdateSlider()
         {
             currentRefLevel = (int)(RefLevelSlider.Value + 0.0f);
-            ;
 
             switch (currentMode)
             {
@@ -489,16 +466,10 @@ namespace ICOMautomagic
                     break;
             }
 
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // only update label if Window has been initialized
-                if (RefLevelLabel != null)
-                    RefLevelLabel.Content = string.Format(RefLabelFormat, currentRefLevel);
-            }));
-
-            SetupRadio_Reflevel((int)currentRefLevel);
+            UpdateRadioReflevel((int)currentRefLevel);
         }
 
-        // Save location of Window whenever it is moved 
+        // Remember app Window location whenever it is moved 
         private void OnLocationChange(object sender, EventArgs e)
         {
             // Remember window location 
@@ -508,7 +479,7 @@ namespace ICOMautomagic
         }
 
         // Update radio with new waterfall edges
-        void SetupRadio_Edges(int lower_edge, int upper_edge, int ICOMedgeSegment)
+        void UpdateRadioEdges(int lower_edge, int upper_edge, int ICOMedgeSegment)
         {
             byte[] CIVSetEdges = new byte[19]
             {
@@ -529,6 +500,14 @@ namespace ICOMautomagic
                 0xFD
             };
 
+            // Update UI if present
+            if (LowerEdgeTextbox != null)
+            {
+                LowerEdgeTextbox.Text = lower_edge.ToString();
+                UpperEdgeTextbox.Text = upper_edge.ToString();
+            }
+
+            // Update radio if present
             if (!NoRadio)
             {
                 port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
@@ -538,13 +517,21 @@ namespace ICOMautomagic
         }
 
         // Update radio with new REF level
-        void SetupRadio_Reflevel(int ref_level) 
+        void UpdateRadioReflevel(int ref_level) 
         {
             int absRefLevel = (ref_level >= 0) ? ref_level : -ref_level;
 
             CIVSetRefLevel[7] = (byte)((absRefLevel / 10) * 16 + absRefLevel % 10);
             CIVSetRefLevel[9] = (ref_level >= 0) ? (byte)0 : (byte)1;
-            
+
+            // Update UI if present
+            if (RefLevelLabel != null)
+            {
+                RefLevelSlider.Value = ref_level;
+                RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", ref_level);
+            }
+
+            // Update radio if present
             if (!NoRadio)
                 port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
         }
