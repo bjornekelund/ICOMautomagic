@@ -80,7 +80,7 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
-        const bool NoRadio = true; // For debugging with no radio attached
+        const bool NoRadio = false; // For debugging with no radio attached
         const int ListenPort = 12060; // UDP broadcast port
         const byte TrxAddress = 0x98; // Address of IC-7610
         const int ZoomRange = 20; // Range of zoomed waterfall in kHz
@@ -158,7 +158,7 @@ namespace ICOMautomagic
                 }
             }
             else
-                ProgramWindow.Title = "ICOM Automagic (No radio)";
+                ProgramWindow.Title = "ICOM Automagic (No Radio)";
 
             // Fetch window location from saved settings
             this.Top = Properties.Settings.Default.Top;
