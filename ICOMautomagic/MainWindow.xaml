@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ICOM Automagic (No radio)" Height="106.905" Width="454.433" LocationChanged="OnLocationChange" Closed="OnClosing">
     <Grid>
-        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="85,8,0,0" VerticalAlignment="Top" Width="188" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnSliderMouse" PreviewKeyUp="OnSliderKey" IsSnapToTickEnabled="True"/>
+        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="85,8,0,0" VerticalAlignment="Top" Width="117" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnSliderMouse" PreviewKeyUp="OnSliderKey" IsSnapToTickEnabled="True"/>
         <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="21" Margin="53,41,0,0" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown" MaxLines="1"/>
         <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="21" Margin="181,41,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown"/>
         <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,37,0,0" VerticalAlignment="Top" Height="28"/>
