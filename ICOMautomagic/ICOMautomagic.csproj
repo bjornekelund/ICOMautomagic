@@ -55,7 +55,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>iconfinder_r2d2_star_wars_droid_robot_3186863_lc1_icon.ico</ApplicationIcon>
+    <ApplicationIcon>roboticon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -120,6 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="iconfinder_r2d2_star_wars_droid_robot_3186863_lc1_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="roboticon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
