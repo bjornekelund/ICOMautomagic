@@ -80,7 +80,7 @@ namespace ICOMautomagic
 
     public partial class MainWindow : Window
     {
-        const bool NoRadio = false; // For debugging with no radio attached
+        readonly bool NoRadio = true; // For debugging with no radio attached
         const int ListenPort = 12060; // UDP broadcast port
         const byte TrxAddress = 0x98; // Address of IC-7610
         const int ZoomRange = 20; // Range of zoomed waterfall in kHz
@@ -102,8 +102,8 @@ namespace ICOMautomagic
 
         // Maps MHz to internal band index
         public static int[] bandIndex = new int[52] 
-        { 0, 0, 0, 1, 0, 2, 0, 3, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 6, 0, 0, 7, 0, 0, 8, 0,
-            0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10 };
+        { 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8,
+            8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 
         // Maps actual MHz to radio's scope edge set on ICOM 7800, 785x, 7300 and 7610
         int[] RadioEdgeSet = new int[]
@@ -111,12 +111,10 @@ namespace ICOMautomagic
             11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
         // Per mode/band waterfall edges and ref levels. Also one zoomed ref level per band.
-        // _scopedge[Radionumber-1, i, modeindex, lower/upper/ref level]
-        // converted at initialization to ScopeEdge[Radionumber-1, megaHertz, modeindex, lower/upper/ref level]
-        // Mode is CW, Digital, Phone, Band = 0, 1, 2, 3
-        int[] lowerEdgeCW = new int[52]; int[] upperEdgeCW = new int[52]; int[] refLevelCW = new int[52]; int[] refLevelCWZ = new int[52];
-        int[] lowerEdgeSSB = new int[52]; int[] upperEdgeSSB = new int[52]; int[] refLevelSSB = new int[52]; int[] refLevelSSBZ = new int[52];
-        int[] lowerEdgeDigital = new int[52]; int[] upperEdgeDigital = new int[52]; int[] refLevelDigital = new int[52]; int[] refLevelDigitalZ = new int[52];
+        int[] lowerEdgeCW = new int[11]; int[] upperEdgeCW = new int[11]; int[] refLevelCW = new int[11]; int[] refLevelCWZ = new int[11];
+        int[] lowerEdgeSSB = new int[11]; int[] upperEdgeSSB = new int[11]; int[] refLevelSSB = new int[11]; int[] refLevelSSBZ = new int[11];
+        int[] lowerEdgeDigital = new int[11]; int[] upperEdgeDigital = new int[11]; int[] refLevelDigital = new int[11]; int[] refLevelDigitalZ = new int[11];
+        int[] pwrLevel = new int[11];
 
         // Global variables
         int currentLowerEdge, currentUpperEdge, currentRefLevel, currentFrequency = 0, newMHz, currentMHz = 0;
@@ -176,6 +174,8 @@ namespace ICOMautomagic
             lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
             refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
+
+            pwrLevel = Properties.Settings.Default.PwrLevels.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
             // Set Zoom button text based on value of ZoomRange
             ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
@@ -385,6 +385,8 @@ namespace ICOMautomagic
             Properties.Settings.Default.UpperEdgesDigital = String.Join(";", upperEdgeDigital.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsDigital = String.Join(";", refLevelDigital.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsDigitalZ = String.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
+
+            Properties.Settings.Default.PwrLevels = String.Join(";", pwrLevel.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.COMport = ComPort;
 

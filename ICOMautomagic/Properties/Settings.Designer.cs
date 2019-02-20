@@ -202,5 +202,17 @@ namespace ICOMautomagic.Properties {
                 this["RefLevelsSSBZ"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
+        public string PwrLevels {
+            get {
+                return ((string)(this["PwrLevels"]));
+            }
+            set {
+                this["PwrLevels"] = value;
+            }
+        }
     }
 }

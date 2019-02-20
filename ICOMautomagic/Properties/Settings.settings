@@ -47,5 +47,8 @@
     <Setting Name="RefLevelsSSBZ" Type="System.String" Scope="User">
       <Value Profile="(Default)">-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3</Value>
     </Setting>
+    <Setting Name="PwrLevels" Type="System.String" Scope="User">
+      <Value Profile="(Default)">23;23;23;23;23;23;23;23;23;23;23</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
