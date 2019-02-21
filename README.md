@@ -1,13 +1,8 @@
 # ICOMautomagic
-A small WPF app that listens to the UDP broadcast from N1MM Logger+ 
-and updates the waterfall/spectrum edges and corresponding reference 
-level based on this on an IC-7610 (likely also other waterfall-capable 
-ICOM but this is not verified.) Accepts and remembers changes to the 
-settings, also between uses. 
-Has both a "normal" mode where the settings are based on band and mode 
-and a "zoomed" setting where the frequency range is fixed and centered 
-around the current operating frequency. Only considers radio #1. 
-Typically connects to the "remote" CI-V port of the radio while the 
-logger is connected to the USB CI-V port. 
-Accepts a command line argument for the used port (e.g. "COM3") 
-and remembers this between runs. 
+A Windows application with small screen footprint that use the radio information broadcast over UDP from [N1MM Logger+](www.n1mm.com) and updates a waterfall/spectrum display capable ICOM radio at band or mode changes, based on this. (e.g. IC-7300, IC-7610, and IC-7850/51). 
+
+It sets waterfall/spectrum edges, display reference level, and output power based on used frequency band and operating mode, also offering a zoom mode with a 20kHz (configurable in the source code) span centered around the current operating frequency, having its own dedicated reference level setting. All settings are controlled using two input boxes for frequency (requiring RETURN for entry, with erroneous input silently ignored.) and sliders for reference level and output power. All settings are remembered. Clicking the power display toggles "barefoot" mode which sets radio output power to 100% at activation and then re-sets it to 100% whenever band or mode changes. 
+
+The application only considers radio #1. 
+
+A typical usage scenario is to connect ICOM Automagic to the slow "remote" CI-V port of the radio while the logger is connected to the fast USB CI-V port. The application accepts a command line argument for the used port (e.g. "COM3") which is also remembered.  
