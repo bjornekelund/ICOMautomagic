@@ -56,5 +56,8 @@
     <Setting Name="PwrLevelsDigital" Type="System.String" Scope="User">
       <Value Profile="(Default)">23;23;23;23;23;23;23;23;23;23;23</Value>
     </Setting>
+    <Setting Name="BareFoot" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

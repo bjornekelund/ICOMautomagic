@@ -1,8 +1,7 @@
-﻿// Demo broadcast listener for N1MM Logger+
-// Receives UDP broadcasts on listenPort, parses XML into an object and prints info
-// Intended as starting point for development of more applications such as 
-// big screen score board, out-of-band alarm, etc.
-// By Björn Ekelund SM7IUN sm7iun@ssa.se 2019-02-05
+﻿// Companion app for N1MM when using ICOM radios with waterfall display,
+// e.g. IC-7300, IC-7610, and IC-785x.
+// 
+// By Björn Ekelund SM7IUN sm7iun@ssa.se
 
 using System;
 using System.Linq;
@@ -87,6 +86,8 @@ namespace ICOMautomagic
         const byte EdgeSet = 0x03; // which scope edge should be manipulated
         static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
         static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
+        static SolidColorBrush BarefootColor = Brushes.DarkGreen; // Color for power label when barefoot
+        static SolidColorBrush ExciterColor = Brushes.Black; // Color for power label when using PA
 
         // Pre-baked CI-V commands
         static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
@@ -95,14 +96,14 @@ namespace ICOMautomagic
         static byte[] CIVSetPwrLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x14, 0x0A, 0x00, 0x00, 0xFD };
 
         // Maps MHz to band name
-        static string[] bandName = new string[52] 
+        static string[] bandName = new string[52]
         { "?m", "160m", "?m", "80m", "?m", "60m", "?m", "40m", "?m", "?m", "30m", "?m", "?m",
             "?m", "20m", "?m", "?m", "?m", "17m", "?m", "?m", "15m", "?m", "?m", "12m", "?m",
             "?m", "?m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
             "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "6m", "6m" };
 
         // Maps MHz to internal band index
-        public static int[] bandIndex = new int[52] 
+        public static int[] bandIndex = new int[52]
         { 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8,
             8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 
@@ -121,8 +122,8 @@ namespace ICOMautomagic
         // Global variables
         int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
         string currentMode = "", newMode = "", ComPort;
-        bool Zoomed, RadioInfoReceived;
-        SerialPort port; 
+        bool Zoomed, RadioInfoReceived, Barefoot;
+        SerialPort port;
 
         public MainWindow()
         {
@@ -162,6 +163,8 @@ namespace ICOMautomagic
             this.Top = Properties.Settings.Default.Top;
             this.Left = Properties.Settings.Default.Left;
 
+            Barefoot = Properties.Settings.Default.BareFoot;
+
             // Fetch lower and upper edges and ref levels from saved settings, ugly due to limitations in WPF settings
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
@@ -180,6 +183,7 @@ namespace ICOMautomagic
             refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
+            Barefoot = Properties.Settings.Default.BareFoot; // Restore barefoot status
 
             // Set Zoom button text based on value of ZoomRange
             ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
@@ -220,6 +224,7 @@ namespace ICOMautomagic
                                         break;
                                     case "USB":
                                     case "LSB":
+                                    case "AM":
                                         newMode = "SSB";
                                         break;
                                     default:
@@ -271,9 +276,9 @@ namespace ICOMautomagic
                                         UpdateRadioReflevel(currentRefLevel);
                                         UpdateRadioPwrlevel(currentPwrLevel);
 
-                                    // Update band/mode display in UI
-                                    BandLabel.Content = bandName[newMHz];
-                                        ModeLabel.Content = newMode; 
+                                        // Update band/mode display in UI
+                                        BandLabel.Content = bandName[newMHz];
+                                        ModeLabel.Content = newMode;
                                     }));
                                 }
                             }
@@ -344,7 +349,6 @@ namespace ICOMautomagic
             if (!RadioInfoReceived) // Do nothing if we have not yet received radioInfo
                 return;
 
-
             switch (currentMode)
             {
                 case "CW":
@@ -375,7 +379,6 @@ namespace ICOMautomagic
             BandModeButton.Background = ActiveButtonColor;
         }
 
-
         // Save all settings when closing program
         private void OnClosing(object sender, EventArgs e)
         {
@@ -400,6 +403,7 @@ namespace ICOMautomagic
             Properties.Settings.Default.PwrLevelsDigital = String.Join(";", pwrLevelDigital.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.COMport = ComPort;
+            Properties.Settings.Default.BareFoot = Barefoot;
 
             Properties.Settings.Default.Save();
         }
@@ -409,7 +413,7 @@ namespace ICOMautomagic
             if (RadioInfoReceived)
             {
                 currentLowerEdge = currentFrequency - ZoomRange / 2;
-                currentUpperEdge= currentLowerEdge + ZoomRange;
+                currentUpperEdge = currentLowerEdge + ZoomRange;
 
                 switch (currentMode)
                 {
@@ -443,6 +447,16 @@ namespace ICOMautomagic
         private void OnRefSliderKey(object sender, KeyEventArgs e)
         {
             UpdateRefSlider();
+        }
+
+        private void ToggleBarefoot(object sender, MouseButtonEventArgs e)
+        {
+            if (currentMHz == 0) // Do not react until we received radio info
+                return;
+
+            Barefoot = !Barefoot;
+
+            UpdateRadioPwrlevel(currentPwrLevel);
         }
 
         // On mouse modification of slider
@@ -588,20 +602,32 @@ namespace ICOMautomagic
             // Update UI if present
             if (PwrLevelLabel != null)
             {
-                PwrLevelSlider.Value = pwr_level;
-                PwrLevelLabel.Content = string.Format("Pwr: {0,3}%", pwr_level);
+                if (Barefoot)
+                {
+                    PwrLevelSlider.IsEnabled = false;
+                    PwrLevelLabel.Foreground = BarefootColor;
+                    PwrLevelLabel.FontWeight = FontWeights.Bold;
+                    usedPower = 255;
+                    PwrLevelSlider.Value = 100;
+                    PwrLevelLabel.Content = "Pwr:100%";
+                }
+                else
+                {
+                    PwrLevelSlider.IsEnabled = true;
+                    PwrLevelLabel.Foreground = ExciterColor;
+                    PwrLevelLabel.FontWeight = FontWeights.Normal;
+                    usedPower = (int)((255.0f * pwr_level) / 100.0f + 0.99f); // Weird ICOM mapping of percent to binary
+                    PwrLevelSlider.Value = pwr_level;
+                    PwrLevelLabel.Content = string.Format("Pwr:{0,3}%", pwr_level);
+                }
+
+                CIVSetPwrLevel[6] = (byte)((usedPower / 100) % 10);
+                CIVSetPwrLevel[7] = (byte)((((usedPower / 10) % 10) << 4) + (usedPower % 10));
+
+                // Update radio if present
+                if (!NoRadio)
+                    port.Write(CIVSetPwrLevel, 0, CIVSetPwrLevel.Length); // set power level 
             }
-
-            usedPower = (int)((255.0f * pwr_level) / 100.0f + 0.99f); // Weird ICOM mapping of percent to binary
-
-            if (usedPower > 255) usedPower = 255;
-
-            CIVSetPwrLevel[6] = (byte)((usedPower / 100) % 10);
-            CIVSetPwrLevel[7] = (byte)((((usedPower / 10) % 10) << 4) + (usedPower % 10));
-
-            // Update radio if present
-            if (!NoRadio)
-                port.Write(CIVSetPwrLevel, 0, CIVSetPwrLevel.Length); // set edge set EdgeSet
         }
     }
 }
