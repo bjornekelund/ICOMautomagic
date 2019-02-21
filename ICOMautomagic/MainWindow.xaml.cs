@@ -164,7 +164,7 @@ namespace ICOMautomagic
             this.Top = Properties.Settings.Default.Top;
             this.Left = Properties.Settings.Default.Left;
 
-            Barefoot = Properties.Settings.Default.BareFoot;
+            Barefoot = Properties.Settings.Default.Barefoot;
 
             // Fetch lower and upper edges and ref levels from saved settings, ugly due to limitations in WPF settings
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
@@ -184,7 +184,7 @@ namespace ICOMautomagic
             refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
-            Barefoot = Properties.Settings.Default.BareFoot; // Restore barefoot status
+            Barefoot = Properties.Settings.Default.Barefoot; // Restore barefoot status
 
             // Set Zoom button text based on value of ZoomRange
             ZoomButton.Content = string.Format("±{0}kHz", (int)(ZoomRange / 2));
@@ -410,7 +410,7 @@ namespace ICOMautomagic
             Properties.Settings.Default.PwrLevelsDigital = String.Join(";", pwrLevelDigital.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.COMport = ComPort;
-            Properties.Settings.Default.BareFoot = Barefoot;
+            Properties.Settings.Default.Barefoot = Barefoot;
 
             Properties.Settings.Default.Save();
         }

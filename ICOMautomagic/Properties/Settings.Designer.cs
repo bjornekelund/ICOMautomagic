@@ -242,12 +242,12 @@ namespace ICOMautomagic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool BareFoot {
+        public bool Barefoot {
             get {
-                return ((bool)(this["BareFoot"]));
+                return ((bool)(this["Barefoot"]));
             }
             set {
-                this["BareFoot"] = value;
+                this["Barefoot"] = value;
             }
         }
     }
