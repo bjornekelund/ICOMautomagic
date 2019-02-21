@@ -238,5 +238,17 @@ namespace ICOMautomagic.Properties {
                 this["PwrLevelsDigital"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BareFoot {
+            get {
+                return ((bool)(this["BareFoot"]));
+            }
+            set {
+                this["BareFoot"] = value;
+            }
+        }
     }
 }
