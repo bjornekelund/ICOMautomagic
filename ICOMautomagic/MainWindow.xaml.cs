@@ -271,8 +271,9 @@ namespace ICOMautomagic
                                         UpdateRadioReflevel(currentRefLevel);
                                         UpdateRadioPwrlevel(currentPwrLevel);
 
-                                        // Update band/mode display in UI
-                                        BandModeLabel.Content = string.Format("{0} {1}", bandName[newMHz], newMode);
+                                    // Update band/mode display in UI
+                                    BandLabel.Content = bandName[newMHz];
+                                        ModeLabel.Content = newMode; 
                                     }));
                                 }
                             }
