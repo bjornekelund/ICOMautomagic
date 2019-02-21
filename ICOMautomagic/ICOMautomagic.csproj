@@ -119,9 +119,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="iconfinder_r2d2_star_wars_droid_robot_3186863_lc1_icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="robot-512.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
