@@ -7,18 +7,18 @@
         mc:Ignorable="d"
         Title="ICOM Automagic (No radio)" Height="106.905" Width="522.433" LocationChanged="OnLocationChange" Closed="OnClosing">
     <Grid>
-        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" Width="117" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnSliderMouse" PreviewKeyUp="OnSliderKey" IsSnapToTickEnabled="True"/>
+        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" Width="117" Value="-5" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnRefSliderMouseClick" PreviewKeyUp="OnRefSliderKey" IsSnapToTickEnabled="True"/>
         <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="21" Margin="53,41,0,0" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown" MaxLines="1"/>
         <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="21" Margin="181,41,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown"/>
         <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,37,0,0" VerticalAlignment="Top" Height="28"/>
         <Label Content="kHz   Upper:" HorizontalAlignment="Left" Margin="99,37,0,0" VerticalAlignment="Top" Height="28" Width="77"/>
         <Label x:Name="BandModeLabel" Content="Band Mode?" HorizontalAlignment="Left" Margin="412,8,0,0" VerticalAlignment="Top" Width="96" Height="30" FontWeight="Bold" FontSize="14" Foreground="Blue"/>
-        <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="70"/>
+        <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="65"/>
         <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="267,41,0,0" VerticalAlignment="Top" Width="75" Click="OnBandModeButton" Background="LightGray" Height="21"/>
         <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="355,41,0,0" VerticalAlignment="Top" Width="75" Click="OnZoomButton" BorderBrush="#FF707070" Background="LightGray" Height="21"/>
         <Label Content="kHz" HorizontalAlignment="Left" Margin="227,37,0,0" VerticalAlignment="Top" Height="28" Width="32"/>
-        <Label x:Name="PwrLevelLabel" Content="Pwr: ---%" HorizontalAlignment="Left" Margin="220,8,0,0" VerticalAlignment="Top" Width="60"/>
-        <Slider x:Name="PwrLevelSlider" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Width="117" Value="-11" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnSliderMouse" PreviewKeyUp="OnSliderKey" IsSnapToTickEnabled="True"/>
+        <Label x:Name="PwrLevelLabel" Content="Pwr: ---%" HorizontalAlignment="Left" Margin="214,8,0,0" VerticalAlignment="Top" Width="66"/>
+        <Slider x:Name="PwrLevelSlider" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Width="117" Value="22" SmallChange="1" TickPlacement="Both" Height="26" PreviewKeyUp="OnPwrSliderKey" PreviewMouseUp="OnPwrSliderMouseClick" Maximum="100" TickFrequency="5" />
 
     </Grid>
 </Window>

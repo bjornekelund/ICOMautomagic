@@ -47,7 +47,13 @@
     <Setting Name="RefLevelsSSBZ" Type="System.String" Scope="User">
       <Value Profile="(Default)">-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3</Value>
     </Setting>
-    <Setting Name="PwrLevels" Type="System.String" Scope="User">
+    <Setting Name="PwrLevelsCW" Type="System.String" Scope="User">
+      <Value Profile="(Default)">23;23;23;23;23;23;23;23;23;23;23</Value>
+    </Setting>
+    <Setting Name="PwrLevelsSSB" Type="System.String" Scope="User">
+      <Value Profile="(Default)">23;23;23;23;23;23;23;23;23;23;23</Value>
+    </Setting>
+    <Setting Name="PwrLevelsDigital" Type="System.String" Scope="User">
       <Value Profile="(Default)">23;23;23;23;23;23;23;23;23;23;23</Value>
     </Setting>
   </Settings>

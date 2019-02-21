@@ -206,12 +206,36 @@ namespace ICOMautomagic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
-        public string PwrLevels {
+        public string PwrLevelsCW {
             get {
-                return ((string)(this["PwrLevels"]));
+                return ((string)(this["PwrLevelsCW"]));
             }
             set {
-                this["PwrLevels"] = value;
+                this["PwrLevelsCW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
+        public string PwrLevelsSSB {
+            get {
+                return ((string)(this["PwrLevelsSSB"]));
+            }
+            set {
+                this["PwrLevelsSSB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
+        public string PwrLevelsDigital {
+            get {
+                return ((string)(this["PwrLevelsDigital"]));
+            }
+            set {
+                this["PwrLevelsDigital"] = value;
             }
         }
     }
