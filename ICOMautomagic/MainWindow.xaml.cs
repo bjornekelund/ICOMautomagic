@@ -385,6 +385,10 @@ namespace ICOMautomagic
         // Save all settings when closing program
         private void OnClosing(object sender, EventArgs e)
         {
+            // Remember window location 
+            Properties.Settings.Default.Top = this.Top;
+            Properties.Settings.Default.Left = this.Left;
+
             // Ugly but because WPF Settings can not store arrays. 
             // Each array is turned into a formatted string that can be read back using Parse()
             Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
@@ -454,7 +458,7 @@ namespace ICOMautomagic
 
         private void ToggleBarefoot(object sender, MouseButtonEventArgs e)
         {
-            if (currentMHz == 0) // Do not react until we received radio info
+            if (!RadioInfoReceived) // Do not react until we received radio info
                 return;
 
             Barefoot = !Barefoot;
@@ -475,7 +479,7 @@ namespace ICOMautomagic
 
             UpdateRadioReflevel(currentRefLevel);
 
-            if (currentMHz != 0)
+            if (RadioInfoReceived) // Only remember value if we are in a known state
                 switch (currentMode)
                 {
                     case "CW":
@@ -499,17 +503,19 @@ namespace ICOMautomagic
                 }
         }
 
+        // on key movement of power slider
         private void OnPwrSliderKey(object sender, KeyEventArgs e)
         {
             UpdatePwrSlider();
         }
 
+        // on mouse movement of power slider
         private void OnPwrSliderMouseClick(object sender, MouseButtonEventArgs e)
         {
             UpdatePwrSlider();
         }
 
-        // Update ref level on slider action
+        // Update pwr level on slider action
         void UpdatePwrSlider()
         {
             currentPwrLevel = (int)(PwrLevelSlider.Value + 0.0f);
@@ -528,15 +534,6 @@ namespace ICOMautomagic
                         pwrLevelDigital[bandIndex[currentMHz]] = currentPwrLevel;
                         break;
                 }
-        }
-
-        // Remember app Window location whenever it is moved 
-        private void OnLocationChange(object sender, EventArgs e)
-        {
-            // Remember window location 
-            Properties.Settings.Default.Top = this.Top;
-            Properties.Settings.Default.Left = this.Left;
-            Properties.Settings.Default.Save();
         }
 
         // Update radio with new waterfall edges
