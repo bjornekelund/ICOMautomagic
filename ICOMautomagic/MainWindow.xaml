@@ -12,14 +12,14 @@
         <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="181,40,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown"/>
         <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,37,0,0" VerticalAlignment="Top" Height="28"/>
         <Label Content="kHz   Upper:" HorizontalAlignment="Left" Margin="99,37,0,0" VerticalAlignment="Top" Height="28" Width="77"/>
-        <Label x:Name="BandLabel" Content="160m" HorizontalAlignment="Left" Margin="446,8,0,0" VerticalAlignment="Top" Width="48" Height="30" FontWeight="Bold" FontSize="14" Foreground="Blue" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="BandLabel" Content="Band" HorizontalAlignment="Left" Margin="446,8,0,0" VerticalAlignment="Top" Width="48" Height="30" FontWeight="Bold" FontSize="14" Foreground="Blue" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="65"/>
         <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="267,40,0,0" VerticalAlignment="Top" Width="75" Click="OnBandModeButton" Background="LightGray" Height="22" Focusable="False"/>
         <Button x:Name="ZoomButton" Content="+/- 20kHz" HorizontalAlignment="Left" Margin="355,40,0,0" VerticalAlignment="Top" Width="75" Click="OnZoomButton" BorderBrush="#FF707070" Background="LightGray" Height="22" Focusable="False"/>
         <Label Content="kHz" HorizontalAlignment="Left" Margin="227,37,0,0" VerticalAlignment="Top" Height="28" Width="32"/>
         <Label x:Name="PwrLevelLabel" Content="Pwr: ---%" HorizontalAlignment="Left" Margin="226,10,0,0" VerticalAlignment="Top" Width="66"/>
         <Slider x:Name="PwrLevelSlider" HorizontalAlignment="Left" Margin="293,10,0,0" VerticalAlignment="Top" Width="140" Value="22" SmallChange="1" TickPlacement="Both" Height="26" PreviewKeyUp="OnPwrSliderKey" PreviewMouseUp="OnPwrSliderMouseClick" Maximum="100" TickFrequency="5" />
-        <Label x:Name="ModeLabel" Content="Digital" HorizontalAlignment="Left" Margin="442,36,0,0" VerticalAlignment="Top" Width="56" Height="30" FontWeight="Bold" FontSize="14" Foreground="Blue" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="ModeLabel" Content="Mode" HorizontalAlignment="Left" Margin="442,36,0,0" VerticalAlignment="Top" Width="56" Height="30" FontWeight="Bold" FontSize="14" Foreground="Blue" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
     </Grid>
 </Window>
