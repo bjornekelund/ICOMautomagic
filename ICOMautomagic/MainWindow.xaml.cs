@@ -88,6 +88,7 @@ namespace ICOMautomagic
         static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
         static SolidColorBrush BarefootColor = Brushes.DarkGreen; // Color for power label when barefoot
         static SolidColorBrush ExciterColor = Brushes.Black; // Color for power label when using PA
+        static SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
 
         // Pre-baked CI-V commands
         static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
@@ -186,7 +187,7 @@ namespace ICOMautomagic
             Barefoot = Properties.Settings.Default.BareFoot; // Restore barefoot status
 
             // Set Zoom button text based on value of ZoomRange
-            ZoomButton.Content = string.Format("+/-{0}kHz", (int)(ZoomRange / 2));
+            ZoomButton.Content = string.Format("±{0}kHz", (int)(ZoomRange / 2));
 
             // Set Band-mode button active, Zoom button inactive
             Zoomed = false;
@@ -278,7 +279,9 @@ namespace ICOMautomagic
 
                                         // Update band/mode display in UI
                                         BandLabel.Content = bandName[newMHz];
+                                        BandLabel.Foreground = BandModeColor;
                                         ModeLabel.Content = newMode;
+                                        ModeLabel.Foreground = BandModeColor;
                                     }));
                                 }
                             }
