@@ -5,4 +5,4 @@ It sets waterfall/spectrum edges, display reference level, and output power base
 
 The application only considers radio #1. 
 
-A typical usage scenario is to connect **ICOM Automagic** to the slow "remote" CI-V port of the radio while the logger is connected to the fast USB CI-V port. The application accepts a command line argument for the used port (e.g. `$ icomautomagic COM3`\) which is also remembered.  
+A typical usage scenario is to connect **ICOM Automagic** to the slow "Remote" CI-V port of the ICOM radio while the logger is connected to the fast USB CI-V port. The application also accepts a command line argument to set the serial port to be used (e.g. `$ icomautomagic COM3`\). This setting is remembered. 
