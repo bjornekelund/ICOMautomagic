@@ -139,7 +139,7 @@ namespace ICOMautomagic
                 ComPort = Properties.Settings.Default.COMport;
 
 
-            if (!NoRadio)
+            if (!NoRadio) // If we are not debugging, open serial port
             {
                 ProgramWindow.Title = "ICOM Automagic (" + ComPort + ")";
                 port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
@@ -159,13 +159,14 @@ namespace ICOMautomagic
                 }
             }
 
-            // Fetch window location from saved settings
+            // Fetch window location from last time
             this.Top = Properties.Settings.Default.Top;
             this.Left = Properties.Settings.Default.Left;
 
+            // Fetch barefoot status from last time
             Barefoot = Properties.Settings.Default.Barefoot;
 
-            // Fetch lower and upper edges and ref levels from saved settings, ugly due to limitations in WPF settings
+            // Fetch lower and upper edges and ref levels from last time, ugly solution due to limitations in WPF settings management
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
             refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
@@ -183,8 +184,6 @@ namespace ICOMautomagic
             refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
 
-            Barefoot = Properties.Settings.Default.Barefoot; // Restore barefoot status
-
             // Set Zoom button text based on value of ZoomRange
             ZoomButton.Content = string.Format("±{0}kHz", (int)(ZoomRange / 2));
 
@@ -192,7 +191,9 @@ namespace ICOMautomagic
             Zoomed = false;
             BandModeButton.Background = PassiveButtonColor;
             ZoomButton.Background = PassiveButtonColor;
-            RadioInfoReceived = false; // To disable functions until we have info from radio
+            
+            // To disable functions until we have received info from N1MM
+            RadioInfoReceived = false; 
 
             Task.Run(async () =>
             {
@@ -232,7 +233,8 @@ namespace ICOMautomagic
                                         break;
                                 }
 
-                                // Only auto update radio when mode or band changes to not override manual changes
+                                // Only auto update radio when mode or band changes to avoid 
+                                // overruling manual changes made on the radio's front panel
                                 if ((newMHz != currentMHz) || (newMode != currentMode))
                                 {
                                     currentMHz = newMHz;
@@ -260,13 +262,14 @@ namespace ICOMautomagic
                                             break;
                                     }
 
-                                    // Necessary to get access to UI from task thread
+                                    // Execute changes to the UI on main thread 
                                     Application.Current.Dispatcher.Invoke(new Action(() =>
                                     {
                                         // Highlight band-mode button and exit Zoomed mode if active
                                         Zoomed = false;
                                         ZoomButton.Background = PassiveButtonColor;
                                         BandModeButton.Background = ActiveButtonColor;
+
                                         // Allow entry in edge text boxes 
                                         LowerEdgeTextbox.IsEnabled = true;
                                         UpperEdgeTextbox.IsEnabled = true;
@@ -348,8 +351,9 @@ namespace ICOMautomagic
         // On band-mode button clicked
         private void OnBandModeButton(object sender, RoutedEventArgs e)
         {
-            if (!RadioInfoReceived) // Do nothing if we have not yet received radioInfo
-                return;
+            // Do nothing if we have not yet received information from N1MM
+            if (!RadioInfoReceived) 
+            return;
 
             switch (currentMode)
             {
@@ -363,7 +367,7 @@ namespace ICOMautomagic
                     currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
                     currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
                     break;
-                default:
+                default: // All other modes = Digital 
                     currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
                     currentUpperEdge = upperEdgeDigital[bandIndex[currentMHz]];
                     currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
@@ -416,6 +420,7 @@ namespace ICOMautomagic
 
         private void OnZoomButton(object sender, RoutedEventArgs e)
         {
+            // Only do act if we have received information from N1MM
             if (RadioInfoReceived)
             {
                 currentLowerEdge = currentFrequency - ZoomRange / 2;
@@ -538,6 +543,7 @@ namespace ICOMautomagic
         // Update radio with new waterfall edges
         void UpdateRadioEdges(int lower_edge, int upper_edge, int ICOMedgeSegment)
         {
+            // Compose CI-V command to set waterfall edges
             byte[] CIVSetEdges = new byte[19]
             {
                 0xFE, 0xFE, TrxAddress, 0xE0,
@@ -557,14 +563,14 @@ namespace ICOMautomagic
                 0xFD
             };
 
-            // Update UI if present
+            // Update UI if present (this function may be called before main window is created)
             if (LowerEdgeTextbox != null)
             {
                 LowerEdgeTextbox.Text = lower_edge.ToString();
                 UpperEdgeTextbox.Text = upper_edge.ToString();
             }
 
-            // Update radio if present
+            // Update radio if we are not in debug mode
             if (!NoRadio)
             {
                 port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
@@ -581,14 +587,14 @@ namespace ICOMautomagic
             CIVSetRefLevel[7] = (byte)((absRefLevel / 10) * 16 + absRefLevel % 10);
             CIVSetRefLevel[9] = (ref_level >= 0) ? (byte)0 : (byte)1;
 
-            // Update UI if present
+            // Update UI if present (this function may be called before main window is created)
             if (RefLevelLabel != null)
             {
                 RefLevelSlider.Value = ref_level;
                 RefLevelLabel.Content = string.Format("Ref: {0:+#;-#;0}dB", ref_level);
             }
 
-            // Update radio if present
+            // Update radio if we are not debugging
             if (!NoRadio)
                 port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
         }
@@ -598,7 +604,7 @@ namespace ICOMautomagic
         {
             int usedPower;
 
-            // Update UI if present
+            // Update UI if present (this function may be called before main window is created)
             if (PwrLevelLabel != null)
             {
                 if (Barefoot)
