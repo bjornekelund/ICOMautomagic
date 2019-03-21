@@ -83,8 +83,10 @@ namespace ICOMautomagic
         const byte TrxAddress = 0x98; // Address of IC-7610
         const int ZoomRange = 20; // Range of zoomed waterfall in kHz
         const byte EdgeSet = 0x03; // which scope edge should be manipulated
-        static SolidColorBrush ActiveButtonColor = Brushes.LightGreen; // Color for active button
-        static SolidColorBrush PassiveButtonColor = Brushes.LightGray; // Color for passive button
+        static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
+
+        static SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
+        static SolidColorBrush PassiveColor = Brushes.LightGray; // Color for passive button
         static SolidColorBrush BarefootColor = Brushes.DarkGreen; // Color for power label when barefoot
         static SolidColorBrush ExciterColor = Brushes.Black; // Color for power label when using PA
         static SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
@@ -189,8 +191,10 @@ namespace ICOMautomagic
 
             // Set Band-mode button active, Zoom button inactive
             Zoomed = false;
-            BandModeButton.Background = PassiveButtonColor;
-            ZoomButton.Background = PassiveButtonColor;
+            BandModeButton.Background = ActiveColor;
+            BandModeButton.BorderBrush = ActiveColor;
+            ZoomButton.Background = PassiveColor;
+            ZoomButton.BorderBrush = PassiveColor;
             
             // To disable functions until we have received info from N1MM
             RadioInfoReceived = false; 
@@ -267,8 +271,10 @@ namespace ICOMautomagic
                                     {
                                         // Highlight band-mode button and exit Zoomed mode if active
                                         Zoomed = false;
-                                        ZoomButton.Background = PassiveButtonColor;
-                                        BandModeButton.Background = ActiveButtonColor;
+                                        ZoomButton.Background = PassiveColor;
+                                        ZoomButton.BorderBrush = PassiveColor;
+                                        BandModeButton.Background = ActiveColor;
+                                        BandModeButton.BorderBrush = ActiveColor;
 
                                         // Allow entry in edge text boxes 
                                         LowerEdgeTextbox.IsEnabled = true;
@@ -381,8 +387,10 @@ namespace ICOMautomagic
             LowerEdgeTextbox.IsEnabled = true;
             UpperEdgeTextbox.IsEnabled = true;
 
-            ZoomButton.Background = PassiveButtonColor;
-            BandModeButton.Background = ActiveButtonColor;
+            ZoomButton.Background = PassiveColor;
+            ZoomButton.BorderBrush = PassiveColor;
+            BandModeButton.Background = ActiveColor;
+            BandModeButton.BorderBrush = ActiveColor;
         }
 
         // Save all settings when closing program
@@ -441,8 +449,10 @@ namespace ICOMautomagic
 
                 // Set zoomed mode and color buttons accordingly
                 Zoomed = true;
-                ZoomButton.Background = ActiveButtonColor;
-                BandModeButton.Background = PassiveButtonColor;
+                ZoomButton.Background = ActiveColor;
+                ZoomButton.BorderBrush = ActiveColor;
+                BandModeButton.Background = PassiveColor;
+                BandModeButton.BorderBrush = PassiveColor;
 
                 // Disable text boxes for entry in Zoomed mode
                 LowerEdgeTextbox.IsEnabled = false;
