@@ -7,4 +7,4 @@ The application only considers radio #1.
 
 A typical usage scenario is to connect **ICOM Automagic** to the slow "Remote" CI-V port of the ICOM radio while the logger is connected to the fast USB CI-V port. The application also accepts a command line argument to set the serial port to be used (e.g. `$ icomautomagic COM3`\). This setting is remembered. 
 
-For the application to work you need to check the "Radio" box on the "Broadcast data" tab in N1MM Logger+'s Configuration panel. 
+For the application to work you need to check the "Radio" box on the "Broadcast data" tab in N1MM Logger+'s Configuration panel. Please also note that the application does not query the radio for settings. Any manual changes made using the radio's own controls are ignored. 
