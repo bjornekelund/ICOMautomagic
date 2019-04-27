@@ -143,7 +143,7 @@ namespace ICOMautomagic
 
             if (!NoRadio) // If we are not debugging, open serial port
             {
-                ProgramWindow.Title = "ICOM Automagic (" + ComPort + ")";
+                ProgramWindow.Title = "ICOM Automagic N1MM Logger+ (" + ComPort + ")";
                 port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
 
                 try
