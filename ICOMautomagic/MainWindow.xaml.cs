@@ -83,8 +83,9 @@ namespace ICOMautomagic
         const byte TrxAddress = 0x98; // Address of IC-7610
         const int ZoomRange = 20; // Range of zoomed waterfall in kHz
         const byte EdgeSet = 0x03; // which scope edge should be manipulated
-        static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
+        const int PortSpeed = 19200; // CI-V port speed
 
+        static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
         static SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
         static SolidColorBrush PassiveColor = Brushes.LightGray; // Color for passive button
         static SolidColorBrush BarefootColor = Brushes.DarkGreen; // Color for power label when barefoot
@@ -144,7 +145,7 @@ namespace ICOMautomagic
             if (!NoRadio) // If we are not debugging, open serial port
             {
                 ProgramWindow.Title = "ICOM Automagic N1MM Logger+ (" + ComPort + ")";
-                port = new SerialPort(ComPort, 19200, Parity.None, 8, StopBits.One);
+                port = new SerialPort(ComPort, PortSpeed, Parity.None, 8, StopBits.One);
 
                 try
                 {
