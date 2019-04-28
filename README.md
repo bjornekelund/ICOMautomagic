@@ -26,3 +26,7 @@ Limitations:
 - Assumes CI-V address 0x98 (IC-7610). Change requires re-build.
 - Assumes 19200 bps CI-V interface. Change requires re-build.
 
+This software controls radio transmitter hardware. 
+Be aware that wrongly used or malfunctioning software can damage or destroy such hardware. 
+This software is used entirely at your own risk.
+
