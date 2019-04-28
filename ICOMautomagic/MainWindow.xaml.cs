@@ -124,7 +124,7 @@ namespace ICOMautomagic
 
         // Global variables
         int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
-        string currentMode = "", newMode = "", ComPort;
+        string currentMode = string.Empty, newMode = string.Empty, ComPort;
         bool Zoomed, RadioInfoReceived, Barefoot;
         SerialPort port;
 
