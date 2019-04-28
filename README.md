@@ -1,6 +1,10 @@
 # ICOM Automagic
 A Windows utility with small screen footprint that use the radio information broadcast over 
-UDP from [N1MM Logger+](http://www.n1mm.com) and updates a waterfall/spectrum display capable 
+UDP from [N1MM Logger+](http://www.n1mm.com) and updates an IC-7610 at band or mode changes 
+based on this. It also supports IC-7300 and IC-7850/51 but this requires changes to the 
+source code and a new build.
+
+updates a waterfall/spectrum display capable 
 ICOM radio at band or mode changes, based on this. (e.g. IC-7300, IC-7610, and IC-7850/51). 
 
 It sets and remembers waterfall/spectrum edges, display reference level, and output power for 
