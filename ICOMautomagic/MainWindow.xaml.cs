@@ -86,11 +86,11 @@ namespace ICOMautomagic
         const int PortSpeed = 19200; // CI-V port speed
 
         static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
-        static SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
-        static SolidColorBrush PassiveColor = Brushes.LightGray; // Color for passive button
-        static SolidColorBrush BarefootColor = Brushes.DarkGreen; // Color for power label when barefoot
-        static SolidColorBrush ExciterColor = Brushes.Black; // Color for power label when using PA
-        static SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
+        readonly SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
+        readonly SolidColorBrush PassiveColor = Brushes.LightGray; // Color for passive button
+        readonly SolidColorBrush BarefootColor = Brushes.DarkGreen; // Color for power label when barefoot
+        readonly SolidColorBrush ExciterColor = Brushes.Black; // Color for power label when using PA
+        readonly SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
 
         // Pre-baked CI-V commands
         static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
@@ -99,19 +99,19 @@ namespace ICOMautomagic
         static byte[] CIVSetPwrLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x14, 0x0A, 0x00, 0x00, 0xFD };
 
         // Maps MHz to band name
-        static string[] bandName = new string[52]
+        readonly string[] bandName = new string[52]
         { "?m", "160m", "?m", "80m", "?m", "60m", "?m", "40m", "?m", "?m", "30m", "?m", "?m",
             "?m", "20m", "?m", "?m", "?m", "17m", "?m", "?m", "15m", "?m", "?m", "12m", "?m",
             "?m", "?m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
             "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "6m", "6m" };
 
         // Maps MHz to internal band index
-        public static int[] bandIndex = new int[52]
+        readonly int[] bandIndex = new int[52]
         { 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8,
             8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 
         // Maps actual MHz to radio's scope edge set on ICOM 7800, 785x, 7300 and 7610
-        int[] RadioEdgeSet = new int[]
+        readonly int[] RadioEdgeSet = new int[]
         { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 11,
             11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
@@ -123,10 +123,10 @@ namespace ICOMautomagic
         int[] pwrLevelCW = new int[11]; int[] pwrLevelSSB = new int[11]; int[] pwrLevelDigital = new int[11];
 
         // Global variables
-        int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
-        string currentMode = string.Empty, newMode = string.Empty, ComPort;
-        bool Zoomed, RadioInfoReceived, Barefoot;
-        SerialPort port;
+        static int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
+        static string currentMode = string.Empty, newMode = string.Empty, ComPort;
+        static bool Zoomed, RadioInfoReceived, Barefoot;
+        static SerialPort port;
 
         public MainWindow()
         {
