@@ -84,6 +84,7 @@ namespace ICOMautomagic
         const int ZoomRange = 20; // Range of zoomed waterfall in kHz
         const byte EdgeSet = 0x03; // which scope edge should be manipulated
         const int PortSpeed = 19200; // CI-V port speed
+        const string programTitle = "ICOM Automagic for N1MM Logger+ by SM7IUN";
 
         static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
         readonly SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
@@ -131,7 +132,7 @@ namespace ICOMautomagic
         public MainWindow()
         {
             string message;
-            String[] commandLineArguments = Environment.GetCommandLineArgs();
+            string[] commandLineArguments = Environment.GetCommandLineArgs();
 
             InitializeComponent();
 
@@ -144,7 +145,7 @@ namespace ICOMautomagic
 
             if (!NoRadio) // If we are not debugging, open serial port
             {
-                ProgramWindow.Title = "ICOM Automagic N1MM Logger+ (" + ComPort + ")";
+                ProgramWindow.Title = programTitle + " (" + ComPort + ")";
                 port = new SerialPort(ComPort, PortSpeed, Parity.None, 8, StopBits.One);
 
                 try
@@ -154,38 +155,40 @@ namespace ICOMautomagic
                 catch
                 {
                     MessageBoxResult result = MessageBox.Show("Could not open serial port " + ComPort,
-                        "ICOM Automagic", MessageBoxButton.OK, MessageBoxImage.Question);
+                        programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
                     if (result == MessageBoxResult.OK)
                     {
                         Application.Current.Shutdown();
                     }
                 }
             }
+            else
+                ProgramWindow.Title = programTitle + " (No radio)";
 
             // Fetch window location from last time
-            this.Top = Properties.Settings.Default.Top;
-            this.Left = Properties.Settings.Default.Left;
+            Top = Properties.Settings.Default.Top;
+            Left = Properties.Settings.Default.Left;
 
             // Fetch barefoot status from last time
             Barefoot = Properties.Settings.Default.Barefoot;
 
             // Fetch lower and upper edges and ref levels from last time, ugly solution due to limitations in WPF settings management
-            lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelCWZ = Properties.Settings.Default.RefLevelsCWZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            pwrLevelCW = Properties.Settings.Default.PwrLevelsCW.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => int.Parse(s)).ToArray();
+            upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelCWZ = Properties.Settings.Default.RefLevelsCWZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            pwrLevelCW = Properties.Settings.Default.PwrLevelsCW.Split(';').Select(s => int.Parse(s)).ToArray();
 
-            lowerEdgeSSB = Properties.Settings.Default.LowerEdgesSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgeSSB = Properties.Settings.Default.UpperEdgesSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelSSB = Properties.Settings.Default.RefLevelsSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelSSBZ = Properties.Settings.Default.RefLevelsSSBZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            pwrLevelSSB = Properties.Settings.Default.PwrLevelsSSB.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            lowerEdgeSSB = Properties.Settings.Default.LowerEdgesSSB.Split(';').Select(s => int.Parse(s)).ToArray();
+            upperEdgeSSB = Properties.Settings.Default.UpperEdgesSSB.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelSSB = Properties.Settings.Default.RefLevelsSSB.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelSSBZ = Properties.Settings.Default.RefLevelsSSBZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            pwrLevelSSB = Properties.Settings.Default.PwrLevelsSSB.Split(';').Select(s => int.Parse(s)).ToArray();
 
-            lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => Int32.Parse(s)).ToArray();
-            pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => Int32.Parse(s)).ToArray();
+            lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
+            upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
 
             // Set Zoom button text based on value of ZoomRange
             ZoomButton.Content = string.Format("±{0}kHz", (int)(ZoomRange / 2));
@@ -313,8 +316,8 @@ namespace ICOMautomagic
 
                 try // Parse and ignore input if there are parsing errors
                 {
-                    lower = Int32.Parse(LowerEdgeTextbox.Text);
-                    upper = Int32.Parse(UpperEdgeTextbox.Text);
+                    lower = int.Parse(LowerEdgeTextbox.Text);
+                    upper = int.Parse(UpperEdgeTextbox.Text);
                 }
                 catch
                 {
@@ -398,28 +401,28 @@ namespace ICOMautomagic
         private void OnClosing(object sender, EventArgs e)
         {
             // Remember window location 
-            Properties.Settings.Default.Top = this.Top;
-            Properties.Settings.Default.Left = this.Left;
+            Properties.Settings.Default.Top = Top;
+            Properties.Settings.Default.Left = Left;
 
             // Ugly but because WPF Settings can not store arrays. 
             // Each array is turned into a formatted string that can be read back using Parse()
-            Properties.Settings.Default.LowerEdgesCW = String.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesCW = String.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsCW = String.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsCWZ = String.Join(";", refLevelCWZ.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.PwrLevelsCW = String.Join(";", pwrLevelCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesCW = string.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesCW = string.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsCW = string.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsCWZ = string.Join(";", refLevelCWZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.PwrLevelsCW = string.Join(";", pwrLevelCW.Select(i => i.ToString()).ToArray());
 
-            Properties.Settings.Default.LowerEdgesSSB = String.Join(";", lowerEdgeSSB.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesSSB = String.Join(";", upperEdgeSSB.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsSSB = String.Join(";", refLevelSSB.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsSSBZ = String.Join(";", refLevelSSBZ.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.PwrLevelsSSB = String.Join(";", pwrLevelSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesSSB = string.Join(";", lowerEdgeSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesSSB = string.Join(";", upperEdgeSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsSSB = string.Join(";", refLevelSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsSSBZ = string.Join(";", refLevelSSBZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.PwrLevelsSSB = string.Join(";", pwrLevelSSB.Select(i => i.ToString()).ToArray());
 
-            Properties.Settings.Default.LowerEdgesDigital = String.Join(";", lowerEdgeDigital.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesDigital = String.Join(";", upperEdgeDigital.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsDigital = String.Join(";", refLevelDigital.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsDigitalZ = String.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.PwrLevelsDigital = String.Join(";", pwrLevelDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesDigital = string.Join(";", lowerEdgeDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesDigital = string.Join(";", upperEdgeDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsDigital = string.Join(";", refLevelDigital.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsDigitalZ = string.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.PwrLevelsDigital = string.Join(";", pwrLevelDigital.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.COMport = ComPort;
             Properties.Settings.Default.Barefoot = Barefoot;
