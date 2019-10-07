@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ICOMautomagic"
         mc:Ignorable="d"
-        Title="ICOM Automagic N1MM Logger+ (No radio)" Height="115" Width="520" Closed="OnClosing" ResizeMode="CanMinimize">
+        Title="ICOM Automagic for N1MM Logger+ (No radio)" Height="115" Width="520" Closed="OnClosing" ResizeMode="CanMinimize">
     <Window.Resources>
         <SolidColorBrush x:Key="SpecialGreen" Color="#FF58F049"/>
     </Window.Resources>
