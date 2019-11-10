@@ -187,7 +187,8 @@ namespace ICOMautomagic
 
             lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
             upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
-            refLevelDigital = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelDigital = Properties.Settings.Default.RefLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelDigitalZ = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => int.Parse(s)).ToArray();
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
 
             // Set Zoom button text based on value of ZoomRange
