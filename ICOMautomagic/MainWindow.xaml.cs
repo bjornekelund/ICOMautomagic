@@ -295,6 +295,15 @@ namespace ICOMautomagic
                                         BandLabel.Foreground = BandModeColor;
                                         ModeLabel.Content = newMode;
                                         ModeLabel.Foreground = BandModeColor;
+
+                                        // Enable UI components
+                                        ZoomButton.IsEnabled = true;
+                                        BandModeButton.IsEnabled = true;
+                                        LowerEdgeTextbox.IsEnabled = true;
+                                        UpperEdgeTextbox.IsEnabled = true;
+                                        RefLevelSlider.IsEnabled = true;
+                                        PwrLevelSlider.IsEnabled = true;
+                                        PwrLevelLabel.IsEnabled = true;
                                     }));
                                 }
                             }

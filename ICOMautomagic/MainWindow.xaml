@@ -10,9 +10,9 @@
         <SolidColorBrush x:Key="SpecialGreen" Color="#FF58F049"/>
     </Window.Resources>
     <Grid>
-        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="77,10,0,0" VerticalAlignment="Top" Width="140" Value="-5" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnRefSliderMouseClick" PreviewKeyUp="OnRefSliderKey" IsSnapToTickEnabled="True"/>
-        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="53,46,0,0" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown" MaxLines="1"/>
-        <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="181,46,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown"/>
+        <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="77,10,0,0" VerticalAlignment="Top" Width="140" Value="-5" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnRefSliderMouseClick" PreviewKeyUp="OnRefSliderKey" IsSnapToTickEnabled="True" IsEnabled="False"/>
+        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="53,46,0,0" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown" MaxLines="1" IsEnabled="False"/>
+        <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="181,46,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="41" KeyDown="OnEdgeTextboxKeydown" IsEnabled="False"/>
         <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,43,0,0" VerticalAlignment="Top" Height="28">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -38,8 +38,8 @@
                 </LinearGradientBrush>
             </Label.Foreground>
         </Label>
-        <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="268,43,0,0" VerticalAlignment="Top" Width="80" Click="OnBandModeButton" Background="LightGray" Height="28" Focusable="False" BorderBrush="LightGray" Foreground="#FF303030"/>
-        <Button x:Name="ZoomButton" Content="Zoom" HorizontalAlignment="Left" Margin="356,43,0,0" VerticalAlignment="Top" Width="80" Click="OnZoomButton" BorderBrush="LightGray" Height="28" Focusable="False" Foreground="#FF303030"/>
+        <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="268,43,0,0" VerticalAlignment="Top" Width="80" Click="OnBandModeButton" Background="LightGray" Height="28" Focusable="False" BorderBrush="LightGray" Foreground="#FF303030" IsEnabled="False"/>
+        <Button x:Name="ZoomButton" Content="Zoom" HorizontalAlignment="Left" Margin="356,43,0,0" VerticalAlignment="Top" Width="80" Click="OnZoomButton" BorderBrush="LightGray" Height="28" Focusable="False" Foreground="#FF303030" IsEnabled="False"/>
         <Label Content="kHz" HorizontalAlignment="Left" Margin="222,43,0,0" VerticalAlignment="Top" Height="28" Width="32">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -48,7 +48,7 @@
                 </LinearGradientBrush>
             </Label.Foreground>
         </Label>
-        <Label x:Name="PwrLevelLabel" Content="Pwr: ---%" HorizontalAlignment="Left" Margin="224,10,0,0" VerticalAlignment="Top" Width="67" MouseDown="ToggleBarefoot">
+        <Label x:Name="PwrLevelLabel" Content="Pwr: ---%" HorizontalAlignment="Left" Margin="224,10,0,0" VerticalAlignment="Top" Width="67" MouseDown="ToggleBarefoot" IsEnabled="False">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>
@@ -56,7 +56,7 @@
                 </LinearGradientBrush>
             </Label.Foreground>
         </Label>
-        <Slider x:Name="PwrLevelSlider" HorizontalAlignment="Left" Margin="296,10,0,0" VerticalAlignment="Top" Width="140" Value="22" SmallChange="1" TickPlacement="Both" Height="26" PreviewKeyUp="OnPwrSliderKey" PreviewMouseUp="OnPwrSliderMouseClick" Maximum="100" TickFrequency="5" />
+        <Slider x:Name="PwrLevelSlider" HorizontalAlignment="Left" Margin="296,10,0,0" VerticalAlignment="Top" Width="140" Value="22" SmallChange="1" TickPlacement="Both" Height="26" PreviewKeyUp="OnPwrSliderKey" PreviewMouseUp="OnPwrSliderMouseClick" Maximum="100" TickFrequency="5" IsEnabled="False" />
         <Label x:Name="ModeLabel" Content="Mode" HorizontalAlignment="Left" Margin="440,32,0,0" VerticalAlignment="Top" Width="62" Height="34" FontWeight="Bold" FontSize="14" Foreground="Gray" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
     </Grid>
