@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Media;
+using System.Reflection;
 
 namespace ICOMautomagic
 {
@@ -84,7 +85,9 @@ namespace ICOMautomagic
         const int ZoomRange = 20; // Range of zoomed waterfall in kHz
         const byte EdgeSet = 0x03; // which scope edge should be manipulated
         const int PortSpeed = 19200; // CI-V port speed
-        const string programTitle = "ICOM Automagic for N1MM Logger+";
+        string programTitle;
+        AssemblyName _assemblyName = Assembly.GetExecutingAssembly().GetName();
+        string Release;
 
         static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
         readonly SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
@@ -133,6 +136,9 @@ namespace ICOMautomagic
         {
             string message;
             string[] commandLineArguments = Environment.GetCommandLineArgs();
+
+            Release = string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
+            programTitle = "ICOM Automagic" + Release;
 
             InitializeComponent();
 
