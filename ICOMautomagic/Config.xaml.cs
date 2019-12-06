@@ -20,7 +20,7 @@ namespace ICOMautomagic
     {
         MainWindow mainwindow;
 
-        string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
+        readonly string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
 
         public Config(MainWindow mw)
         {
@@ -72,6 +72,30 @@ namespace ICOMautomagic
 
             if (!int.TryParse(zoomWidthTB.Text, out int zoom))
                 return;
+
+            switch (radioModelCB.Text)
+            {
+                case "IC-7600":
+                    Properties.Settings.Default.CIVaddress = 0x7a;
+                    break;
+                case "IC-7610":
+                    Properties.Settings.Default.CIVaddress = 0x98;
+                    break;
+                case "IC-7700":
+                    Properties.Settings.Default.CIVaddress = 0x74;
+                    break;
+                case "IC-7800":
+                    Properties.Settings.Default.CIVaddress = 0x6a;
+                    break;
+                case "IC-7850":
+                case "IC-7851":
+                    Properties.Settings.Default.CIVaddress = 0x8e;
+                    break;
+                default: // IC-7300
+                    radioModelCB.Text = "IC-7300";
+                    Properties.Settings.Default.CIVaddress = 0x94;
+                    break;
+            }
 
             Properties.Settings.Default.RadioModel = radioModelCB.Text;
 
