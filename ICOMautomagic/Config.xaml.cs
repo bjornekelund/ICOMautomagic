@@ -14,9 +14,12 @@ using System.Windows.Shapes;
 
 namespace ICOMautomagic
 {
+
     public partial class Config : Window
     {
         MainWindow mainwindow;
+
+        string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
 
         public Config(MainWindow mw)
         {
@@ -26,6 +29,8 @@ namespace ICOMautomagic
 
             mainwindow = mw;
 
+            for (int i = 0; i < ICOMradios.Length; i++)
+                radioModelCB.Items.Add(ICOMradios[i]);
             //modelComboBox.Items.Add("600S");
             //modelComboBox.Items.Add("700S");
             //modelComboBox.Items.Add("1200S");
@@ -36,16 +41,25 @@ namespace ICOMautomagic
             //portComboBox.SelectedItem = port;
 
         }
-        //private void CancelButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Close();
-        //}
 
-        //private void OkButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    mainwindow.Configuration(portComboBox.Text, modelComboBox.Text);
-        //    Close();
-        //}
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
 
+        private void OKbutton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void DxLogRB_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void N1mmRB_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
