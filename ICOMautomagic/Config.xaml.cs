@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
 namespace ICOMautomagic
 {
 
@@ -31,15 +32,27 @@ namespace ICOMautomagic
 
             for (int i = 0; i < ICOMradios.Length; i++)
                 radioModelCB.Items.Add(ICOMradios[i]);
-            //modelComboBox.Items.Add("600S");
-            //modelComboBox.Items.Add("700S");
-            //modelComboBox.Items.Add("1200S");
-            //modelComboBox.SelectedItem = model;
+            radioModelCB.SelectedItem = Properties.Settings.Default.RadioModel;
 
-            //for (int i = 1; i <= 30; i++)
-            //    portComboBox.Items.Add("COM" + i.ToString());
-            //portComboBox.SelectedItem = port;
+            for (int i = 1; i <= 30; i++)
+                comPortCB.Items.Add("COM" + i.ToString());
+            comPortCB.SelectedItem = Properties.Settings.Default.COMport;
 
+            for (int i = 1; i <= 3; i++)
+                edgeSetCB.Items.Add(i.ToString("00"));
+            edgeSetCB.SelectedItem = Properties.Settings.Default.EdgeSet.ToString("00");
+
+            for (int i = 4800; i <= 115200; i += i)
+                ComPortSpeedCB.Items.Add(i.ToString());
+            ComPortSpeedCB.SelectedItem = Properties.Settings.Default.COMportSpeed.ToString();
+
+            zoomWidthTB.Text = Properties.Settings.Default.ZoomWidth.ToString();
+
+            stnameDxlogTB.Text = Properties.Settings.Default.DXLogStation;
+
+            dxlogUdpTB.Text = Properties.Settings.Default.DXLogPort.ToString();
+
+            n1mmUdpTB.Text = Properties.Settings.Default.N1MMPort.ToString();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -49,6 +62,29 @@ namespace ICOMautomagic
 
         private void OKbutton_Click(object sender, RoutedEventArgs e)
         {
+            if (!int.TryParse(n1mmUdpTB.Text, out int n1mmport))
+                return;
+            Properties.Settings.Default.N1MMPort = n1mmport;
+
+            if (!int.TryParse(dxlogUdpTB.Text, out int dxlogport))
+                return;
+            Properties.Settings.Default.DXLogPort = dxlogport;
+
+            if (!int.TryParse(zoomWidthTB.Text, out int zoom))
+                return;
+
+            Properties.Settings.Default.RadioModel = radioModelCB.Text;
+
+            Properties.Settings.Default.ZoomWidth = zoom;
+
+            Properties.Settings.Default.COMport = comPortCB.Text;
+
+            Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCB.Text);
+
+            Properties.Settings.Default.DXLogStation = stnameDxlogTB.Text;
+
+            Properties.Settings.Default.Save();
+
             Close();
         }
 

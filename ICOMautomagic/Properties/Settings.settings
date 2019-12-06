@@ -9,7 +9,7 @@
       <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="COMport" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM2</Value>
+      <Value Profile="(Default)">COM5</Value>
     </Setting>
     <Setting Name="LowerEdgesCW" Type="System.String" Scope="User">
       <Value Profile="(Default)">1810;3500;5352;7000;10100;14000;18068;21000;24890;28000;50000</Value>
@@ -58,6 +58,30 @@
     </Setting>
     <Setting Name="Barefoot" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RadioModel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">IC-7300</Value>
+    </Setting>
+    <Setting Name="EdgeSet" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="COMportSpeed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">19200</Value>
+    </Setting>
+    <Setting Name="ZoomWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="DXLogStation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">STN1</Value>
+    </Setting>
+    <Setting Name="DXLogPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9888</Value>
+    </Setting>
+    <Setting Name="N1MMPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12060</Value>
+    </Setting>
+    <Setting Name="CIVaddress" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">148</Value>
     </Setting>
   </Settings>
 </SettingsFile>

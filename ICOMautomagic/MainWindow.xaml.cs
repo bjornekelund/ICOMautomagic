@@ -80,14 +80,14 @@ namespace ICOMautomagic
     public partial class MainWindow : Window
     {
         readonly bool NoRadio = false; // For debugging with no radio attached
-        const int ListenPort = 12060; // UDP broadcast port
-        const byte TrxAddress = 0x98; // Address of IC-7610
-        const int ZoomRange = 20; // Range of zoomed waterfall in kHz
-        const byte EdgeSet = 0x03; // which scope edge should be manipulated
-        const int PortSpeed = 19200; // CI-V port speed
-        string programTitle;
+        //const int ListenPort = 12060; // UDP broadcast port
+        //const byte TrxAddress = 0x98; // Address of IC-7610
+        //const int ZoomRange = 20; // Range of zoomed waterfall in kHz
+        //const byte EdgeSet = 0x03; // which scope edge should be manipulated
+        //const int PortSpeed = 19200; // CI-V port speed
+        string programTitle = "ICOM Automagic";
         AssemblyName _assemblyName = Assembly.GetExecutingAssembly().GetName();
-        string Release;
+        //string Release;
 
         static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
         readonly SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
@@ -97,10 +97,10 @@ namespace ICOMautomagic
         readonly SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
 
         // Pre-baked CI-V commands
-        static byte[] CIVSetFixedMode = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x14, 0x0, 0x1, 0xFD };
-        static byte[] CIVSetEdgeSet = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x16, 0x0, EdgeSet, 0xFD };
-        static byte[] CIVSetRefLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xFD };
-        static byte[] CIVSetPwrLevel = new byte[] { 0xFE, 0xFE, TrxAddress, 0xE0, 0x14, 0x0A, 0x00, 0x00, 0xFD };
+        static byte[] CIVSetFixedMode = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x14, 0x00, 0x01, 0xfd };
+        static byte[] CIVSetEdgeSet = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x16, 0x0, 0xff, 0xfd };
+        static byte[] CIVSetRefLevel = new byte[11] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
+        static byte[] CIVSetPwrLevel = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
 
         // Maps MHz to band name
         readonly string[] bandName = new string[52]
@@ -128,40 +128,32 @@ namespace ICOMautomagic
 
         // Global variables
         static int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
-        static string currentMode = string.Empty, newMode = string.Empty, ComPort;
+        static string currentMode = string.Empty, newMode = string.Empty;
         static bool Zoomed, RadioInfoReceived, Barefoot;
-        static SerialPort port;
+        static SerialPort Port;
 
         public MainWindow()
         {
             string message;
             string[] commandLineArguments = Environment.GetCommandLineArgs();
 
-            Release = string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
-            programTitle = "ICOM Automagic" + Release;
+            programTitle += string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
 
             InitializeComponent();
 
-            // If there is a command line argument, take it as the COM port 
-            if (commandLineArguments.Length > 1)
-                ComPort = commandLineArguments[1].ToUpper();
-            else
-                ComPort = Properties.Settings.Default.COMport;
-
-
             if (!NoRadio) // If we are not debugging, open serial port
             {
-                ProgramWindow.Title = programTitle + " (" + ComPort + ")";
-                port = new SerialPort(ComPort, PortSpeed, Parity.None, 8, StopBits.One);
+                ProgramWindow.Title = programTitle +  " (" + Properties.Settings.Default.COMport + ")";
+                Port = new SerialPort(Properties.Settings.Default.COMport, Properties.Settings.Default.COMportSpeed, Parity.None, 8, StopBits.One);
 
                 try
                 {
-                    port.Open();
+                    Port.Open();
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Could not open serial port " + ComPort,
-                        programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
+                    MessageBoxResult result = MessageBox.Show("Could not open serial port " + Properties.Settings.Default.COMport,
+                        "ICOM Automagic", MessageBoxButton.OK, MessageBoxImage.Question);
                     if (result == MessageBoxResult.OK)
                     {
                         Application.Current.Shutdown();
@@ -169,7 +161,7 @@ namespace ICOMautomagic
                 }
             }
             else
-                ProgramWindow.Title = programTitle + " (No radio)";
+                ProgramWindow.Title = "ICOM Automagic" + " (No radio)";
 
             // Fetch window location from last time
             Top = Properties.Settings.Default.Top;
@@ -198,21 +190,21 @@ namespace ICOMautomagic
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
 
             // Set Zoom button text based on value of ZoomRange
-            ZoomButton.Content = string.Format("±{0}kHz", (int)(ZoomRange / 2));
+            ZoomButton.Content = string.Format("±{0}kHz", Properties.Settings.Default.ZoomWidth / 2);
 
             // Set Band-mode button active, Zoom button inactive
             Zoomed = false;
-            BandModeButton.Background = ActiveColor;
-            BandModeButton.BorderBrush = ActiveColor;
-            ZoomButton.Background = PassiveColor;
-            ZoomButton.BorderBrush = PassiveColor;
+            //BandModeButton.Background = ActiveColor;
+            //BandModeButton.BorderBrush = ActiveColor;
+            //ZoomButton.Background = PassiveColor;
+            //ZoomButton.BorderBrush = PassiveColor;
             
             // To disable functions until we have received info from N1MM
             RadioInfoReceived = false; 
 
             Task.Run(async () =>
             {
-                using (var udpClient = new UdpClient(ListenPort))
+                using (var udpClient = new UdpClient(Properties.Settings.Default.N1MMPort))
                 {
                     while (true)
                     {
@@ -229,8 +221,8 @@ namespace ICOMautomagic
 
                             if (radioInfo.RadioNr == 1) // Only listen to RadioInfo for radio 1
                             {
-                                newMHz = (int)(radioInfo.Freq / 100000f);
-                                currentFrequency = (int)(radioInfo.Freq / 100f); // Make it kHz
+                                newMHz = (int)(radioInfo.Freq / 100000.0);
+                                currentFrequency = (int)(radioInfo.Freq / 100.0); // Make it kHz
                                 RadioInfoReceived = true;
 
                                 switch (radioInfo.Mode)
@@ -440,7 +432,7 @@ namespace ICOMautomagic
             Properties.Settings.Default.RefLevelsDigitalZ = string.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.PwrLevelsDigital = string.Join(";", pwrLevelDigital.Select(i => i.ToString()).ToArray());
 
-            Properties.Settings.Default.COMport = ComPort;
+            //Properties.Settings.Default.COMport = ComPort;
             Properties.Settings.Default.Barefoot = Barefoot;
 
             Properties.Settings.Default.Save();
@@ -451,8 +443,8 @@ namespace ICOMautomagic
             // Only do act if we have received information from N1MM
             if (RadioInfoReceived)
             {
-                currentLowerEdge = currentFrequency - ZoomRange / 2;
-                currentUpperEdge = currentLowerEdge + ZoomRange;
+                currentLowerEdge = currentFrequency - Properties.Settings.Default.ZoomWidth / 2;
+                currentUpperEdge = currentLowerEdge + Properties.Settings.Default.ZoomWidth;
 
                 switch (currentMode)
                 {
@@ -482,6 +474,12 @@ namespace ICOMautomagic
                 UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
                 UpdateRadioReflevel(currentRefLevel);
             }
+        }
+
+        private void ZoomButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Config configPanel = new Config(this);
+            configPanel.ShowDialog();
         }
 
         // On arrow key modification of slider
@@ -576,10 +574,10 @@ namespace ICOMautomagic
             // Compose CI-V command to set waterfall edges
             byte[] CIVSetEdges = new byte[19]
             {
-                0xFE, 0xFE, TrxAddress, 0xE0,
-                0x27, 0x1E,
+                0xfe, 0xfe, Properties.Settings.Default.CIVaddress, 0xe0,
+                0x27, 0x1e,
                 (byte)((ICOMedgeSegment / 10) * 16 + (ICOMedgeSegment % 10)),
-                EdgeSet,
+                Properties.Settings.Default.EdgeSet,
                 0x00, // Lower 10Hz & 1Hz
                 (byte)((lower_edge % 10) * 16 + 0), // 1kHz & 100Hz
                 (byte)(((lower_edge / 100) % 10) * 16 + ((lower_edge / 10) % 10)), // 100kHz & 10kHz
@@ -590,7 +588,7 @@ namespace ICOMautomagic
                 (byte)(((upper_edge / 100) % 10) * 16 + (upper_edge / 10) % 10), // 100kHz & 10kHz
                 (byte)(((upper_edge / 10000) % 10) * 16 + (upper_edge / 1000) % 10), // 10MHz & 1MHz
                 0x00, // 1GHz & 100MHz
-                0xFD
+                0xfd
             };
 
             // Update UI if present (this function may be called before main window is created)
@@ -603,9 +601,13 @@ namespace ICOMautomagic
             // Update radio if we are not in debug mode
             if (!NoRadio)
             {
-                port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
-                port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
-                port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
+                CIVSetFixedMode[2] = Properties.Settings.Default.CIVaddress;
+                CIVSetEdgeSet[2] = Properties.Settings.Default.CIVaddress;
+                CIVSetEdgeSet[7] = Properties.Settings.Default.EdgeSet;
+
+                Port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
+                Port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
+                Port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
             }
         }
 
@@ -614,6 +616,7 @@ namespace ICOMautomagic
         {
             int absRefLevel = (ref_level >= 0) ? ref_level : -ref_level;
 
+            CIVSetRefLevel[2] = Properties.Settings.Default.CIVaddress;
             CIVSetRefLevel[7] = (byte)((absRefLevel / 10) * 16 + absRefLevel % 10);
             CIVSetRefLevel[9] = (ref_level >= 0) ? (byte)0 : (byte)1;
 
@@ -626,7 +629,7 @@ namespace ICOMautomagic
 
             // Update radio if we are not debugging
             if (!NoRadio)
-                port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
+                Port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
         }
 
         // Update radio with new PWR level
@@ -656,12 +659,13 @@ namespace ICOMautomagic
                     PwrLevelLabel.Content = string.Format("Pwr:{0,3}%", pwr_level);
                 }
 
+                CIVSetPwrLevel[2] = Properties.Settings.Default.CIVaddress;
                 CIVSetPwrLevel[6] = (byte)((usedPower / 100) % 10);
                 CIVSetPwrLevel[7] = (byte)((((usedPower / 10) % 10) << 4) + (usedPower % 10));
 
                 // Update radio if present
                 if (!NoRadio)
-                    port.Write(CIVSetPwrLevel, 0, CIVSetPwrLevel.Length); // set power level 
+                    Port.Write(CIVSetPwrLevel, 0, CIVSetPwrLevel.Length); // set power level 
             }
         }
     }

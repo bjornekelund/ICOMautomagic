@@ -49,7 +49,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM5")]
         public string COMport {
             get {
                 return ((string)(this["COMport"]));
@@ -248,6 +248,102 @@ namespace ICOMautomagic.Properties {
             }
             set {
                 this["Barefoot"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("IC-7300")]
+        public string RadioModel {
+            get {
+                return ((string)(this["RadioModel"]));
+            }
+            set {
+                this["RadioModel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public byte EdgeSet {
+            get {
+                return ((byte)(this["EdgeSet"]));
+            }
+            set {
+                this["EdgeSet"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("19200")]
+        public int COMportSpeed {
+            get {
+                return ((int)(this["COMportSpeed"]));
+            }
+            set {
+                this["COMportSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int ZoomWidth {
+            get {
+                return ((int)(this["ZoomWidth"]));
+            }
+            set {
+                this["ZoomWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("STN1")]
+        public string DXLogStation {
+            get {
+                return ((string)(this["DXLogStation"]));
+            }
+            set {
+                this["DXLogStation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9888")]
+        public int DXLogPort {
+            get {
+                return ((int)(this["DXLogPort"]));
+            }
+            set {
+                this["DXLogPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12060")]
+        public int N1MMPort {
+            get {
+                return ((int)(this["N1MMPort"]));
+            }
+            set {
+                this["N1MMPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("148")]
+        public byte CIVaddress {
+            get {
+                return ((byte)(this["CIVaddress"]));
+            }
+            set {
+                this["CIVaddress"] = value;
             }
         }
     }

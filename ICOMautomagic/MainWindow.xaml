@@ -38,8 +38,8 @@
                 </LinearGradientBrush>
             </Label.Foreground>
         </Label>
-        <Button x:Name="BandModeButton" Content="Band-Mode" HorizontalAlignment="Left" Margin="268,43,0,0" VerticalAlignment="Top" Width="80" Click="OnBandModeButton" Background="LightGray" Height="28" Focusable="False" BorderBrush="LightGray" Foreground="#FF303030" IsEnabled="False"/>
-        <Button x:Name="ZoomButton" Content="Zoom" HorizontalAlignment="Left" Margin="356,43,0,0" VerticalAlignment="Top" Width="80" Click="OnZoomButton" BorderBrush="LightGray" Height="28" Focusable="False" Foreground="#FF303030" IsEnabled="False"/>
+        <Button x:Name="BandModeButton" Content="Band+Mode" HorizontalAlignment="Left" Margin="268,43,0,0" VerticalAlignment="Top" Width="80" Click="OnBandModeButton" Background="LightGray" Height="28" Focusable="False" BorderBrush="LightGray" Foreground="#FF303030" IsEnabled="False"/>
+        <Button x:Name="ZoomButton" Content="Zoom" HorizontalAlignment="Left" Margin="356,43,0,0" VerticalAlignment="Top" Width="80" Click="OnZoomButton" BorderBrush="Gray" Height="28" Focusable="False" Foreground="#FF303030" Background="#FFF3F3F3" MouseRightButtonDown="ZoomButton_MouseRightButtonDown"/>
         <Label Content="kHz" HorizontalAlignment="Left" Margin="222,43,0,0" VerticalAlignment="Top" Height="28" Width="32">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
