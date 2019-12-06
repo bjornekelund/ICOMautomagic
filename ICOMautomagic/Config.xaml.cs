@@ -93,15 +93,5 @@ namespace ICOMautomagic
 
             Close();
         }
-
-        private void DxLogRB_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void N1mmRB_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

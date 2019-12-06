@@ -81,14 +81,8 @@ namespace ICOMautomagic
     public partial class MainWindow : Window
     {
         readonly bool NoRadio = false; // For debugging with no radio attached
-        //const int ListenPort = 12060; // UDP broadcast port
-        //const byte TrxAddress = 0x98; // Address of IC-7610
-        //const int ZoomRange = 20; // Range of zoomed waterfall in kHz
-        //const byte EdgeSet = 0x03; // which scope edge should be manipulated
-        //const int PortSpeed = 19200; // CI-V port speed
         string programTitle = "ICOM Automagic";
         AssemblyName _assemblyName = Assembly.GetExecutingAssembly().GetName();
-        //string Release;
 
         static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
         readonly SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
@@ -115,17 +109,30 @@ namespace ICOMautomagic
         { 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8,
             8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 
-        // Maps actual MHz to radio's scope edge set on ICOM 7800, 785x, 7300 and 7610
+        // Maps actual MHz to radio's scope edge set on ICOM 7xxx
         readonly int[] RadioEdgeSet = new int[]
         { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 11,
             11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
         // Per mode/band waterfall edges and ref levels. Also one zoomed ref level per band.
-        int[] lowerEdgeCW = new int[11]; int[] upperEdgeCW = new int[11]; int[] refLevelCW = new int[11]; int[] refLevelCWZ = new int[11];
-        int[] lowerEdgeSSB = new int[11]; int[] upperEdgeSSB = new int[11]; int[] refLevelSSB = new int[11]; int[] refLevelSSBZ = new int[11];
-        int[] lowerEdgeDigital = new int[11]; int[] upperEdgeDigital = new int[11]; int[] refLevelDigital = new int[11]; int[] refLevelDigitalZ = new int[11];
+        int[] lowerEdgeCW = new int[11]; 
+        int[] upperEdgeCW = new int[11]; 
+        int[] refLevelCW = new int[11]; 
+        int[] refLevelCWZ = new int[11];
 
-        int[] pwrLevelCW = new int[11]; int[] pwrLevelSSB = new int[11]; int[] pwrLevelDigital = new int[11];
+        int[] lowerEdgeSSB = new int[11]; 
+        int[] upperEdgeSSB = new int[11]; 
+        int[] refLevelSSB = new int[11]; 
+        int[] refLevelSSBZ = new int[11];
+
+        int[] lowerEdgeDigital = new int[11]; 
+        int[] upperEdgeDigital = new int[11]; 
+        int[] refLevelDigital = new int[11]; 
+        int[] refLevelDigitalZ = new int[11];
+
+        int[] pwrLevelCW = new int[11]; 
+        int[] pwrLevelSSB = new int[11]; 
+        int[] pwrLevelDigital = new int[11];
 
         // Global variables
         static int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
@@ -142,27 +149,7 @@ namespace ICOMautomagic
 
             InitializeComponent();
 
-            if (!NoRadio) // If we are not debugging, open serial port
-            {
-                ProgramWindow.Title = programTitle +  " (" + Properties.Settings.Default.COMport + ")";
-                Port = new SerialPort(Properties.Settings.Default.COMport, Properties.Settings.Default.COMportSpeed, Parity.None, 8, StopBits.One);
-
-                try
-                {
-                    Port.Open();
-                }
-                catch
-                {
-                    MessageBoxResult result = MessageBox.Show("Could not open serial port " + Properties.Settings.Default.COMport,
-                        programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.OK)
-                    {
-                        Application.Current.Shutdown();
-                    }
-                }
-            }
-            else
-                ProgramWindow.Title = programTitle + " (No radio)";
+            ResetSerialPort();
 
             // Fetch window location from last time
             Top = Properties.Settings.Default.Top;
@@ -195,10 +182,6 @@ namespace ICOMautomagic
 
             // Set Band-mode button active, Zoom button inactive
             Zoomed = false;
-            //BandModeButton.Background = ActiveColor;
-            //BandModeButton.BorderBrush = ActiveColor;
-            //ZoomButton.Background = PassiveColor;
-            //ZoomButton.BorderBrush = PassiveColor;
             
             // To disable functions until we have received info from N1MM
             RadioInfoReceived = false; 
@@ -248,67 +231,7 @@ namespace ICOMautomagic
                                 // Only auto update radio when mode or band changes to avoid 
                                 // overruling manual changes made on the radio's front panel
                                 if ((newMHz != currentMHz) || (newMode != currentMode))
-                                {
-                                    currentMHz = newMHz;
-                                    currentMode = newMode;
-
-                                    switch (currentMode)
-                                    {
-                                        case "CW":
-                                            currentLowerEdge = lowerEdgeCW[bandIndex[currentMHz]];
-                                            currentUpperEdge = upperEdgeCW[bandIndex[currentMHz]];
-                                            currentRefLevel = refLevelCW[bandIndex[currentMHz]];
-                                            currentPwrLevel = pwrLevelCW[bandIndex[currentMHz]];
-                                            break;
-                                        case "SSB":
-                                            currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
-                                            currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
-                                            currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
-                                            currentPwrLevel = pwrLevelSSB[bandIndex[currentMHz]];
-                                            break;
-                                        default:
-                                            currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
-                                            currentUpperEdge = upperEdgeDigital[bandIndex[currentMHz]];
-                                            currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
-                                            currentPwrLevel = pwrLevelDigital[bandIndex[currentMHz]];
-                                            break;
-                                    }
-
-                                    // Execute changes to the UI on main thread 
-                                    Application.Current.Dispatcher.Invoke(new Action(() =>
-                                    {
-                                        // Highlight band-mode button and exit Zoomed mode if active
-                                        Zoomed = false;
-                                        ZoomButton.Background = PassiveColor;
-                                        ZoomButton.BorderBrush = PassiveColor;
-                                        BandModeButton.Background = ActiveColor;
-                                        BandModeButton.BorderBrush = ActiveColor;
-
-                                        // Allow entry in edge text boxes 
-                                        LowerEdgeTextbox.IsEnabled = true;
-                                        UpperEdgeTextbox.IsEnabled = true;
-
-                                        // Update UI and waterfall edges and ref level in radio 
-                                        UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
-                                        UpdateRadioReflevel(currentRefLevel);
-                                        UpdateRadioPwrlevel(currentPwrLevel);
-
-                                        // Update band/mode display in UI
-                                        BandLabel.Content = bandName[newMHz];
-                                        BandLabel.Foreground = BandModeColor;
-                                        ModeLabel.Content = newMode;
-                                        ModeLabel.Foreground = BandModeColor;
-
-                                        // Enable UI components
-                                        ZoomButton.IsEnabled = true;
-                                        BandModeButton.IsEnabled = true;
-                                        LowerEdgeTextbox.IsEnabled = true;
-                                        UpperEdgeTextbox.IsEnabled = true;
-                                        RefLevelSlider.IsEnabled = true;
-                                        PwrLevelSlider.IsEnabled = true;
-                                        PwrLevelLabel.IsEnabled = true;
-                                    }));
-                                }
+                                    updateRadio();
                             }
                         }
                     }
@@ -377,72 +300,104 @@ namespace ICOMautomagic
                             // Only auto update radio when mode or band changes to avoid 
                             // overruling manual changes made on the radio's front panel
                             if ((newMHz != currentMHz) || (newMode != currentMode))
-                            {
-                                currentMHz = newMHz;
-                                currentMode = newMode;
-
-                                switch (currentMode)
-                                {
-                                    case "CW":
-                                        currentLowerEdge = lowerEdgeCW[bandIndex[currentMHz]];
-                                        currentUpperEdge = upperEdgeCW[bandIndex[currentMHz]];
-                                        currentRefLevel = refLevelCW[bandIndex[currentMHz]];
-                                        currentPwrLevel = pwrLevelCW[bandIndex[currentMHz]];
-                                        break;
-                                    case "SSB":
-                                        currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
-                                        currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
-                                        currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
-                                        currentPwrLevel = pwrLevelSSB[bandIndex[currentMHz]];
-                                        break;
-                                    default:
-                                        currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
-                                        currentUpperEdge = upperEdgeDigital[bandIndex[currentMHz]];
-                                        currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
-                                        currentPwrLevel = pwrLevelDigital[bandIndex[currentMHz]];
-                                        break;
-                                }
-
-                                // Execute changes to the UI on main thread 
-                                Application.Current.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    // Highlight band-mode button and exit Zoomed mode if active
-                                    Zoomed = false;
-                                    ZoomButton.Background = PassiveColor;
-                                    ZoomButton.BorderBrush = PassiveColor;
-                                    BandModeButton.Background = ActiveColor;
-                                    BandModeButton.BorderBrush = ActiveColor;
-
-                                    // Allow entry in edge text boxes 
-                                    LowerEdgeTextbox.IsEnabled = true;
-                                    UpperEdgeTextbox.IsEnabled = true;
-
-                                    // Update UI and waterfall edges and ref level in radio 
-                                    UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
-                                    UpdateRadioReflevel(currentRefLevel);
-                                    UpdateRadioPwrlevel(currentPwrLevel);
-
-                                    // Update band/mode display in UI
-                                    BandLabel.Content = bandName[newMHz];
-                                    BandLabel.Foreground = BandModeColor;
-                                    ModeLabel.Content = newMode;
-                                    ModeLabel.Foreground = BandModeColor;
-
-                                    // Enable UI components
-                                    ZoomButton.IsEnabled = true;
-                                    BandModeButton.IsEnabled = true;
-                                    LowerEdgeTextbox.IsEnabled = true;
-                                    UpperEdgeTextbox.IsEnabled = true;
-                                    RefLevelSlider.IsEnabled = true;
-                                    PwrLevelSlider.IsEnabled = true;
-                                    PwrLevelLabel.IsEnabled = true;
-                                }));
-                            }
+                                updateRadio();
                         }
                     }
                 }
             });
+        }
 
+        private void ResetSerialPort()
+        {
+            string title;
+
+            if (!NoRadio) // If we are not debugging, open serial port
+            {
+                try
+                {
+                    Port.Close();
+                }
+                catch { }
+
+                Port = new SerialPort(Properties.Settings.Default.COMport, Properties.Settings.Default.COMportSpeed, Parity.None, 8, StopBits.One);
+
+                try
+                {
+                    Port.Open();
+                    title = programTitle + " (" + Properties.Settings.Default.COMport + ")";
+                }
+                catch
+                {
+                    title = programTitle + " (" + Properties.Settings.Default.COMport + " - failed to open)";
+                }
+            }
+            else
+                title = programTitle + " (No radio)";
+
+            ProgramWindow.Title = title;
+        }
+
+        private void updateRadio()
+        {
+            currentMHz = newMHz;
+            currentMode = newMode;
+
+            switch (currentMode)
+            {
+                case "CW":
+                    currentLowerEdge = lowerEdgeCW[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgeCW[bandIndex[currentMHz]];
+                    currentRefLevel = refLevelCW[bandIndex[currentMHz]];
+                    currentPwrLevel = pwrLevelCW[bandIndex[currentMHz]];
+                    break;
+                case "SSB":
+                    currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
+                    currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                    currentPwrLevel = pwrLevelSSB[bandIndex[currentMHz]];
+                    break;
+                default:
+                    currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgeDigital[bandIndex[currentMHz]];
+                    currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
+                    currentPwrLevel = pwrLevelDigital[bandIndex[currentMHz]];
+                    break;
+            }
+
+            // Execute changes to the UI on main thread 
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                // Highlight band-mode button and exit Zoomed mode if active
+                Zoomed = false;
+                ZoomButton.Background = PassiveColor;
+                ZoomButton.BorderBrush = PassiveColor;
+                BandModeButton.Background = ActiveColor;
+                BandModeButton.BorderBrush = ActiveColor;
+
+                // Allow entry in edge text boxes 
+                LowerEdgeTextbox.IsEnabled = true;
+                UpperEdgeTextbox.IsEnabled = true;
+
+                // Update UI and waterfall edges and ref level in radio 
+                UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                UpdateRadioReflevel(currentRefLevel);
+                UpdateRadioPwrlevel(currentPwrLevel);
+
+                // Update band/mode display in UI
+                BandLabel.Content = bandName[newMHz];
+                BandLabel.Foreground = BandModeColor;
+                ModeLabel.Content = newMode;
+                ModeLabel.Foreground = BandModeColor;
+
+                // Enable UI components
+                ZoomButton.IsEnabled = true;
+                BandModeButton.IsEnabled = true;
+                LowerEdgeTextbox.IsEnabled = true;
+                UpperEdgeTextbox.IsEnabled = true;
+                RefLevelSlider.IsEnabled = true;
+                PwrLevelSlider.IsEnabled = true;
+                PwrLevelLabel.IsEnabled = true;
+            }));
         }
 
         // On hitting a key in upper and lower edge text boxes
@@ -614,6 +569,11 @@ namespace ICOMautomagic
         {
             Config configPanel = new Config(this);
             configPanel.ShowDialog();
+            ResetSerialPort();
+            // Update Zoom button text based on value of ZoomWidth
+            ZoomButton.Content = string.Format("±{0}kHz", Properties.Settings.Default.ZoomWidth / 2);
+            updateRadio();
+
         }
 
         // On arrow key modification of slider

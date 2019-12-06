@@ -30,7 +30,7 @@
             </Label.Foreground>
         </Label>
         <Label x:Name="BandLabel" Content="Band" HorizontalAlignment="Left" Margin="444,10,0,0" VerticalAlignment="Top" Width="52" Height="30" FontWeight="Bold" FontSize="14" Foreground="Gray" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="65">
+        <Label x:Name="RefLevelLabel" Content="Ref: ---dB" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="69">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>
