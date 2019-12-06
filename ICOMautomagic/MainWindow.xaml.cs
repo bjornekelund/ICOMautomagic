@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Xml.Linq;
 using System.Xml;
@@ -153,7 +154,7 @@ namespace ICOMautomagic
                 catch
                 {
                     MessageBoxResult result = MessageBox.Show("Could not open serial port " + Properties.Settings.Default.COMport,
-                        "ICOM Automagic", MessageBoxButton.OK, MessageBoxImage.Question);
+                        programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
                     if (result == MessageBoxResult.OK)
                     {
                         Application.Current.Shutdown();
@@ -161,7 +162,7 @@ namespace ICOMautomagic
                 }
             }
             else
-                ProgramWindow.Title = "ICOM Automagic" + " (No radio)";
+                ProgramWindow.Title = programTitle + " (No radio)";
 
             // Fetch window location from last time
             Top = Properties.Settings.Default.Top;
@@ -204,8 +205,12 @@ namespace ICOMautomagic
 
             Task.Run(async () =>
             {
-                using (var udpClient = new UdpClient(Properties.Settings.Default.N1MMPort))
+                using (var udpClient = new UdpClient())
                 {
+                    // UDP receiver without bind
+                    udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, Properties.Settings.Default.N1MMPort));
+
                     while (true)
                     {
                         //Wait for UDP packets to arrive 
