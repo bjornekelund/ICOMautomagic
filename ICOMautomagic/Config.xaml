@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ICOMautomagic"
         mc:Ignorable="d"
-        Title="Config" Height="304.982" Width="674.982">
+        Title="Configuration" Height="305" Width="675" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Grid>
         <GroupBox Header="N1MM Logger+" HorizontalAlignment="Left" Height="194" Margin="174,16,0,0" VerticalAlignment="Top" Width="158"/>
 
@@ -15,17 +15,15 @@
 
         <ComboBox x:Name="radioModelCB" HorizontalAlignment="Left" Margin="356,61,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="ICOM Radio model" HorizontalAlignment="Left" Margin="356,35,0,0" VerticalAlignment="Top"/>
-        <RadioButton x:Name="dxLogRB" Content="DXLog.net" HorizontalAlignment="Left" Margin="29,44,0,0" VerticalAlignment="Top" Checked="DxLogRB_Checked"/>
-        <RadioButton x:Name="n1mmRB" Content="N1MM Logger+" HorizontalAlignment="Left" Margin="188,44,0,0" VerticalAlignment="Top" Checked="N1mmRB_Checked"/>
         <ComboBox x:Name="ComPortSpeedCB" HorizontalAlignment="Left" Margin="356,188,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Speed" HorizontalAlignment="Left" Margin="356,157,0,0" VerticalAlignment="Top"/>
         <Label Content="COM port" HorizontalAlignment="Left" Margin="356,96,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="comPortCB" HorizontalAlignment="Left" Margin="356,122,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="dxlogUdpTB" HorizontalAlignment="Left" Height="23" Margin="29,152,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="stnameDxlogTB" HorizontalAlignment="Left" Height="23" Margin="29,94,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="dxlogUdpTB" HorizontalAlignment="Left" Height="23" Margin="24,114,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="stnameDxlogTB" HorizontalAlignment="Left" Height="23" Margin="24,65,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="n1mmUdpTB" HorizontalAlignment="Left" Height="23" Margin="198,126,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Station name" HorizontalAlignment="Left" Margin="29,64,0,0" VerticalAlignment="Top"/>
-        <Label Content="UDP port" HorizontalAlignment="Left" Margin="29,122,0,0" VerticalAlignment="Top"/>
+        <Label Content="Station name" HorizontalAlignment="Left" Margin="19,39,0,0" VerticalAlignment="Top"/>
+        <Label Content="UDP port" HorizontalAlignment="Left" Margin="18,88,0,0" VerticalAlignment="Top"/>
         <Label Content="UDP port" HorizontalAlignment="Left" Margin="198,95,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="edgeSetCB" HorizontalAlignment="Left" Margin="504,61,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Edge set" HorizontalAlignment="Left" Margin="504,30,0,0" VerticalAlignment="Top"/>

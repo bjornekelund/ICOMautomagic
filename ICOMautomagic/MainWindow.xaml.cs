@@ -314,6 +314,135 @@ namespace ICOMautomagic
                     }
                 }
             });
+
+
+            Task.Run(async () =>
+            {
+                using (var udpClient = new UdpClient())
+                {
+                    // UDP receiver without bind
+                    udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, Properties.Settings.Default.DXLogPort));
+
+                    while (true)
+                    {
+                        //Wait for UDP packets to arrive 
+                        var receivedResults = await udpClient.ReceiveAsync();
+
+                        message = Encoding.Unicode.GetString(receivedResults.Buffer);
+
+                        string datagramType = message.Substring(32, 3);
+                        int senderlen = 0;
+                        while (message.Substring(senderlen, 1) != "\0")
+                            senderlen++;
+                        string sender = message.Substring(0, senderlen);
+
+                        if ((datagramType == "STI") && (sender == Properties.Settings.Default.DXLogStation)) // If it is a RadioInfo datagram
+                        {
+                            // Ugly but simple parsing of struct
+                            int i = 0;
+                            while (message.Substring(i + 101, 1) != "\0") i++;
+                            int frequency1 = int.Parse(message.Substring(101, i - 2));
+
+                            i = 0;
+                            while (message.Substring(i + 121, 1) != "\0") i++;
+                            int frequency2 = int.Parse(message.Substring(121, i - 2));
+
+                            i = 0;
+                            while (message.Substring(i + 56, 1) != "\0") i++;
+                            int band = int.Parse(message.Substring(56, i));
+
+                            string mode = message.Substring(66, 2); // Use first two characters of mode string
+
+                            newMHz = frequency1 / 1000;
+                            currentFrequency = frequency1;
+                            RadioInfoReceived = true;
+
+                            switch (mode)
+                            {
+                                case "CW":
+                                    newMode = "CW";
+                                    break;
+                                case "US":
+                                case "LS":
+                                case "AM":
+                                case "SS":
+                                    newMode = "SSB";
+                                    break;
+                                default:
+                                    newMode = "Digital";
+                                    break;
+                            }
+
+                            // Only auto update radio when mode or band changes to avoid 
+                            // overruling manual changes made on the radio's front panel
+                            if ((newMHz != currentMHz) || (newMode != currentMode))
+                            {
+                                currentMHz = newMHz;
+                                currentMode = newMode;
+
+                                switch (currentMode)
+                                {
+                                    case "CW":
+                                        currentLowerEdge = lowerEdgeCW[bandIndex[currentMHz]];
+                                        currentUpperEdge = upperEdgeCW[bandIndex[currentMHz]];
+                                        currentRefLevel = refLevelCW[bandIndex[currentMHz]];
+                                        currentPwrLevel = pwrLevelCW[bandIndex[currentMHz]];
+                                        break;
+                                    case "SSB":
+                                        currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
+                                        currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
+                                        currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                                        currentPwrLevel = pwrLevelSSB[bandIndex[currentMHz]];
+                                        break;
+                                    default:
+                                        currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
+                                        currentUpperEdge = upperEdgeDigital[bandIndex[currentMHz]];
+                                        currentRefLevel = refLevelDigital[bandIndex[currentMHz]];
+                                        currentPwrLevel = pwrLevelDigital[bandIndex[currentMHz]];
+                                        break;
+                                }
+
+                                // Execute changes to the UI on main thread 
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    // Highlight band-mode button and exit Zoomed mode if active
+                                    Zoomed = false;
+                                    ZoomButton.Background = PassiveColor;
+                                    ZoomButton.BorderBrush = PassiveColor;
+                                    BandModeButton.Background = ActiveColor;
+                                    BandModeButton.BorderBrush = ActiveColor;
+
+                                    // Allow entry in edge text boxes 
+                                    LowerEdgeTextbox.IsEnabled = true;
+                                    UpperEdgeTextbox.IsEnabled = true;
+
+                                    // Update UI and waterfall edges and ref level in radio 
+                                    UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
+                                    UpdateRadioReflevel(currentRefLevel);
+                                    UpdateRadioPwrlevel(currentPwrLevel);
+
+                                    // Update band/mode display in UI
+                                    BandLabel.Content = bandName[newMHz];
+                                    BandLabel.Foreground = BandModeColor;
+                                    ModeLabel.Content = newMode;
+                                    ModeLabel.Foreground = BandModeColor;
+
+                                    // Enable UI components
+                                    ZoomButton.IsEnabled = true;
+                                    BandModeButton.IsEnabled = true;
+                                    LowerEdgeTextbox.IsEnabled = true;
+                                    UpperEdgeTextbox.IsEnabled = true;
+                                    RefLevelSlider.IsEnabled = true;
+                                    PwrLevelSlider.IsEnabled = true;
+                                    PwrLevelLabel.IsEnabled = true;
+                                }));
+                            }
+                        }
+                    }
+                }
+            });
+
         }
 
         // On hitting a key in upper and lower edge text boxes
