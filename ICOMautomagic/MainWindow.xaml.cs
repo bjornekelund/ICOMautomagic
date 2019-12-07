@@ -567,8 +567,21 @@ namespace ICOMautomagic
 
         private void ZoomButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            int n1mmport = Properties.Settings.Default.N1MMPort;
+            int dxlogport = Properties.Settings.Default.DXLogPort;
+
             Config configPanel = new Config(this);
             configPanel.ShowDialog();
+
+            if (n1mmport != Properties.Settings.Default.N1MMPort || dxlogport != Properties.Settings.Default.DXLogPort)
+            {
+                MessageBoxResult result = MessageBox.Show("Port change - Restart required", programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
+                if (result == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+
             ResetSerialPort();
             // Update Zoom button text based on value of ZoomWidth
             ZoomButton.Content = string.Format("±{0}kHz", Properties.Settings.Default.ZoomWidth / 2);
