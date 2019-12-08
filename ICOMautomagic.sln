@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICOMautomagic", "ICOMautomagic\ICOMautomagic.csproj", "{AA222E0A-A394-44DC-B579-E8C65A7668E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICOM Automagic", "ICOMautomagic\ICOM Automagic.csproj", "{AA222E0A-A394-44DC-B579-E8C65A7668E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4DC7EDB2-958F-4D31-969C-352E7BE93D73}"
 	ProjectSection(SolutionItems) = preProject
