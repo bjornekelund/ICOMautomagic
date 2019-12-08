@@ -120,10 +120,10 @@ namespace ICOMautomagic
         int[] refLevelCW = new int[11]; 
         int[] refLevelCWZ = new int[11];
 
-        int[] lowerEdgeSSB = new int[11]; 
-        int[] upperEdgeSSB = new int[11]; 
-        int[] refLevelSSB = new int[11]; 
-        int[] refLevelSSBZ = new int[11];
+        int[] lowerEdgePhone = new int[11]; 
+        int[] upperEdgePhone = new int[11]; 
+        int[] refLevelPhone = new int[11]; 
+        int[] refLevelPhoneZ = new int[11];
 
         int[] lowerEdgeDigital = new int[11]; 
         int[] upperEdgeDigital = new int[11]; 
@@ -131,7 +131,7 @@ namespace ICOMautomagic
         int[] refLevelDigitalZ = new int[11];
 
         int[] pwrLevelCW = new int[11]; 
-        int[] pwrLevelSSB = new int[11]; 
+        int[] pwrLevelPhone = new int[11]; 
         int[] pwrLevelDigital = new int[11];
 
         // Global variables
@@ -165,11 +165,11 @@ namespace ICOMautomagic
             refLevelCWZ = Properties.Settings.Default.RefLevelsCWZ.Split(';').Select(s => int.Parse(s)).ToArray();
             pwrLevelCW = Properties.Settings.Default.PwrLevelsCW.Split(';').Select(s => int.Parse(s)).ToArray();
 
-            lowerEdgeSSB = Properties.Settings.Default.LowerEdgesSSB.Split(';').Select(s => int.Parse(s)).ToArray();
-            upperEdgeSSB = Properties.Settings.Default.UpperEdgesSSB.Split(';').Select(s => int.Parse(s)).ToArray();
-            refLevelSSB = Properties.Settings.Default.RefLevelsSSB.Split(';').Select(s => int.Parse(s)).ToArray();
-            refLevelSSBZ = Properties.Settings.Default.RefLevelsSSBZ.Split(';').Select(s => int.Parse(s)).ToArray();
-            pwrLevelSSB = Properties.Settings.Default.PwrLevelsSSB.Split(';').Select(s => int.Parse(s)).ToArray();
+            lowerEdgePhone = Properties.Settings.Default.LowerEdgesPhone.Split(';').Select(s => int.Parse(s)).ToArray();
+            upperEdgePhone = Properties.Settings.Default.UpperEdgesPhone.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelPhone = Properties.Settings.Default.RefLevelsPhone.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelPhoneZ = Properties.Settings.Default.RefLevelsPhoneZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            pwrLevelPhone = Properties.Settings.Default.PwrLevelsPhone.Split(';').Select(s => int.Parse(s)).ToArray();
 
             lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
             upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
@@ -210,7 +210,7 @@ namespace ICOMautomagic
                             if (radioInfo.RadioNr == 1) // Only listen to RadioInfo for radio 1
                             {
                                 newMHz = (int)(radioInfo.Freq / 100000.0);
-                                currentFrequency = (int)(radioInfo.Freq / 100.0); // Make it kHz
+                                currentFrequency = (int)(radioInfo.Freq / 100.0 + 0.5); // Make it kHz
                                 RadioInfoReceived = true;
 
                                 switch (radioInfo.Mode)
@@ -221,7 +221,7 @@ namespace ICOMautomagic
                                     case "USB":
                                     case "LSB":
                                     case "AM":
-                                        newMode = "SSB";
+                                        newMode = "Phone";
                                         break;
                                     default:
                                         newMode = "Digital";
@@ -265,11 +265,12 @@ namespace ICOMautomagic
                             // Ugly but simple parsing of struct
                             int i = 0;
                             while (message.Substring(i + 101, 1) != "\0") i++;
-                            int frequency1 = int.Parse(message.Substring(101, i - 2));
+                            currentFrequency = int.Parse(message.Substring(101, i - 2));
+                            newMHz = currentFrequency / 1000;
 
-                            i = 0;
-                            while (message.Substring(i + 121, 1) != "\0") i++;
-                            int frequency2 = int.Parse(message.Substring(121, i - 2));
+                            //i = 0;
+                            //while (message.Substring(i + 121, 1) != "\0") i++;
+                            //int frequency2 = int.Parse(message.Substring(121, i - 2));
 
                             i = 0;
                             while (message.Substring(i + 56, 1) != "\0") i++;
@@ -277,11 +278,12 @@ namespace ICOMautomagic
 
                             string mode = message.Substring(66, 2); // Use first two characters of mode string
 
-                            newMHz = frequency1 / 1000;
-                            currentFrequency = frequency1;
+                            //newMHz = dxlogfrequency / 1000;
+                            //currentFrequency = dxlogfrequency;
                             RadioInfoReceived = true;
 
-                            switch (mode)
+                            // Use first two characters of mode string to determine mode
+                            switch (message.Substring(66, 2))
                             {
                                 case "CW":
                                     newMode = "CW";
@@ -290,7 +292,7 @@ namespace ICOMautomagic
                                 case "LS":
                                 case "AM":
                                 case "SS":
-                                    newMode = "SSB";
+                                    newMode = "Phone";
                                     break;
                                 default:
                                     newMode = "Digital";
@@ -350,11 +352,11 @@ namespace ICOMautomagic
                     currentRefLevel = refLevelCW[bandIndex[currentMHz]];
                     currentPwrLevel = pwrLevelCW[bandIndex[currentMHz]];
                     break;
-                case "SSB":
-                    currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
-                    currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
-                    currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
-                    currentPwrLevel = pwrLevelSSB[bandIndex[currentMHz]];
+                case "Phone":
+                    currentLowerEdge = lowerEdgePhone[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgePhone[bandIndex[currentMHz]];
+                    currentRefLevel = refLevelPhone[bandIndex[currentMHz]];
+                    currentPwrLevel = pwrLevelPhone[bandIndex[currentMHz]];
                     break;
                 default:
                     currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
@@ -432,10 +434,10 @@ namespace ICOMautomagic
                         upperEdgeCW[bandIndex[currentMHz]] = currentUpperEdge;
                         currentRefLevel = refLevelCW[bandIndex[currentMHz]];
                         break;
-                    case "SSB":
-                        lowerEdgeSSB[bandIndex[currentMHz]] = currentLowerEdge;
-                        upperEdgeSSB[bandIndex[currentMHz]] = currentUpperEdge;
-                        currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                    case "Phone":
+                        lowerEdgePhone[bandIndex[currentMHz]] = currentLowerEdge;
+                        upperEdgePhone[bandIndex[currentMHz]] = currentUpperEdge;
+                        currentRefLevel = refLevelPhone[bandIndex[currentMHz]];
                         break;
                     default:
                         lowerEdgeDigital[bandIndex[currentMHz]] = currentLowerEdge;
@@ -469,10 +471,10 @@ namespace ICOMautomagic
                     currentUpperEdge = upperEdgeCW[bandIndex[currentMHz]];
                     currentRefLevel = refLevelCW[bandIndex[currentMHz]];
                     break;
-                case "SSB":
-                    currentLowerEdge = lowerEdgeSSB[bandIndex[currentMHz]];
-                    currentUpperEdge = upperEdgeSSB[bandIndex[currentMHz]];
-                    currentRefLevel = refLevelSSB[bandIndex[currentMHz]];
+                case "Phone":
+                    currentLowerEdge = lowerEdgePhone[bandIndex[currentMHz]];
+                    currentUpperEdge = upperEdgePhone[bandIndex[currentMHz]];
+                    currentRefLevel = refLevelPhone[bandIndex[currentMHz]];
                     break;
                 default: // All other modes = Digital 
                     currentLowerEdge = lowerEdgeDigital[bandIndex[currentMHz]];
@@ -509,11 +511,11 @@ namespace ICOMautomagic
             Properties.Settings.Default.RefLevelsCWZ = string.Join(";", refLevelCWZ.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.PwrLevelsCW = string.Join(";", pwrLevelCW.Select(i => i.ToString()).ToArray());
 
-            Properties.Settings.Default.LowerEdgesSSB = string.Join(";", lowerEdgeSSB.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.UpperEdgesSSB = string.Join(";", upperEdgeSSB.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsSSB = string.Join(";", refLevelSSB.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsSSBZ = string.Join(";", refLevelSSBZ.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.PwrLevelsSSB = string.Join(";", pwrLevelSSB.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.LowerEdgesPhone = string.Join(";", lowerEdgePhone.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.UpperEdgesPhone = string.Join(";", upperEdgePhone.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsPhone = string.Join(";", refLevelPhone.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsPhoneZ = string.Join(";", refLevelPhoneZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.PwrLevelsPhone = string.Join(";", pwrLevelPhone.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.LowerEdgesDigital = string.Join(";", lowerEdgeDigital.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.UpperEdgesDigital = string.Join(";", upperEdgeDigital.Select(i => i.ToString()).ToArray());
@@ -540,8 +542,8 @@ namespace ICOMautomagic
                     case "CW":
                         currentRefLevel = refLevelCWZ[bandIndex[currentMHz]];
                         break;
-                    case "SSB":
-                        currentRefLevel = refLevelSSBZ[bandIndex[currentMHz]];
+                    case "Phone":
+                        currentRefLevel = refLevelPhoneZ[bandIndex[currentMHz]];
                         break;
                     default:
                         currentRefLevel = refLevelDigitalZ[bandIndex[currentMHz]];
@@ -627,11 +629,11 @@ namespace ICOMautomagic
                         else
                             refLevelCW[bandIndex[currentMHz]] = currentRefLevel;
                         break;
-                    case "SSB":
+                    case "Phone":
                         if (Zoomed)
-                            refLevelSSBZ[bandIndex[currentMHz]] = currentRefLevel;
+                            refLevelPhoneZ[bandIndex[currentMHz]] = currentRefLevel;
                         else
-                            refLevelSSB[bandIndex[currentMHz]] = currentRefLevel;
+                            refLevelPhone[bandIndex[currentMHz]] = currentRefLevel;
                         break;
                     default:
                         if (Zoomed)
@@ -666,8 +668,8 @@ namespace ICOMautomagic
                     case "CW":
                         pwrLevelCW[bandIndex[currentMHz]] = currentPwrLevel;
                         break;
-                    case "SSB":
-                        pwrLevelSSB[bandIndex[currentMHz]] = currentPwrLevel;
+                    case "Phone":
+                        pwrLevelPhone[bandIndex[currentMHz]] = currentPwrLevel;
                         break;
                     default:
                         pwrLevelDigital[bandIndex[currentMHz]] = currentPwrLevel;

@@ -98,36 +98,36 @@ namespace ICOMautomagic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1840;3600;5353;7040;10100;14100;18111;21150;24931;28300;50100")]
-        public string LowerEdgesSSB {
+        public string LowerEdgesPhone {
             get {
-                return ((string)(this["LowerEdgesSSB"]));
+                return ((string)(this["LowerEdgesPhone"]));
             }
             set {
-                this["LowerEdgesSSB"] = value;
+                this["LowerEdgesPhone"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2000;3800;5366;7200;10150;14350;18168;21450;24990;28600;50500")]
-        public string UpperEdgesSSB {
+        public string UpperEdgesPhone {
             get {
-                return ((string)(this["UpperEdgesSSB"]));
+                return ((string)(this["UpperEdgesPhone"]));
             }
             set {
-                this["UpperEdgesSSB"] = value;
+                this["UpperEdgesPhone"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
-        public string RefLevelsSSB {
+        [global::System.Configuration.DefaultSettingValueAttribute("-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9")]
+        public string RefLevelsPhone {
             get {
-                return ((string)(this["RefLevelsSSB"]));
+                return ((string)(this["RefLevelsPhone"]));
             }
             set {
-                this["RefLevelsSSB"] = value;
+                this["RefLevelsPhone"] = value;
             }
         }
         
@@ -157,7 +157,7 @@ namespace ICOMautomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
         public string RefLevelsDigital {
             get {
                 return ((string)(this["RefLevelsDigital"]));
@@ -194,12 +194,12 @@ namespace ICOMautomagic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
-        public string RefLevelsSSBZ {
+        public string RefLevelsPhoneZ {
             get {
-                return ((string)(this["RefLevelsSSBZ"]));
+                return ((string)(this["RefLevelsPhoneZ"]));
             }
             set {
-                this["RefLevelsSSBZ"] = value;
+                this["RefLevelsPhoneZ"] = value;
             }
         }
         
@@ -218,12 +218,12 @@ namespace ICOMautomagic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
-        public string PwrLevelsSSB {
+        public string PwrLevelsPhone {
             get {
-                return ((string)(this["PwrLevelsSSB"]));
+                return ((string)(this["PwrLevelsPhone"]));
             }
             set {
-                this["PwrLevelsSSB"] = value;
+                this["PwrLevelsPhone"] = value;
             }
         }
         

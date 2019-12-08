@@ -1,43 +1,40 @@
 ﻿using System.Windows;
+using System.IO.Ports;
 
 namespace ICOMautomagic
 {
     public partial class Config : Window
     {
-        MainWindow mainwindow;
-
         readonly string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
 
         public Config(MainWindow mw)
         {
             InitializeComponent();
+
+            string[] ports = SerialPort.GetPortNames();
+
             Top = mw.Top + 10;
             Left = mw.Left + 50;
-
-            mainwindow = mw;
 
             for (int i = 0; i < ICOMradios.Length; i++)
                 radioModelCB.Items.Add(ICOMradios[i]);
             radioModelCB.SelectedItem = Properties.Settings.Default.RadioModel;
 
-            for (int i = 1; i <= 30; i++)
-                comPortCB.Items.Add("COM" + i.ToString());
+            foreach(string port in ports)
+                comPortCB.Items.Add(port);
             comPortCB.SelectedItem = Properties.Settings.Default.COMport;
 
             for (int i = 1; i <= 3; i++)
                 edgeSetCB.Items.Add(i.ToString("00"));
             edgeSetCB.SelectedItem = Properties.Settings.Default.EdgeSet.ToString("00");
 
-            for (int i = 4800; i <= 115200; i += i)
+            for (int i = 4800; i <= 19200; i *= 2)
                 ComPortSpeedCB.Items.Add(i.ToString());
             ComPortSpeedCB.SelectedItem = Properties.Settings.Default.COMportSpeed.ToString();
 
             zoomWidthTB.Text = Properties.Settings.Default.ZoomWidth.ToString();
-
             stnameDxlogTB.Text = Properties.Settings.Default.DXLogStation;
-
             dxlogUdpTB.Text = Properties.Settings.Default.DXLogPort.ToString();
-
             n1mmUdpTB.Text = Properties.Settings.Default.N1MMPort.ToString();
         }
 
@@ -48,13 +45,11 @@ namespace ICOMautomagic
 
         private void OKbutton_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(n1mmUdpTB.Text, out int n1mmport))
+            if (!int.TryParse(n1mmUdpTB.Text, out int n1mmPort))
                 return;
-            Properties.Settings.Default.N1MMPort = n1mmport;
 
-            if (!int.TryParse(dxlogUdpTB.Text, out int dxlogport))
+            if (!int.TryParse(dxlogUdpTB.Text, out int dxlogPort))
                 return;
-            Properties.Settings.Default.DXLogPort = dxlogport;
 
             if (!int.TryParse(zoomWidthTB.Text, out int zoom))
                 return;
@@ -77,12 +72,14 @@ namespace ICOMautomagic
                 case "IC-7851":
                     Properties.Settings.Default.CIVaddress = 0x8e;
                     break;
-                default: // IC-7300
+                default: // IC-7300 is default
                     radioModelCB.Text = "IC-7300";
                     Properties.Settings.Default.CIVaddress = 0x94;
                     break;
             }
 
+            Properties.Settings.Default.N1MMPort = n1mmPort;
+            Properties.Settings.Default.DXLogPort = dxlogPort;
             Properties.Settings.Default.RadioModel = radioModelCB.Text;
             Properties.Settings.Default.ZoomWidth = zoom;
             Properties.Settings.Default.COMport = comPortCB.Text;
