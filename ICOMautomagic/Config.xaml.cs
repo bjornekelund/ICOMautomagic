@@ -2,7 +2,7 @@
 using System.IO.Ports;
 using System.Windows.Input;
 
-namespace ICOMautomagic
+namespace ICOMAutomagic
 {
     public partial class Config : Window
     {

@@ -19,7 +19,7 @@ using System.IO.Ports;
 using System.Windows.Media;
 using System.Reflection;
 
-namespace ICOMautomagic
+namespace ICOMAutomagic
 {
     // Definition of N1MM XML datagrams based on
     // http://n1mm.hamdocs.com/tiki-index.php?page=UDP+Broadcasts
@@ -146,7 +146,7 @@ namespace ICOMautomagic
             string message;
             string[] commandLineArguments = Environment.GetCommandLineArgs();
 
-            programTitle = _assemblyName.Name + string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
+            programTitle = programTitle + string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
 
             InitializeComponent();
 

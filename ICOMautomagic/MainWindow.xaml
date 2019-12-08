@@ -1,9 +1,9 @@
-﻿<Window x:Name="ProgramWindow" x:Class="ICOMautomagic.MainWindow"
+﻿<Window x:Name="ProgramWindow" x:Class="ICOMAutomagic.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ICOMautomagic"
+        xmlns:local="clr-namespace:ICOMAutomagic"
         mc:Ignorable="d"
         Title="ICOM Automagic for N1MM Logger+ (No radio)" Height="115" Width="520" Closed="OnClosing" ResizeMode="CanMinimize" Topmost="True">
     <Window.Resources>
