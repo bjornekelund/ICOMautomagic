@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.IO.Ports;
+using System.Windows.Input;
 
 namespace ICOMautomagic
 {
@@ -43,7 +44,7 @@ namespace ICOMautomagic
             Close();
         }
 
-        private void OKbutton_Click(object sender, RoutedEventArgs e)
+        private void OKbutton_Action()
         {
             if (!int.TryParse(n1mmUdpTB.Text, out int n1mmPort))
                 return;
@@ -87,8 +88,48 @@ namespace ICOMautomagic
             Properties.Settings.Default.DXLogStation = stnameDxlogTB.Text;
             Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCB.Text);
             Properties.Settings.Default.Save();
+        }
 
+        private void OKbutton_Click(object sender, RoutedEventArgs e)
+        {
+            OKbutton_Action();
             Close();
+        }
+
+        private void stnameDxlogTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                OKbutton_Action();
+                Close();
+            }
+        }
+
+            private void dxlogUdpTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                OKbutton_Action();
+                Close();
+            }
+        }
+
+        private void n1mmUdpTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                OKbutton_Action();
+                Close();
+            }
+        }
+
+        private void zoomWidthTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                OKbutton_Action();
+                Close();
+            }
         }
     }
 }

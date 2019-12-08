@@ -1,5 +1,5 @@
-﻿// Companion app for N1MM when using ICOM radios with waterfall display,
-// e.g. IC-7300, IC-7610, and IC-785x.
+﻿// Companion app for N1MM and DXLog.net when using ICOM radios 
+// with waterfall display, e.g. IC-7300, IC-7610, etc.
 // 
 // By Björn Ekelund SM7IUN sm7iun@ssa.se
 
@@ -92,22 +92,22 @@ namespace ICOMautomagic
         readonly SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
 
         // Pre-baked CI-V commands
-        static byte[] CIVSetFixedMode = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x14, 0x00, 0x01, 0xfd };
-        static byte[] CIVSetEdgeSet = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x16, 0x0, 0xff, 0xfd };
-        static byte[] CIVSetRefLevel = new byte[11] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
-        static byte[] CIVSetPwrLevel = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
+        byte[] CIVSetFixedMode = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x14, 0x00, 0x01, 0xfd };
+        byte[] CIVSetEdgeSet = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x16, 0x0, 0xff, 0xfd };
+        byte[] CIVSetRefLevel = new byte[11] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
+        byte[] CIVSetPwrLevel = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
 
         // Maps MHz to band name
         readonly string[] bandName = new string[52]
-        { "?m", "160m", "?m", "80m", "?m", "60m", "?m", "40m", "?m", "?m", "30m", "?m", "?m",
-            "?m", "20m", "?m", "?m", "?m", "17m", "?m", "?m", "15m", "?m", "?m", "12m", "?m",
-            "?m", "?m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
-            "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "6m", "6m" };
+        { "?m", "160m", "?m", "80m", "?m", "60m", "40m", "40m", "?m", "30m", "30m", "?m", "?m",
+            "20m", "20m", "?m", "?m", "17m", "17m", "?m", "15m", "15m", "?m", "?m", "12m", "12m",
+            "?m", "10m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
+            "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "6m", "6m", "6m" };
 
         // Maps MHz to internal band index
         readonly int[] bandIndex = new int[52]
-        { 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8,
-            8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
+            { 0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8,
+            8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 
         // Maps actual MHz to radio's scope edge set on ICOM 7xxx
         readonly int[] RadioEdgeSet = new int[]
@@ -118,34 +118,35 @@ namespace ICOMautomagic
         int[] lowerEdgeCW = new int[11]; 
         int[] upperEdgeCW = new int[11]; 
         int[] refLevelCW = new int[11]; 
-        int[] refLevelCWZ = new int[11];
+        int[] refLevelCWZoom = new int[11];
 
         int[] lowerEdgePhone = new int[11]; 
         int[] upperEdgePhone = new int[11]; 
         int[] refLevelPhone = new int[11]; 
-        int[] refLevelPhoneZ = new int[11];
+        int[] refLevelPhoneZoom = new int[11];
 
         int[] lowerEdgeDigital = new int[11]; 
         int[] upperEdgeDigital = new int[11]; 
         int[] refLevelDigital = new int[11]; 
-        int[] refLevelDigitalZ = new int[11];
+        int[] refLevelDigitalZoom = new int[11];
 
         int[] pwrLevelCW = new int[11]; 
         int[] pwrLevelPhone = new int[11]; 
         int[] pwrLevelDigital = new int[11];
 
         // Global variables
-        static int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel, currentFrequency = 0, newMHz, currentMHz = 0;
-        static string currentMode = string.Empty, newMode = string.Empty;
-        static bool Zoomed, RadioInfoReceived, Barefoot;
-        static SerialPort Port;
+        int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel;
+        int currentFrequency = 0, newMHz, currentMHz = 0;
+        string currentMode = string.Empty, newMode = string.Empty;
+        bool Zoomed, RadioInfoReceived, Barefoot;
+        SerialPort Port;
 
         public MainWindow()
         {
             string message;
             string[] commandLineArguments = Environment.GetCommandLineArgs();
 
-            programTitle += string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
+            programTitle = _assemblyName.Name + string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
 
             InitializeComponent();
 
@@ -162,19 +163,19 @@ namespace ICOMautomagic
             lowerEdgeCW = Properties.Settings.Default.LowerEdgesCW.Split(';').Select(s => int.Parse(s)).ToArray();
             upperEdgeCW = Properties.Settings.Default.UpperEdgesCW.Split(';').Select(s => int.Parse(s)).ToArray();
             refLevelCW = Properties.Settings.Default.RefLevelsCW.Split(';').Select(s => int.Parse(s)).ToArray();
-            refLevelCWZ = Properties.Settings.Default.RefLevelsCWZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelCWZoom = Properties.Settings.Default.RefLevelsCWZ.Split(';').Select(s => int.Parse(s)).ToArray();
             pwrLevelCW = Properties.Settings.Default.PwrLevelsCW.Split(';').Select(s => int.Parse(s)).ToArray();
 
             lowerEdgePhone = Properties.Settings.Default.LowerEdgesPhone.Split(';').Select(s => int.Parse(s)).ToArray();
             upperEdgePhone = Properties.Settings.Default.UpperEdgesPhone.Split(';').Select(s => int.Parse(s)).ToArray();
             refLevelPhone = Properties.Settings.Default.RefLevelsPhone.Split(';').Select(s => int.Parse(s)).ToArray();
-            refLevelPhoneZ = Properties.Settings.Default.RefLevelsPhoneZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelPhoneZoom = Properties.Settings.Default.RefLevelsPhoneZ.Split(';').Select(s => int.Parse(s)).ToArray();
             pwrLevelPhone = Properties.Settings.Default.PwrLevelsPhone.Split(';').Select(s => int.Parse(s)).ToArray();
 
             lowerEdgeDigital = Properties.Settings.Default.LowerEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
             upperEdgeDigital = Properties.Settings.Default.UpperEdgesDigital.Split(';').Select(s => int.Parse(s)).ToArray();
             refLevelDigital = Properties.Settings.Default.RefLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
-            refLevelDigitalZ = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => int.Parse(s)).ToArray();
+            refLevelDigitalZoom = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => int.Parse(s)).ToArray();
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
 
             // Set Zoom button text based on value of ZoomRange
@@ -269,17 +270,11 @@ namespace ICOMautomagic
                             newMHz = currentFrequency / 1000;
 
                             //i = 0;
-                            //while (message.Substring(i + 121, 1) != "\0") i++;
-                            //int frequency2 = int.Parse(message.Substring(121, i - 2));
+                            //while (message.Substring(i + 56, 1) != "\0") i++;
+                            //int band = int.Parse(message.Substring(56, i));
 
-                            i = 0;
-                            while (message.Substring(i + 56, 1) != "\0") i++;
-                            int band = int.Parse(message.Substring(56, i));
+                            //string mode = message.Substring(66, 2); // Use first two characters of mode string
 
-                            string mode = message.Substring(66, 2); // Use first two characters of mode string
-
-                            //newMHz = dxlogfrequency / 1000;
-                            //currentFrequency = dxlogfrequency;
                             RadioInfoReceived = true;
 
                             // Use first two characters of mode string to determine mode
@@ -486,6 +481,7 @@ namespace ICOMautomagic
             UpdateRadioEdges(currentLowerEdge, currentUpperEdge, RadioEdgeSet[currentMHz]);
 
             UpdateRadioReflevel(currentRefLevel);
+
             Zoomed = false;
             LowerEdgeTextbox.IsEnabled = true;
             UpperEdgeTextbox.IsEnabled = true;
@@ -508,19 +504,19 @@ namespace ICOMautomagic
             Properties.Settings.Default.LowerEdgesCW = string.Join(";", lowerEdgeCW.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.UpperEdgesCW = string.Join(";", upperEdgeCW.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsCW = string.Join(";", refLevelCW.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsCWZ = string.Join(";", refLevelCWZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsCWZ = string.Join(";", refLevelCWZoom.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.PwrLevelsCW = string.Join(";", pwrLevelCW.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.LowerEdgesPhone = string.Join(";", lowerEdgePhone.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.UpperEdgesPhone = string.Join(";", upperEdgePhone.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsPhone = string.Join(";", refLevelPhone.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsPhoneZ = string.Join(";", refLevelPhoneZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsPhoneZ = string.Join(";", refLevelPhoneZoom.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.PwrLevelsPhone = string.Join(";", pwrLevelPhone.Select(i => i.ToString()).ToArray());
 
             Properties.Settings.Default.LowerEdgesDigital = string.Join(";", lowerEdgeDigital.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.UpperEdgesDigital = string.Join(";", upperEdgeDigital.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.RefLevelsDigital = string.Join(";", refLevelDigital.Select(i => i.ToString()).ToArray());
-            Properties.Settings.Default.RefLevelsDigitalZ = string.Join(";", refLevelDigitalZ.Select(i => i.ToString()).ToArray());
+            Properties.Settings.Default.RefLevelsDigitalZ = string.Join(";", refLevelDigitalZoom.Select(i => i.ToString()).ToArray());
             Properties.Settings.Default.PwrLevelsDigital = string.Join(";", pwrLevelDigital.Select(i => i.ToString()).ToArray());
 
             //Properties.Settings.Default.COMport = ComPort;
@@ -540,13 +536,13 @@ namespace ICOMautomagic
                 switch (currentMode)
                 {
                     case "CW":
-                        currentRefLevel = refLevelCWZ[bandIndex[currentMHz]];
+                        currentRefLevel = refLevelCWZoom[bandIndex[currentMHz]];
                         break;
                     case "Phone":
-                        currentRefLevel = refLevelPhoneZ[bandIndex[currentMHz]];
+                        currentRefLevel = refLevelPhoneZoom[bandIndex[currentMHz]];
                         break;
-                    default:
-                        currentRefLevel = refLevelDigitalZ[bandIndex[currentMHz]];
+                    default: // Digital or anything else
+                        currentRefLevel = refLevelDigitalZoom[bandIndex[currentMHz]];
                         break;
                 }
 
@@ -557,7 +553,7 @@ namespace ICOMautomagic
                 BandModeButton.Background = PassiveColor;
                 BandModeButton.BorderBrush = PassiveColor;
 
-                // Disable text boxes for entry in Zoomed mode
+                // Disable text boxes for entry in zoomed mode
                 LowerEdgeTextbox.IsEnabled = false;
                 UpperEdgeTextbox.IsEnabled = false;
 
@@ -567,7 +563,7 @@ namespace ICOMautomagic
             }
         }
 
-        private void ZoomButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnZoomButton_RightClick(object sender, MouseButtonEventArgs e)
         {
             int n1mmport = Properties.Settings.Default.N1MMPort;
             int dxlogport = Properties.Settings.Default.DXLogPort;
@@ -585,10 +581,12 @@ namespace ICOMautomagic
             }
 
             ResetSerialPort();
+
             // Update Zoom button text based on value of ZoomWidth
             ZoomButton.Content = string.Format("±{0}kHz", Properties.Settings.Default.ZoomWidth / 2);
-            updateRadio();
 
+            if (RadioInfoReceived)
+                updateRadio();
         }
 
         // On arrow key modification of slider
@@ -625,19 +623,19 @@ namespace ICOMautomagic
                 {
                     case "CW":
                         if (Zoomed)
-                            refLevelCWZ[bandIndex[currentMHz]] = currentRefLevel;
+                            refLevelCWZoom[bandIndex[currentMHz]] = currentRefLevel;
                         else
                             refLevelCW[bandIndex[currentMHz]] = currentRefLevel;
                         break;
                     case "Phone":
                         if (Zoomed)
-                            refLevelPhoneZ[bandIndex[currentMHz]] = currentRefLevel;
+                            refLevelPhoneZoom[bandIndex[currentMHz]] = currentRefLevel;
                         else
                             refLevelPhone[bandIndex[currentMHz]] = currentRefLevel;
                         break;
                     default:
                         if (Zoomed)
-                            refLevelDigitalZ[bandIndex[currentMHz]] = currentRefLevel;
+                            refLevelDigitalZoom[bandIndex[currentMHz]] = currentRefLevel;
                         else
                             refLevelDigital[bandIndex[currentMHz]] = currentRefLevel;
                         break;

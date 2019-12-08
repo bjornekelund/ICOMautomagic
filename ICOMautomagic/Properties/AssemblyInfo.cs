@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ICOMautomagic")]
+[assembly: AssemblyTitle("ICOM Automagic")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SM7IUN")]
-[assembly: AssemblyProduct("ICOMautomagic")]
+[assembly: AssemblyProduct("ICOM Automagic")]
 [assembly: AssemblyCopyright("Copyright © Björn Ekelund SM7IUN 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

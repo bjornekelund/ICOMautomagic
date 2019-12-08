@@ -19,16 +19,16 @@
         <Label Content="Speed" HorizontalAlignment="Left" Margin="343,123,0,0" VerticalAlignment="Top"/>
         <Label Content="COM port" HorizontalAlignment="Left" Margin="342,75,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="comPortCB" HorizontalAlignment="Left" Margin="348,101,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="dxlogUdpTB" HorizontalAlignment="Left" Height="23" Margin="21,100,0,0" Text="TextBox" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="stnameDxlogTB" HorizontalAlignment="Left" Height="22" Margin="21,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="n1mmUdpTB" HorizontalAlignment="Left" Height="22" Margin="174,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="dxlogUdpTB" HorizontalAlignment="Left" Height="23" Margin="21,100,0,0" Text="TextBox" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center" KeyDown="dxlogUdpTB_KeyDown"/>
+        <TextBox x:Name="stnameDxlogTB" HorizontalAlignment="Left" Height="22" Margin="21,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center" KeyDown="stnameDxlogTB_KeyDown"/>
+        <TextBox x:Name="n1mmUdpTB" HorizontalAlignment="Left" Height="22" Margin="174,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="120" VerticalContentAlignment="Center" KeyDown="n1mmUdpTB_KeyDown"/>
         <Label Content="Station name" HorizontalAlignment="Left" Margin="16,29,0,0" VerticalAlignment="Top"/>
         <Label Content="UDP port" HorizontalAlignment="Left" Margin="15,74,0,0" VerticalAlignment="Top"/>
         <Label Content="UDP port" HorizontalAlignment="Left" Margin="174,25,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="edgeSetCB" HorizontalAlignment="Left" Margin="487,52,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Edge set" HorizontalAlignment="Left" Margin="480,26,0,0" VerticalAlignment="Top"/>
         <Label Content="Zoom width" HorizontalAlignment="Left" Margin="482,74,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="zoomWidthTB" HorizontalAlignment="Left" Height="24" Margin="487,101,0,0" Text="TextBox" VerticalAlignment="Top" Width="48" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="zoomWidthTB" HorizontalAlignment="Left" Height="24" Margin="487,101,0,0" Text="TextBox" VerticalAlignment="Top" Width="48" VerticalContentAlignment="Center" KeyDown="zoomWidthTB_KeyDown"/>
         <Label Content="kHz" HorizontalAlignment="Left" Margin="535,100,0,0" VerticalAlignment="Top"/>
         <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="247,151,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="137,151,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>
