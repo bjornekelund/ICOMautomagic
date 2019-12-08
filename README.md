@@ -13,8 +13,9 @@ for frequency (requiring RETURN for entry, with erroneous input silently ignored
 for reference level and output power. Clicking the power level percentage number toggles "barefoot" 
 mode which sets radio output power to 100% at activation and then re-sets it to 100% whenever band or mode changes.
 
-A typical usage scenario is to connect **ICOM Automagic** to the slow "Remote" CI-V port of the 
-ICOM radio while the logger is connected to the fast USB CI-V port. 
+A typical usage scenario is to connect **ICOM Automagic** to the "Remote" CI-V port of the 
+ICOM radio while the logger is connected to the fast USB CI-V port. (Please note that the two ports 
+need to be unlinked in the settings.)
 
 For the application to work you need to check the "Radio" box on the "Broadcast data" tab in N1MM Logger+'s 
 Configuration panel and make sure the UDP port is the same in both N1MM Logger+ and ICOM Automagic. 
