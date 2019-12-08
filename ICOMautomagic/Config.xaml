@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ICOMautomagic"
         mc:Ignorable="d"
-        Title="Configuration" Height="213.729" Width="493.901" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+        Title="Configuration" Height="213.729" Width="493.901" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <Grid Margin="0,0,4,0">
         <GroupBox Header="N1MM Logger+" HorizontalAlignment="Left" Height="72" Margin="145,10,0,0" VerticalAlignment="Top" Width="128"/>
 
