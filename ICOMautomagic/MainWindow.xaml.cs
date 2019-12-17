@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -147,6 +148,12 @@ namespace ICOMAutomagic
             string[] commandLineArguments = Environment.GetCommandLineArgs();
 
             programTitle = programTitle + string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
+
+            if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
+            {
+                MessageBox.Show(programTitle + " is already running on this PC.", programTitle);
+                Application.Current.Shutdown();
+            }
 
             InitializeComponent();
 
