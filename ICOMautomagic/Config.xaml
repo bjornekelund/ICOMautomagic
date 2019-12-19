@@ -32,6 +32,7 @@
         <Label Content="kHz" HorizontalAlignment="Left" Margin="188,102,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="391,146,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="285,146,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>
+        <CheckBox x:Name="onTopCB" Content="Always on top" HorizontalAlignment="Left" Margin="21,151,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

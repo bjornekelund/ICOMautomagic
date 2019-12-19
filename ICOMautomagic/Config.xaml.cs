@@ -8,9 +8,13 @@ namespace ICOMAutomagic
     {
         readonly string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
 
-        public Config(MainWindow mw)
+        MainWindow mw;
+
+        public Config(MainWindow mainform)
         {
             InitializeComponent();
+
+            mw = mainform;
 
             string[] ports = SerialPort.GetPortNames();
 
@@ -37,6 +41,7 @@ namespace ICOMAutomagic
             stnameDxlogTB.Text = Properties.Settings.Default.DXLogStation;
             dxlogUdpTB.Text = Properties.Settings.Default.DXLogPort.ToString();
             n1mmUdpTB.Text = Properties.Settings.Default.N1MMPort.ToString();
+            onTopCB.IsChecked = Properties.Settings.Default.AlwaysOnTop;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -87,6 +92,8 @@ namespace ICOMAutomagic
             Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCB.Text);
             Properties.Settings.Default.DXLogStation = stnameDxlogTB.Text;
             Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCB.Text);
+            Properties.Settings.Default.AlwaysOnTop = (bool)onTopCB.IsChecked;
+            mw.Topmost = Properties.Settings.Default.AlwaysOnTop;
             Properties.Settings.Default.Save();
         }
 
