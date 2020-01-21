@@ -584,7 +584,7 @@ namespace ICOMAutomagic
                 MessageBoxResult result = MessageBox.Show("Port change - Restart required", programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
                 if (result == MessageBoxResult.OK)
                 {
-                    Application.Current.Shutdown();
+                    Close();
                 }
             }
 
