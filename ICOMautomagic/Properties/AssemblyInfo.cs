@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SM7IUN")]
 [assembly: AssemblyProduct("ICOM Automagic")]
-[assembly: AssemblyCopyright("Copyright © Björn Ekelund SM7IUN 2019")]
+[assembly: AssemblyCopyright("Copyright © Björn Ekelund SM7IUN 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
