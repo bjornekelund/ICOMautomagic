@@ -162,6 +162,7 @@ namespace ICOMAutomagic
             // Fetch window location from last time
             Top = Properties.Settings.Default.Top;
             Left = Properties.Settings.Default.Left;
+            Topmost = Properties.Settings.Default.AlwaysOnTop;
 
             // Fetch barefoot status from last time
             Barefoot = Properties.Settings.Default.Barefoot;

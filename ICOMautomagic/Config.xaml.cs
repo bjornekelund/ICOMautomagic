@@ -60,6 +60,16 @@ namespace ICOMAutomagic
             if (!int.TryParse(zoomWidthTB.Text, out int zoom))
                 return;
 
+            Properties.Settings.Default.COMport = comPortCB.Text == "" ? "COM5" : comPortCB.Text;
+            Properties.Settings.Default.N1MMPort = n1mmPort;
+            Properties.Settings.Default.DXLogPort = dxlogPort;
+            Properties.Settings.Default.RadioModel = radioModelCB.Text;
+            Properties.Settings.Default.ZoomWidth = zoom;
+            Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCB.Text);
+            Properties.Settings.Default.DXLogStation = stnameDxlogTB.Text;
+            Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCB.Text);
+            Properties.Settings.Default.AlwaysOnTop = (bool)onTopCB.IsChecked;
+
             switch (radioModelCB.Text)
             {
                 case "IC-7600":
@@ -84,16 +94,8 @@ namespace ICOMAutomagic
                     break;
             }
 
-            Properties.Settings.Default.N1MMPort = n1mmPort;
-            Properties.Settings.Default.DXLogPort = dxlogPort;
-            Properties.Settings.Default.RadioModel = radioModelCB.Text;
-            Properties.Settings.Default.ZoomWidth = zoom;
-            Properties.Settings.Default.COMport = comPortCB.Text;
-            Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCB.Text);
-            Properties.Settings.Default.DXLogStation = stnameDxlogTB.Text;
-            Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCB.Text);
-            Properties.Settings.Default.AlwaysOnTop = (bool)onTopCB.IsChecked;
             mw.Topmost = Properties.Settings.Default.AlwaysOnTop;
+
             Properties.Settings.Default.Save();
         }
 
