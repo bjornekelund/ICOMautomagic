@@ -218,8 +218,8 @@ namespace ICOMAutomagic
 
                             if (radioInfo.RadioNr == 1) // Only listen to RadioInfo for radio 1
                             {
-                                newMHz = (int)(radioInfo.Freq / 100000.0);
-                                currentFrequency = (int)(radioInfo.Freq / 100.0 + 0.5); // Make it kHz
+                                newMHz = (int)(radioInfo.TXFreq / 100000.0);
+                                currentFrequency = (int)(radioInfo.TXFreq / 100.0 + 0.5); // Make it kHz
                                 RadioInfoReceived = true;
 
                                 switch (radioInfo.Mode)
