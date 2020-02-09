@@ -720,9 +720,12 @@ namespace ICOMAutomagic
                 CIVSetEdgeSet[2] = Properties.Settings.Default.CIVaddress;
                 CIVSetEdgeSet[7] = Properties.Settings.Default.EdgeSet;
 
-                Port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
-                Port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
-                Port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
+                if (Port.IsOpen)
+                {
+                    Port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
+                    Port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
+                    Port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
+                }
             }
         }
 
@@ -743,7 +746,7 @@ namespace ICOMAutomagic
             }
 
             // Update radio if we are not debugging
-            if (!NoRadio)
+            if (!NoRadio && Port.IsOpen)
                 Port.Write(CIVSetRefLevel, 0, CIVSetRefLevel.Length); // set edge set EdgeSet
         }
 
@@ -779,7 +782,7 @@ namespace ICOMAutomagic
                 CIVSetPwrLevel[7] = (byte)((((usedPower / 10) % 10) << 4) + (usedPower % 10));
 
                 // Update radio if present
-                if (!NoRadio)
+                if (!NoRadio && Port.IsOpen)
                     Port.Write(CIVSetPwrLevel, 0, CIVSetPwrLevel.Length); // set power level 
             }
         }
