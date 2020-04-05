@@ -37,7 +37,7 @@ in both N1MM Logger+ and ICOM Automagic.
 
 The application does not query the radio for settings. 
 Any manual changes made using the radio's own controls are ignored and are consequently not saved. 
-The application updates the radio only when band or mode is changed. 
+To not interfer with manual adjustments, the application only updates the radio's settings on band or mode changes. 
 
 Please note that N1MM Logger+ reports the main receiver's frequency when broadcasting frequency information. 
 This means e.g. cross band SO2V is not supported with this logger.
