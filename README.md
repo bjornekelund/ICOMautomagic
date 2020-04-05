@@ -1,6 +1,6 @@
 # ICOM Automagic
 A Windows utility with small screen footprint that use the radio information broadcast over 
-UDP from [N1MM Logger+](http://www.n1mm.com) or [DXLog.net](http://dxlog.net) to update 
+UDP from [DXLog.net](http://dxlog.net) or [N1MM Logger+](http://www.n1mm.com) to automatically set 
 spectrum scope settings and output power on a range of ICOM radios. 
 
 It sets and remembers waterfall/spectrum edges, display reference level, and output power for 
@@ -26,8 +26,8 @@ need to be unlinked in the settings.)
 
 For the application to work you need to enabled UDP XML broadcast in the logger.
 
-In DXLog.net this is done with the Options|Broadcast|Radio information menu item. 
-Make sure the correct IP address and port are set in Options|Configure network and 
+In DXLog.net this is done with the `Options|Broadcast|Radio information menu` item. 
+Make sure the correct IP address and port are set in `Options|Configure network` and 
 that the port is the same as in ICOM Automagic's XML broadcast setting. 
 The default is 127.0.0.1 and 12060. 
 
