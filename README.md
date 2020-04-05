@@ -15,20 +15,31 @@ power to 100% at activation and then re-sets it to 100% whenever band or mode ch
 
 The configuration panel is opened by right-clicking the zoom button in the lower right corner. 
 
+The configuration panel allows setting the UDP broadcast port, zoom width in kHz, ICOM radio model, 
+radio control COM port and speed, which of the radio's three edge sets should be used. It offers 
+the option to make the application always stay on top of any other window. 
+This is particularly useful when used together with a full-screen logger such as DXLog.net.
+
 A typical usage scenario is to connect **ICOM Automagic** to the "Remote" CI-V port of the 
 ICOM radio while the logger is connected to the fast USB CI-V port. (Please note that the two ports 
 need to be unlinked in the settings.)
 
-For the application to work you need to check the "Radio" box on the "Broadcast data" tab in N1MM Logger+'s 
-Configuration panel and make sure the UDP port is the same in both N1MM Logger+ and ICOM Automagic. 
-For DXLog.net UDP broadcast needs to be enabled and both the port and the station ID of the tracked 
-station needs to be entered correctly.
+For the application to work you need to enabled UDP XML broadcast in the logger.
 
-The application does not query the radio for settings. Any manual changes made using the radio's own 
-controls are ignored and are consequently not saved. 
+In DXLog.net this is done with the Options|Broadcast|Radio information menu item. 
+Make sure the correct IP address and port are set in Options|Configure network and 
+that the port is the same as in ICOM Automagic's XML broadcast setting. 
+The default is 127.0.0.1 and 12060. 
 
-Please note that N1MM Logger+ does not considers split operation which means e.g. cross band SO2V 
-is not supported with this logger.
+With N1MM Logger+ you need to check the "Radio" box on the "Broadcast data" tab in 
+N1MM Logger+'s Configuration panel. Also here, make sure the UDP port is the same 
+in both N1MM Logger+ and ICOM Automagic.
+
+The application does not query the radio for settings. 
+Any manual changes made using the radio's own controls are ignored and are consequently not saved. 
+
+Please note that N1MM Logger+ reports the main receiver's frequency when broadcasting frequency information. 
+This means e.g. cross band SO2V is not supported with this logger.
 
 **This software controls radio transmitter hardware.** 
 Be aware that wrongly used or malfunctioning software can damage or destroy such hardware. 
