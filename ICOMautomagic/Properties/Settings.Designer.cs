@@ -12,7 +12,7 @@ namespace ICOMAutomagic.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -301,37 +301,13 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("STN1")]
-        public string DXLogStation {
-            get {
-                return ((string)(this["DXLogStation"]));
-            }
-            set {
-                this["DXLogStation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9888")]
-        public int DXLogPort {
-            get {
-                return ((int)(this["DXLogPort"]));
-            }
-            set {
-                this["DXLogPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12060")]
-        public int N1MMPort {
+        public int UDPPort {
             get {
-                return ((int)(this["N1MMPort"]));
+                return ((int)(this["UDPPort"]));
             }
             set {
-                this["N1MMPort"] = value;
+                this["UDPPort"] = value;
             }
         }
         

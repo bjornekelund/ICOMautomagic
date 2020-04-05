@@ -71,13 +71,7 @@
     <Setting Name="ZoomWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
-    <Setting Name="DXLogStation" Type="System.String" Scope="User">
-      <Value Profile="(Default)">STN1</Value>
-    </Setting>
-    <Setting Name="DXLogPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9888</Value>
-    </Setting>
-    <Setting Name="N1MMPort" Type="System.Int32" Scope="User">
+    <Setting Name="UDPPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">12060</Value>
     </Setting>
     <Setting Name="CIVaddress" Type="System.Byte" Scope="User">

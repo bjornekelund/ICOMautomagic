@@ -8,7 +8,7 @@ namespace ICOMAutomagic
     {
         readonly string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
 
-        MainWindow mw;
+        readonly MainWindow mw;
 
         public Config(MainWindow mainform)
         {
@@ -18,30 +18,28 @@ namespace ICOMAutomagic
 
             string[] ports = SerialPort.GetPortNames();
 
-            Top = mw.Top + 10;
-            Left = mw.Left + 50;
+            Top = mainform.Top + 10;
+            Left = mainform.Left + 50;
 
             for (int i = 0; i < ICOMradios.Length; i++)
-                radioModelCB.Items.Add(ICOMradios[i]);
-            radioModelCB.SelectedItem = Properties.Settings.Default.RadioModel;
+                radioModelCombobox.Items.Add(ICOMradios[i]);
+            radioModelCombobox.SelectedItem = Properties.Settings.Default.RadioModel;
 
             foreach(string port in ports)
-                comPortCB.Items.Add(port);
-            comPortCB.SelectedItem = Properties.Settings.Default.COMport;
+                comPortCombobox.Items.Add(port);
+            comPortCombobox.SelectedItem = Properties.Settings.Default.COMport;
 
             for (int i = 1; i <= 3; i++)
-                edgeSetCB.Items.Add(i.ToString("00"));
-            edgeSetCB.SelectedItem = Properties.Settings.Default.EdgeSet.ToString("00");
+                edgeSetCombobox.Items.Add(i.ToString("00"));
+            edgeSetCombobox.SelectedItem = Properties.Settings.Default.EdgeSet.ToString("00");
 
             for (int i = 4800; i <= 19200; i *= 2)
-                ComPortSpeedCB.Items.Add(i.ToString());
-            ComPortSpeedCB.SelectedItem = Properties.Settings.Default.COMportSpeed.ToString();
+                ComPortSpeedCombobox.Items.Add(i.ToString());
+            ComPortSpeedCombobox.SelectedItem = Properties.Settings.Default.COMportSpeed.ToString();
 
             zoomWidthTB.Text = Properties.Settings.Default.ZoomWidth.ToString();
-            stnameDxlogTB.Text = Properties.Settings.Default.DXLogStation;
-            dxlogUdpTB.Text = Properties.Settings.Default.DXLogPort.ToString();
-            n1mmUdpTB.Text = Properties.Settings.Default.N1MMPort.ToString();
-            onTopCB.IsChecked = Properties.Settings.Default.AlwaysOnTop;
+            broadcastUDPtextbox.Text = Properties.Settings.Default.UDPPort.ToString();
+            onTopCheckbox.IsChecked = Properties.Settings.Default.AlwaysOnTop;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -51,26 +49,21 @@ namespace ICOMAutomagic
 
         private void OKbutton_Action()
         {
-            if (!int.TryParse(n1mmUdpTB.Text, out int n1mmPort))
-                return;
-
-            if (!int.TryParse(dxlogUdpTB.Text, out int dxlogPort))
+            if (!int.TryParse(broadcastUDPtextbox.Text, out int udpPort))
                 return;
 
             if (!int.TryParse(zoomWidthTB.Text, out int zoom))
                 return;
 
-            Properties.Settings.Default.COMport = comPortCB.Text == "" ? "COM5" : comPortCB.Text;
-            Properties.Settings.Default.N1MMPort = n1mmPort;
-            Properties.Settings.Default.DXLogPort = dxlogPort;
-            Properties.Settings.Default.RadioModel = radioModelCB.Text;
+            Properties.Settings.Default.COMport = comPortCombobox.Text == "" ? "COM5" : comPortCombobox.Text;
+            Properties.Settings.Default.UDPPort = udpPort;
+            Properties.Settings.Default.RadioModel = radioModelCombobox.Text;
             Properties.Settings.Default.ZoomWidth = zoom;
-            Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCB.Text);
-            Properties.Settings.Default.DXLogStation = stnameDxlogTB.Text;
-            Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCB.Text);
-            Properties.Settings.Default.AlwaysOnTop = (bool)onTopCB.IsChecked;
+            Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCombobox.Text);
+            Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCombobox.Text);
+            Properties.Settings.Default.AlwaysOnTop = (bool)onTopCheckbox.IsChecked;
 
-            switch (radioModelCB.Text)
+            switch (radioModelCombobox.Text)
             {
                 case "IC-7600":
                     Properties.Settings.Default.CIVaddress = 0x7a;
@@ -89,7 +82,7 @@ namespace ICOMAutomagic
                     Properties.Settings.Default.CIVaddress = 0x8e;
                     break;
                 default: // IC-7300 is default
-                    radioModelCB.Text = "IC-7300";
+                    radioModelCombobox.Text = "IC-7300";
                     Properties.Settings.Default.CIVaddress = 0x94;
                     break;
             }
@@ -105,7 +98,7 @@ namespace ICOMAutomagic
             Close();
         }
 
-        private void stnameDxlogTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void UDPTextbox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
@@ -114,25 +107,7 @@ namespace ICOMAutomagic
             }
         }
 
-            private void dxlogUdpTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                OKbutton_Action();
-                Close();
-            }
-        }
-
-        private void n1mmUdpTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                OKbutton_Action();
-                Close();
-            }
-        }
-
-        private void zoomWidthTB_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void ZoomWidthTextbox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {

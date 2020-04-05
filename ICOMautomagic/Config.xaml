@@ -5,34 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ICOMAutomagic"
         mc:Ignorable="d"
-        Title="Configuration" Height="213.729" Width="493.901" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
+        Title="Configuration" Height="221.062" Width="366.567" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <Grid Margin="0,0,4,0">
-        <GroupBox Header="XML &amp; N1MM" HorizontalAlignment="Left" Height="72" Margin="145,10,0,0" VerticalAlignment="Top" Width="128"/>
 
-        <GroupBox Header="DXLog.net (legacy)" HorizontalAlignment="Left" Height="129" Margin="7,10,0,0" VerticalAlignment="Top" Width="134"/>
+        <GroupBox Header="CI-V" HorizontalAlignment="Left" Height="129" Margin="145,10,0,0" VerticalAlignment="Top" Width="192"/>
 
-        <GroupBox Header="CI-V" HorizontalAlignment="Left" Height="129" Margin="278,10,0,0" VerticalAlignment="Top" Width="192"/>
+        <GroupBox Header="Network" HorizontalAlignment="Left" Height="78" Margin="10,10,0,0" VerticalAlignment="Top" Width="130"/>
 
-        <ComboBox x:Name="radioModelCB" HorizontalAlignment="Left" Margin="293,52,0,0" VerticalAlignment="Top" Width="70"/>
-        <Label Content="ICOM Radio" HorizontalAlignment="Left" Margin="290,29,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="ComPortSpeedCB" HorizontalAlignment="Left" Margin="386,101,0,0" VerticalAlignment="Top" Width="70"/>
-        <Label Content="Speed" HorizontalAlignment="Left" Margin="383,78,0,0" VerticalAlignment="Top"/>
-        <Label Content="COM port" HorizontalAlignment="Left" Margin="289,78,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="comPortCB" HorizontalAlignment="Left" Margin="293,101,0,0" VerticalAlignment="Top" Width="70"/>
-        <TextBox x:Name="dxlogUdpTB" HorizontalAlignment="Left" Height="23" Margin="21,103,0,0" Text="TextBox" VerticalAlignment="Top" Width="105" VerticalContentAlignment="Center" KeyDown="dxlogUdpTB_KeyDown"/>
-        <TextBox x:Name="stnameDxlogTB" HorizontalAlignment="Left" Height="22" Margin="21,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="105" VerticalContentAlignment="Center" KeyDown="stnameDxlogTB_KeyDown"/>
-        <TextBox x:Name="n1mmUdpTB" HorizontalAlignment="Left" Height="22" Margin="155,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="105" VerticalContentAlignment="Center" KeyDown="n1mmUdpTB_KeyDown"/>
-        <Label Content="Station name" HorizontalAlignment="Left" Margin="17,29,0,0" VerticalAlignment="Top"/>
-        <Label Content="UDP port" HorizontalAlignment="Left" Margin="16,80,0,0" VerticalAlignment="Top"/>
-        <Label Content="UDP port" HorizontalAlignment="Left" Margin="152,29,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="edgeSetCB" HorizontalAlignment="Left" Margin="386,52,0,0" VerticalAlignment="Top" Width="45"/>
-        <Label Content="Edge set" HorizontalAlignment="Left" Margin="383,29,0,0" VerticalAlignment="Top"/>
-        <Label Content="Zoom width" HorizontalAlignment="Left" Margin="151,80,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="zoomWidthTB" HorizontalAlignment="Left" Height="24" Margin="155,103,0,0" Text="TextBox" VerticalAlignment="Top" Width="33" VerticalContentAlignment="Center" KeyDown="zoomWidthTB_KeyDown"/>
-        <Label Content="kHz" HorizontalAlignment="Left" Margin="188,102,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="391,146,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click"/>
-        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="285,146,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>
-        <CheckBox x:Name="onTopCB" Content="Always on top" HorizontalAlignment="Left" Margin="21,151,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="radioModelCombobox" HorizontalAlignment="Left" Margin="160,52,0,0" VerticalAlignment="Top" Width="70"/>
+        <Label Content="ICOM Radio" HorizontalAlignment="Left" Margin="157,29,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="ComPortSpeedCombobox" HorizontalAlignment="Left" Margin="253,101,0,0" VerticalAlignment="Top" Width="70"/>
+        <Label Content="Speed" HorizontalAlignment="Left" Margin="250,78,0,0" VerticalAlignment="Top"/>
+        <Label Content="COM port" HorizontalAlignment="Left" Margin="156,78,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="comPortCombobox" HorizontalAlignment="Left" Margin="160,101,0,0" VerticalAlignment="Top" Width="70"/>
+        <TextBox x:Name="broadcastUDPtextbox" HorizontalAlignment="Left" Height="22" Margin="22,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="105" VerticalContentAlignment="Center" KeyDown="UDPTextbox_KeyDown"/>
+        <Label Content="UDP port" HorizontalAlignment="Left" Margin="19,29,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="edgeSetCombobox" HorizontalAlignment="Left" Margin="253,52,0,0" VerticalAlignment="Top" Width="45"/>
+        <Label Content="Edge set" HorizontalAlignment="Left" Margin="250,29,0,0" VerticalAlignment="Top"/>
+        <Label Content="Zoom width" HorizontalAlignment="Left" Margin="19,92,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="zoomWidthTB" HorizontalAlignment="Left" Height="24" Margin="22,115,0,0" Text="TextBox" VerticalAlignment="Top" Width="33" VerticalContentAlignment="Center" KeyDown="ZoomWidthTextbox_KeyDown"/>
+        <Label Content="kHz" HorizontalAlignment="Left" Margin="57,114,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="258,146,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="152,146,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>
+        <CheckBox x:Name="onTopCheckbox" Content="Always on top" HorizontalAlignment="Left" Margin="31,151,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

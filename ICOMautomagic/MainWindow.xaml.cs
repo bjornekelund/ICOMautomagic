@@ -201,7 +201,7 @@ namespace ICOMAutomagic
                 {
                     // UDP receiver without bind
                     udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                    udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, Properties.Settings.Default.N1MMPort));
+                    udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, Properties.Settings.Default.UDPPort));
 
                     while (true)
                     {
@@ -240,72 +240,8 @@ namespace ICOMAutomagic
                                 // Only auto update radio when mode or band changes to avoid 
                                 // overruling manual changes made on the radio's front panel
                                 if ((newMHz != currentMHz) || (newMode != currentMode))
-                                    updateRadio();
+                                    UpdateRadio();
                             }
-                        }
-                    }
-                }
-            });
-
-
-            Task.Run(async () =>
-            {
-                using (var udpClient = new UdpClient())
-                {
-                    // UDP receiver without bind
-                    udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                    udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, Properties.Settings.Default.DXLogPort));
-
-                    while (true)
-                    {
-                        //Wait for UDP packets to arrive 
-                        var receivedResults = await udpClient.ReceiveAsync();
-
-                        message = Encoding.Unicode.GetString(receivedResults.Buffer);
-
-                        string datagramType = message.Substring(32, 3);
-                        int senderlen = 0;
-                        while (message.Substring(senderlen, 1) != "\0")
-                            senderlen++;
-                        string sender = message.Substring(0, senderlen);
-
-                        if ((datagramType == "STI") && (sender == Properties.Settings.Default.DXLogStation)) // If it is a RadioInfo datagram
-                        {
-                            // Ugly but simple parsing of struct
-                            int i = 0;
-                            while (message.Substring(i + 101, 1) != "\0") i++;
-                            currentFrequency = int.Parse(message.Substring(101, i - 2));
-                            newMHz = currentFrequency / 1000;
-
-                            //i = 0;
-                            //while (message.Substring(i + 56, 1) != "\0") i++;
-                            //int band = int.Parse(message.Substring(56, i));
-
-                            //string mode = message.Substring(66, 2); // Use first two characters of mode string
-
-                            RadioInfoReceived = true;
-
-                            // Use first two characters of mode string to determine mode
-                            switch (message.Substring(66, 2))
-                            {
-                                case "CW":
-                                    newMode = "CW";
-                                    break;
-                                case "US":
-                                case "LS":
-                                case "AM":
-                                case "SS":
-                                    newMode = "Phone";
-                                    break;
-                                default:
-                                    newMode = "Digital";
-                                    break;
-                            }
-
-                            // Only auto update radio when mode or band changes to avoid 
-                            // overruling manual changes made on the radio's front panel
-                            if ((newMHz != currentMHz) || (newMode != currentMode))
-                                updateRadio();
                         }
                     }
                 }
@@ -318,7 +254,7 @@ namespace ICOMAutomagic
 
             if (!NoRadio) // If we are not debugging, open serial port
             {
-                try
+                try // closing first, if we are switching port
                 {
                     Port.Close();
                 }
@@ -342,7 +278,7 @@ namespace ICOMAutomagic
             ProgramWindow.Title = title;
         }
 
-        private void updateRadio()
+        private void UpdateRadio()
         {
             currentMHz = newMHz;
             currentMode = newMode;
@@ -573,13 +509,12 @@ namespace ICOMAutomagic
 
         private void OnZoomButton_RightClick(object sender, MouseButtonEventArgs e)
         {
-            int n1mmport = Properties.Settings.Default.N1MMPort;
-            int dxlogport = Properties.Settings.Default.DXLogPort;
+            int currentport = Properties.Settings.Default.UDPPort;
 
             Config configPanel = new Config(this);
             configPanel.ShowDialog();
 
-            if (n1mmport != Properties.Settings.Default.N1MMPort || dxlogport != Properties.Settings.Default.DXLogPort)
+            if (currentport != Properties.Settings.Default.UDPPort)
             {
                 MessageBoxResult result = MessageBox.Show("Port change - Restart required", programTitle, MessageBoxButton.OK, MessageBoxImage.Question);
                 if (result == MessageBoxResult.OK)
@@ -594,7 +529,7 @@ namespace ICOMAutomagic
             ZoomButton.Content = string.Format("±{0}kHz", Properties.Settings.Default.ZoomWidth / 2);
 
             if (RadioInfoReceived)
-                updateRadio();
+                UpdateRadio();
         }
 
         // On arrow key modification of slider
