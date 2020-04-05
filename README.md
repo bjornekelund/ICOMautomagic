@@ -31,7 +31,7 @@ Make sure the correct IP address and port are set in `Options|Configure network`
 that the port is the same as in ICOM Automagic's XML broadcast setting. 
 The default is 127.0.0.1 and 12060. 
 
-With N1MM Logger+ you need to check the "Radio" box on the "Broadcast data" tab in 
+With N1MM Logger+ you need to check the *Radio* box on the *Broadcast data* tab in 
 N1MM Logger+'s Configuration panel. Also here, make sure the UDP port is the same 
 in both N1MM Logger+ and ICOM Automagic.
 
@@ -39,8 +39,8 @@ The application does not query the radio for settings.
 Any manual changes made using the radio's own controls are ignored and are consequently not saved. 
 To not interfer with manual adjustments, the application only updates the radio's settings on band or mode changes. 
 
-Please note that N1MM Logger+ reports the main receiver's frequency when broadcasting frequency information. 
-This means e.g. cross band SO2V is not supported with this logger.
+Please note that, contrary to DXLog.net, N1MM Logger+ only broadcasts the main receiver's frequency over UDP. 
+This means e.g. cross band SO2V is only supported with DXLog.net.
 
 **This software controls radio transmitter hardware.** 
 Be aware that wrongly used or malfunctioning software can damage or destroy such hardware. 
