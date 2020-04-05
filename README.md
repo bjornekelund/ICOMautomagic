@@ -27,8 +27,8 @@ station needs to be entered correctly.
 The application does not query the radio for settings. Any manual changes made using the radio's own 
 controls are ignored and are consequently not saved. 
 
-Please note that the application only considers radio #1 which means it e.g. does not 
-support cross band SO2V.
+Please note that N1MM Logger+ does not considers split operation which means e.g. cross band SO2V 
+is not supported with this logger.
 
 **This software controls radio transmitter hardware.** 
 Be aware that wrongly used or malfunctioning software can damage or destroy such hardware. 

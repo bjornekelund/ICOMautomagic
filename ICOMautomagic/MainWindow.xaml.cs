@@ -227,9 +227,11 @@ namespace ICOMAutomagic
                                     case "CW":
                                         newMode = "CW";
                                         break;
+                                    case "SSB":
                                     case "USB":
                                     case "LSB":
                                     case "AM":
+                                    case "FM":
                                         newMode = "Phone";
                                         break;
                                     default:
