@@ -1,4 +1,4 @@
-﻿// Companion app for N1MM and DXLog.net when using ICOM radios 
+﻿// Companion app for DXLog and N1MM Logger+ net when using ICOM radios 
 // with waterfall display, e.g. IC-7300, IC-7610, etc.
 // 
 // By Björn Ekelund SM7IUN sm7iun@ssa.se
@@ -22,7 +22,8 @@ using System.Reflection;
 
 namespace ICOMAutomagic
 {
-    // Definition of N1MM XML datagrams based on
+    // Definition of logger XML datagrams based on
+    // http://dxlog.net/docs/index.php/Additional_Information#UDP_broadcast
     // http://n1mm.hamdocs.com/tiki-index.php?page=UDP+Broadcasts
 
     [XmlRoot(ElementName = "RadioInfo")]
@@ -192,7 +193,7 @@ namespace ICOMAutomagic
             // Set Band-mode button active, Zoom button inactive
             Zoomed = false;
             
-            // To disable functions until we have received info from N1MM
+            // To disable functions until we have received info from logger
             RadioInfoReceived = false; 
 
             Task.Run(async () =>
@@ -401,7 +402,7 @@ namespace ICOMAutomagic
         // On band-mode button clicked
         private void OnBandModeButton(object sender, RoutedEventArgs e)
         {
-            // Do nothing if we have not yet received information from N1MM
+            // Do nothing if we have not yet received information from logger
             if (!RadioInfoReceived) 
             return;
 
@@ -473,7 +474,7 @@ namespace ICOMAutomagic
 
         private void OnZoomButton(object sender, RoutedEventArgs e)
         {
-            // Only do act if we have received information from N1MM
+            // Only do act if we have received information from logger
             if (RadioInfoReceived)
             {
                 currentLowerEdge = currentFrequency - Properties.Settings.Default.ZoomWidth / 2;
