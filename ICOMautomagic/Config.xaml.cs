@@ -6,7 +6,7 @@ namespace ICOMAutomagic
 {
     public partial class Config : Window
     {
-        readonly string[] ICOMradios = new string[] { "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
+        readonly string[] ICOMradios = new string[] { "IC-705", "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
 
         readonly MainWindow mw;
 
@@ -65,6 +65,9 @@ namespace ICOMAutomagic
 
             switch (radioModelCombobox.Text)
             {
+                case "IC-705":
+                    Properties.Settings.Default.CIVaddress = 0xa4;
+                    break;
                 case "IC-7600":
                     Properties.Settings.Default.CIVaddress = 0x7a;
                     break;
