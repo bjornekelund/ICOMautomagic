@@ -1,5 +1,8 @@
 ﻿// Companion app for DXLog and N1MM Logger+ net when using ICOM radios 
 // with waterfall display, e.g. IC-7300, IC-7610, etc.
+// Since the logger occupies the fast USB port it is typically 
+// used on the second CI-V port (Remote) on the radio except on 
+// the IC-705 where the Bluetooth port is recommended.
 // 
 // By Björn Ekelund SM7IUN sm7iun@ssa.se
 
@@ -84,7 +87,7 @@ namespace ICOMAutomagic
     {
         readonly bool NoRadio = false; // For debugging with no radio attached
         string programTitle = "ICOM Automagic";
-        AssemblyName _assemblyName = Assembly.GetExecutingAssembly().GetName();
+        readonly AssemblyName _assemblyName = Assembly.GetExecutingAssembly().GetName();
 
         static SolidColorBrush SpecialGreen = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff58f049"));
         readonly SolidColorBrush ActiveColor = SpecialGreen; // Color for active button
@@ -94,25 +97,25 @@ namespace ICOMAutomagic
         readonly SolidColorBrush BandModeColor = Brushes.Blue; // Color for valid band and mode display
 
         // Pre-baked CI-V commands
-        byte[] CIVSetFixedMode = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x14, 0x00, 0x01, 0xfd };
-        byte[] CIVSetEdgeSet = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x16, 0x0, 0xff, 0xfd };
-        byte[] CIVSetRefLevel = new byte[11] { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
-        byte[] CIVSetPwrLevel = new byte[9] { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
+        readonly byte[] CIVSetFixedMode = { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x14, 0x00, 0x01, 0xfd };
+        readonly byte[] CIVSetEdgeSet = { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x16, 0x0, 0xff, 0xfd };
+        readonly byte[] CIVSetRefLevel = { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
+        readonly byte[] CIVSetPwrLevel = { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
 
         // Maps MHz to band name
-        readonly string[] bandName = new string[52]
+        readonly string[] bandName = 
         { "?m", "160m", "?m", "80m", "?m", "60m", "40m", "40m", "?m", "30m", "30m", "?m", "?m",
             "20m", "20m", "?m", "?m", "17m", "17m", "?m", "15m", "15m", "?m", "?m", "12m", "12m",
             "?m", "10m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
             "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "6m", "6m", "6m" };
 
         // Maps MHz to internal band index
-        readonly int[] bandIndex = new int[52]
+        readonly int[] bandIndex = 
             { 0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8,
             8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 
         // Maps actual MHz to radio's scope edge set on ICOM 7xxx
-        readonly int[] RadioEdgeSet = new int[]
+        readonly int[] RadioEdgeSet = 
         { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 11,
             11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
@@ -148,7 +151,7 @@ namespace ICOMAutomagic
             string message;
             string[] commandLineArguments = Environment.GetCommandLineArgs();
 
-            programTitle = programTitle + string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
+            programTitle += string.Format(" {0}.{1} ", _assemblyName.Version.Major, _assemblyName.Version.Minor);
 
             if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
             {
