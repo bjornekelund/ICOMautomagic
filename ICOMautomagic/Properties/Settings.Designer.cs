@@ -12,7 +12,7 @@ namespace ICOMAutomagic.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -61,7 +61,8 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1810;3500;5352;7000;10100;14000;18068;21000;24890;28000;50000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1810;3500;5352;7000;10100;14000;18068;21000;24890;28000;50000;70000;144000;432000" +
+            "")]
         public string LowerEdgesCW {
             get {
                 return ((string)(this["LowerEdgesCW"]));
@@ -73,7 +74,8 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5366;7040;10130;14070;18109;21070;24920;28070;50150")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5366;7040;10130;14070;18109;21070;24920;28070;50150;71000;144100;432100" +
+            "")]
         public string UpperEdgesCW {
             get {
                 return ((string)(this["UpperEdgesCW"]));
@@ -85,7 +87,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6;-6")]
         public string RefLevelsCW {
             get {
                 return ((string)(this["RefLevelsCW"]));
@@ -97,7 +99,8 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1840;3600;5353;7040;10100;14100;18111;21150;24931;28300;50100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1840;3600;5353;7040;10100;14100;18111;21150;24931;28300;50100;70000;144200;432200" +
+            "")]
         public string LowerEdgesPhone {
             get {
                 return ((string)(this["LowerEdgesPhone"]));
@@ -109,7 +112,8 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000;3800;5366;7200;10150;14350;18168;21450;24990;28600;50500")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000;3800;5366;7200;10150;14350;18168;21450;24990;28600;50500;71000;144400;432300" +
+            "")]
         public string UpperEdgesPhone {
             get {
                 return ((string)(this["UpperEdgesPhone"]));
@@ -121,7 +125,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9;-9")]
         public string RefLevelsPhone {
             get {
                 return ((string)(this["RefLevelsPhone"]));
@@ -133,7 +137,8 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5352;7040;10130;14070;18089;21070;24910;28070;50300")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1840;3570;5352;7040;10130;14070;18089;21070;24910;28070;50300;70000;144000;432000" +
+            "")]
         public string LowerEdgesDigital {
             get {
                 return ((string)(this["LowerEdgesDigital"]));
@@ -145,7 +150,8 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1860;3600;5366;7080;10150;14100;18109;21150;24932;28110;50350")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1860;3600;5366;7080;10150;14100;18109;21150;24932;28110;50350;71000;144400;432400" +
+            "")]
         public string UpperEdgesDigital {
             get {
                 return ((string)(this["UpperEdgesDigital"]));
@@ -157,7 +163,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
         public string RefLevelsDigital {
             get {
                 return ((string)(this["RefLevelsDigital"]));
@@ -169,7 +175,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
         public string RefLevelsDigitalZ {
             get {
                 return ((string)(this["RefLevelsDigitalZ"]));
@@ -181,7 +187,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
         public string RefLevelsCWZ {
             get {
                 return ((string)(this["RefLevelsCWZ"]));
@@ -193,7 +199,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3;-3")]
         public string RefLevelsPhoneZ {
             get {
                 return ((string)(this["RefLevelsPhoneZ"]));
@@ -205,7 +211,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
+        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23;23;23;23")]
         public string PwrLevelsCW {
             get {
                 return ((string)(this["PwrLevelsCW"]));
@@ -217,7 +223,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
+        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23;23;23;23")]
         public string PwrLevelsPhone {
             get {
                 return ((string)(this["PwrLevelsPhone"]));
@@ -229,7 +235,7 @@ namespace ICOMAutomagic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23")]
+        [global::System.Configuration.DefaultSettingValueAttribute("23;23;23;23;23;23;23;23;23;23;23;23;23;23")]
         public string PwrLevelsDigital {
             get {
                 return ((string)(this["PwrLevelsDigital"]));

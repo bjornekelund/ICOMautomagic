@@ -102,52 +102,66 @@ namespace ICOMAutomagic
         readonly byte[] CIVSetRefLevel = { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
         readonly byte[] CIVSetPwrLevel = { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
 
-        // Maps MHz to band name. 54 elements.
-        readonly string[] bandName = 
+        const int HamBands = 14;
+        const int MaxMHz = 470;
+        const int TableSize = 74;
+
+        // Maps MHz to band name.
+        string[] bandName = new string[MaxMHz];
+        readonly string[] REFbandName = new string[TableSize]
             { "??m", "160m", "??m", "80m", "??m", "60m", "40m", "40m", "??m", "30m", 
             "30m", "??m", "??m", "20m", "20m", "??m", "??m", "17m", "17m", "??m", 
             "15m", "15m", "??m", "??m", "12m", "12m", "??m", "11m", "10m", "10m", 
-            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", 
-            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "6m", 
-            "6m", "6m", "6m", "6m" };
+            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m",
+            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "6m",
+            "6m", "6m", "6m", "6m", "??m", "??m", "??m", "??m", "??m", "??m",
+            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "4m",
+            "4m", "4m", "4m", "4m" };
 
-        // Maps MHz to internal band index. 54 elements.
-        readonly int[] bandIndex = 
+        // Maps MHz to internal band index.
+        // Bands are 160=0, 80=1, etc. up to 11=4m
+        int[] bandIndex = new int[MaxMHz];
+        readonly int[] REFbandIndex = new int[TableSize]
             { 0, 0, 0, 1, 1, 2, 3, 3, 3, 4,
-            4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 
-            7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 
-            9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
-            9, 10, 10, 10, 10, 10, 10, 10, 
-            10, 10, 10, 10 };
+            4, 4, 4, 5, 5, 5, 5, 6, 6, 6,
+            7, 7, 7, 7, 8, 8, 8, 9, 9, 9,
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+            9, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+            10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+            10, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+            11, 11, 11, 11 };
 
         // Maps actual MHz to radio's scope edge set on ICOM 7xxx. 54 elements.
-        readonly int[] RadioEdgeSet = 
+        int[] RadioEdgeSet = new int[MaxMHz];
+        readonly int[] REFRadioEdgeSet = new int[TableSize]
             { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 
             5, 6, 6, 6, 6, 7, 7, 7, 7, 7,
             8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 
-            11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
-            11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 
-            12, 12, 12, 12 };
+            11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+            11, 11, 11, 11, 11, 12, 12, 12, 12, 12,
+            12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+            13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+            13, 13, 13, 13 };
 
         // Per mode/band waterfall edges and ref levels. Also one zoomed ref level per band.
-        int[] lowerEdgeCW = new int[11]; 
-        int[] upperEdgeCW = new int[11]; 
-        int[] refLevelCW = new int[11]; 
-        int[] refLevelCWZoom = new int[11];
+        int[] lowerEdgeCW = new int[HamBands];
+        int[] upperEdgeCW = new int[HamBands]; 
+        int[] refLevelCW = new int[HamBands]; 
+        int[] refLevelCWZoom = new int[HamBands];
 
-        int[] lowerEdgePhone = new int[11]; 
-        int[] upperEdgePhone = new int[11]; 
-        int[] refLevelPhone = new int[11]; 
-        int[] refLevelPhoneZoom = new int[11];
+        int[] lowerEdgePhone = new int[HamBands]; 
+        int[] upperEdgePhone = new int[HamBands]; 
+        int[] refLevelPhone = new int[HamBands]; 
+        int[] refLevelPhoneZoom = new int[HamBands];
 
-        int[] lowerEdgeDigital = new int[11]; 
-        int[] upperEdgeDigital = new int[11]; 
-        int[] refLevelDigital = new int[11]; 
-        int[] refLevelDigitalZoom = new int[11];
+        int[] lowerEdgeDigital = new int[HamBands]; 
+        int[] upperEdgeDigital = new int[HamBands]; 
+        int[] refLevelDigital = new int[HamBands]; 
+        int[] refLevelDigitalZoom = new int[HamBands];
 
-        int[] pwrLevelCW = new int[11]; 
-        int[] pwrLevelPhone = new int[11]; 
-        int[] pwrLevelDigital = new int[11];
+        int[] pwrLevelCW = new int[HamBands]; 
+        int[] pwrLevelPhone = new int[HamBands]; 
+        int[] pwrLevelDigital = new int[HamBands];
 
         // Global variables
         int currentLowerEdge, currentUpperEdge, currentRefLevel, currentPwrLevel;
@@ -172,6 +186,38 @@ namespace ICOMAutomagic
             InitializeComponent();
 
             ResetSerialPort();
+
+            // Set the decoding arrays to default
+            for (int MHz = 0; MHz < MaxMHz; MHz++)
+            {
+                bandName[MHz] = "??m";
+                bandIndex[MHz] = 1;
+                RadioEdgeSet[MHz] = 1;
+            }
+
+            // Initialize using tables
+            for (int MHz = 0; MHz < TableSize; MHz++)
+            {
+                bandName[MHz] = REFbandName[MHz];
+                bandIndex[MHz] = REFbandIndex[MHz];
+                RadioEdgeSet[MHz] = REFRadioEdgeSet[MHz];
+            }
+
+            // Add 2m
+            for (int MHz = 137; MHz < 200; MHz++)
+            {
+                bandName[MHz] = "2m";
+                bandIndex[MHz] = 12;
+                RadioEdgeSet[MHz] = 16;
+            }
+
+            // Add 70cm
+            for (int MHz = 400; MHz < 470; MHz++)
+            {
+                bandName[MHz] = "70cm";
+                bandIndex[MHz] = 13;
+                RadioEdgeSet[MHz] = 17;
+            }
 
             // Fetch window location from last time
             Top = Properties.Settings.Default.Top;
@@ -199,6 +245,9 @@ namespace ICOMAutomagic
             refLevelDigital = Properties.Settings.Default.RefLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
             refLevelDigitalZoom = Properties.Settings.Default.RefLevelsDigitalZ.Split(';').Select(s => int.Parse(s)).ToArray();
             pwrLevelDigital = Properties.Settings.Default.PwrLevelsDigital.Split(';').Select(s => int.Parse(s)).ToArray();
+
+            if (lowerEdgeCW.Length != HamBands)
+                Properties.Settings.Default.Reset();
 
             // Set Zoom button text based on value of ZoomRange
             ZoomButton.Content = string.Format("±{0}kHz", Properties.Settings.Default.ZoomWidth / 2);
@@ -648,12 +697,12 @@ namespace ICOMAutomagic
                 (byte)((lower_edge % 10) * 16 + 0), // 1kHz & 100Hz
                 (byte)(((lower_edge / 100) % 10) * 16 + ((lower_edge / 10) % 10)), // 100kHz & 10kHz
                 (byte)(((lower_edge / 10000) % 10) * 16 + (lower_edge / 1000) % 10), // 10MHz & 1MHz
-                0x00, // 1GHz & 100MHz
+                (byte)(((lower_edge / 1000000) % 10) * 16 + (lower_edge / 100000) % 10), // 1GHz & 100MHz
                 0x00, // // Upper 10Hz & 1Hz 
                 (byte)((upper_edge % 10) * 16 + 0), // 1kHz & 100Hz
                 (byte)(((upper_edge / 100) % 10) * 16 + (upper_edge / 10) % 10), // 100kHz & 10kHz
                 (byte)(((upper_edge / 10000) % 10) * 16 + (upper_edge / 1000) % 10), // 10MHz & 1MHz
-                0x00, // 1GHz & 100MHz
+                (byte)(((upper_edge / 1000000) % 10) * 16 + (upper_edge / 100000) % 10), // 1GHz & 100MHz
                 0xfd
             };
 
@@ -676,6 +725,7 @@ namespace ICOMAutomagic
                     Port.Write(CIVSetFixedMode, 0, CIVSetFixedMode.Length); // Set fixed mode
                     Port.Write(CIVSetEdgeSet, 0, CIVSetEdgeSet.Length); // set edge set EdgeSet
                     Port.Write(CIVSetEdges, 0, CIVSetEdges.Length); // set edge set EdgeSet
+                    System.Diagnostics.Debug.Print(string.Format("CIVSetEdges {0}", BitConverter.ToString(CIVSetEdges)));
                 }
             }
         }
