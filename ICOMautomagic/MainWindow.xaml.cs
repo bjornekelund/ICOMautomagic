@@ -102,22 +102,32 @@ namespace ICOMAutomagic
         readonly byte[] CIVSetRefLevel = { 0xfe, 0xfe, 0xff, 0xe0, 0x27, 0x19, 0x00, 0x00, 0x00, 0x00, 0xfd };
         readonly byte[] CIVSetPwrLevel = { 0xfe, 0xfe, 0xff, 0xe0, 0x14, 0x0a, 0x00, 0x00, 0xfd };
 
-        // Maps MHz to band name
+        // Maps MHz to band name. 54 elements.
         readonly string[] bandName = 
-        { "?m", "160m", "?m", "80m", "?m", "60m", "40m", "40m", "?m", "30m", "30m", "?m", "?m",
-            "20m", "20m", "?m", "?m", "17m", "17m", "?m", "15m", "15m", "?m", "?m", "12m", "12m",
-            "?m", "10m", "10m", "10m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m",
-            "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "?m", "6m", "6m", "6m" };
+            { "??m", "160m", "??m", "80m", "??m", "60m", "40m", "40m", "??m", "30m", 
+            "30m", "??m", "??m", "20m", "20m", "??m", "??m", "17m", "17m", "??m", 
+            "15m", "15m", "??m", "??m", "12m", "12m", "??m", "11m", "10m", "10m", 
+            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", 
+            "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "??m", "6m", 
+            "6m", "6m", "6m", "6m" };
 
-        // Maps MHz to internal band index
+        // Maps MHz to internal band index. 54 elements.
         readonly int[] bandIndex = 
-            { 0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8,
-            8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
+            { 0, 0, 0, 1, 1, 2, 3, 3, 3, 4,
+            4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 
+            7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 
+            9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+            9, 10, 10, 10, 10, 10, 10, 10, 
+            10, 10, 10, 10 };
 
-        // Maps actual MHz to radio's scope edge set on ICOM 7xxx
+        // Maps actual MHz to radio's scope edge set on ICOM 7xxx. 54 elements.
         readonly int[] RadioEdgeSet = 
-        { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 11,
-            11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
+            { 1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 
+            5, 6, 6, 6, 6, 7, 7, 7, 7, 7,
+            8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 
+            11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+            11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 
+            12, 12, 12, 12 };
 
         // Per mode/band waterfall edges and ref levels. Also one zoomed ref level per band.
         int[] lowerEdgeCW = new int[11]; 
