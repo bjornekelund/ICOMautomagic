@@ -21,8 +21,8 @@ the option to make the application always stay on top of any other window.
 This is particularly useful when used together with a full-screen logger such as DXLog.net.
 
 A typical usage scenario is to connect **ICOM Automagic** to the "Remote" CI-V port of the 
-ICOM radio while the logger is connected to the fast USB CI-V port. (Please note that the two ports 
-need to be unlinked in the settings.)
+ICOM radio while the logger is connected to the fast USB CI-V port. Please note that the two ports 
+need to be unlinked in the settings. On IC-705 you typically use the Bluetooth port.
 
 For the application to work you need to enabled UDP XML broadcast in the logger.
 

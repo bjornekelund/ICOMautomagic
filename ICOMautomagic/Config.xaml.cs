@@ -29,7 +29,7 @@ namespace ICOMAutomagic
                 comPortCombobox.Items.Add(port);
             comPortCombobox.SelectedItem = Properties.Settings.Default.COMport;
 
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 4; i++)
                 edgeSetCombobox.Items.Add(i.ToString("00"));
             edgeSetCombobox.SelectedItem = Properties.Settings.Default.EdgeSet.ToString("00");
 
