@@ -11,7 +11,7 @@
     </Window.Resources>
     <Grid>
         <Slider x:Name="RefLevelSlider" HorizontalAlignment="Left" Margin="77,10,0,0" VerticalAlignment="Top" Width="140" Value="-5" Minimum="-20" SmallChange="1" TickPlacement="Both" Height="26" PreviewMouseUp="OnRefSliderMouseClick" PreviewKeyUp="OnRefSliderKey" IsSnapToTickEnabled="True" IsEnabled="False"/>
-        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="53,46,0,0" Text="432888" VerticalAlignment="Top" Width="48" KeyDown="OnEdgeTextboxKeydown" MaxLines="1" IsEnabled="False"/>
+        <TextBox x:Name="LowerEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="53,46,0,0" Text="?" VerticalAlignment="Top" Width="48" KeyDown="OnEdgeTextboxKeydown" MaxLines="1" IsEnabled="False"/>
         <TextBox x:Name="UpperEdgeTextbox" HorizontalAlignment="Left" Height="22" Margin="176,46,0,0" TextWrapping="Wrap" Text="?" VerticalAlignment="Top" Width="48" KeyDown="OnEdgeTextboxKeydown" IsEnabled="False"/>
         <Label Content="Lower:" HorizontalAlignment="Left" Margin="9,43,0,0" VerticalAlignment="Top" Height="28">
             <Label.Foreground>
