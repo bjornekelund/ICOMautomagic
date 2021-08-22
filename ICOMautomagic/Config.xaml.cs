@@ -6,9 +6,9 @@ namespace ICOMAutomagic
 {
     public partial class Config : Window
     {
-        readonly string[] ICOMradios = new string[] { "IC-705", "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
-
-        readonly MainWindow mw;
+        private readonly string[] ICOMradios = new string[] { "IC-705", "IC-7300", "IC-7600", "IC-7610", "IC-7700", "IC-7800", "IC-7850", "IC-7851" };
+        
+        private readonly MainWindow mw;
 
         public Config(MainWindow mainform)
         {
@@ -22,24 +22,36 @@ namespace ICOMAutomagic
             Left = mainform.Left + 50;
 
             for (int i = 0; i < ICOMradios.Length; i++)
+            {
                 radioModelCombobox.Items.Add(ICOMradios[i]);
+            }
             radioModelCombobox.SelectedItem = Properties.Settings.Default.RadioModel;
 
             foreach(string port in ports)
+            {
                 comPortCombobox.Items.Add(port);
+            }
+
             comPortCombobox.SelectedItem = Properties.Settings.Default.COMport;
 
             for (int i = 1; i <= 4; i++)
+            {
                 edgeSetCombobox.Items.Add(i.ToString("00"));
+            }
+
             edgeSetCombobox.SelectedItem = Properties.Settings.Default.EdgeSet.ToString("00");
 
             for (int i = 4800; i <= 19200; i *= 2)
+            {
                 ComPortSpeedCombobox.Items.Add(i.ToString());
+            }
+
             ComPortSpeedCombobox.SelectedItem = Properties.Settings.Default.COMportSpeed.ToString();
 
-            zoomWidthTB.Text = Properties.Settings.Default.ZoomWidth.ToString();
+            zoomWidthTextbox.Text = Properties.Settings.Default.ZoomWidth.ToString();
             broadcastUDPtextbox.Text = Properties.Settings.Default.UDPPort.ToString();
             onTopCheckbox.IsChecked = Properties.Settings.Default.AlwaysOnTop;
+            scrollModeCheckbox.IsChecked = Properties.Settings.Default.UseScrollMode;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -52,7 +64,7 @@ namespace ICOMAutomagic
             if (!int.TryParse(broadcastUDPtextbox.Text, out int udpPort))
                 return;
 
-            if (!int.TryParse(zoomWidthTB.Text, out int zoom))
+            if (!int.TryParse(zoomWidthTextbox.Text, out int zoom))
                 return;
 
             Properties.Settings.Default.COMport = comPortCombobox.Text == "" ? "COM5" : comPortCombobox.Text;
@@ -62,6 +74,7 @@ namespace ICOMAutomagic
             Properties.Settings.Default.COMportSpeed = int.Parse(ComPortSpeedCombobox.Text);
             Properties.Settings.Default.EdgeSet = byte.Parse(edgeSetCombobox.Text);
             Properties.Settings.Default.AlwaysOnTop = (bool)onTopCheckbox.IsChecked;
+            Properties.Settings.Default.UseScrollMode = (bool)scrollModeCheckbox.IsChecked;
 
             switch (radioModelCombobox.Text)
             {

@@ -5,29 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ICOMAutomagic"
         mc:Ignorable="d"
-        Title="Configuration" Height="221.062" Width="366.567" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
+        Title="Configuration" Height="245.295" Width="366.567" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Topmost="True">
     <Grid Margin="0,0,4,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="179*"/>
+            <ColumnDefinition Width="29*"/>
+            <ColumnDefinition Width="149*"/>
+        </Grid.ColumnDefinitions>
 
-        <GroupBox Header="CI-V" HorizontalAlignment="Left" Height="129" Margin="145,10,0,0" VerticalAlignment="Top" Width="192"/>
+        <GroupBox Header="Waterfall" HorizontalAlignment="Left" Height="105" Margin="10,93,0,0" VerticalAlignment="Top" Width="130"/>
+
+        <GroupBox Header="CI-V" HorizontalAlignment="Left" Height="129" Margin="145,10,0,0" VerticalAlignment="Top" Width="192" Grid.ColumnSpan="3"/>
 
         <GroupBox Header="Network" HorizontalAlignment="Left" Height="78" Margin="10,10,0,0" VerticalAlignment="Top" Width="130"/>
 
-        <ComboBox x:Name="radioModelCombobox" HorizontalAlignment="Left" Margin="160,52,0,0" VerticalAlignment="Top" Width="70"/>
-        <Label Content="ICOM Radio" HorizontalAlignment="Left" Margin="157,29,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="ComPortSpeedCombobox" HorizontalAlignment="Left" Margin="253,101,0,0" VerticalAlignment="Top" Width="70"/>
-        <Label Content="Speed" HorizontalAlignment="Left" Margin="250,78,0,0" VerticalAlignment="Top"/>
-        <Label Content="COM port" HorizontalAlignment="Left" Margin="156,78,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="comPortCombobox" HorizontalAlignment="Left" Margin="160,101,0,0" VerticalAlignment="Top" Width="70"/>
+        <ComboBox x:Name="radioModelCombobox" HorizontalAlignment="Left" Margin="160,52,0,0" VerticalAlignment="Top" Width="70" Grid.ColumnSpan="3"/>
+        <Label Content="ICOM Radio" HorizontalAlignment="Left" Margin="157,29,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <ComboBox x:Name="ComPortSpeedCombobox" HorizontalAlignment="Left" Margin="45,101,0,0" VerticalAlignment="Top" Width="70" Grid.Column="2"/>
+        <Label Content="Speed" HorizontalAlignment="Left" Margin="42,78,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+        <Label Content="COM port" HorizontalAlignment="Left" Margin="156,78,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <ComboBox x:Name="comPortCombobox" HorizontalAlignment="Left" Margin="160,101,0,0" VerticalAlignment="Top" Width="70" Grid.ColumnSpan="3"/>
         <TextBox x:Name="broadcastUDPtextbox" HorizontalAlignment="Left" Height="22" Margin="22,52,0,0" Text="TextBox" VerticalAlignment="Top" Width="105" VerticalContentAlignment="Center" KeyDown="UDPTextbox_KeyDown"/>
         <Label Content="UDP port" HorizontalAlignment="Left" Margin="19,29,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="edgeSetCombobox" HorizontalAlignment="Left" Margin="253,52,0,0" VerticalAlignment="Top" Width="45"/>
-        <Label Content="Edge set" HorizontalAlignment="Left" Margin="250,29,0,0" VerticalAlignment="Top"/>
-        <Label Content="Zoom width" HorizontalAlignment="Left" Margin="19,92,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="zoomWidthTB" HorizontalAlignment="Left" Height="24" Margin="22,115,0,0" Text="TextBox" VerticalAlignment="Top" Width="33" VerticalContentAlignment="Center" KeyDown="ZoomWidthTextbox_KeyDown"/>
-        <Label Content="kHz" HorizontalAlignment="Left" Margin="57,114,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="258,146,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click"/>
-        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="152,146,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>
-        <CheckBox x:Name="onTopCheckbox" Content="Always on top" HorizontalAlignment="Left" Margin="31,151,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="edgeSetCombobox" HorizontalAlignment="Left" Margin="45,52,0,0" VerticalAlignment="Top" Width="45" Grid.Column="2"/>
+        <Label Content="Edge set" HorizontalAlignment="Left" Margin="42,29,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+        <Label Content="Zoom width" HorizontalAlignment="Left" Margin="17,113,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="zoomWidthTextbox" HorizontalAlignment="Left" Height="24" Margin="20,136,0,0" Text="TextBox" VerticalAlignment="Top" Width="33" VerticalContentAlignment="Center" KeyDown="ZoomWidthTextbox_KeyDown"/>
+        <Label Content="kHz" HorizontalAlignment="Left" Margin="55,135,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="50,176,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click" Grid.Column="2"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="152,176,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click" Grid.ColumnSpan="3"/>
+        <CheckBox x:Name="onTopCheckbox" Content="Windows always on top" HorizontalAlignment="Left" Margin="152,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <CheckBox x:Name="scrollModeCheckbox" Content="Use scroll mode" HorizontalAlignment="Left" Margin="22,171,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
