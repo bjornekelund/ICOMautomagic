@@ -29,13 +29,13 @@
         <Label Content="UDP port" HorizontalAlignment="Left" Margin="19,29,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="edgeSetCombobox" HorizontalAlignment="Left" Margin="45,52,0,0" VerticalAlignment="Top" Width="45" Grid.Column="2"/>
         <Label Content="Edge set" HorizontalAlignment="Left" Margin="42,29,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-        <Label Content="Zoom width" HorizontalAlignment="Left" Margin="17,113,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="zoomWidthTextbox" HorizontalAlignment="Left" Height="24" Margin="20,136,0,0" Text="TextBox" VerticalAlignment="Top" Width="33" VerticalContentAlignment="Center" KeyDown="ZoomWidthTextbox_KeyDown"/>
-        <Label Content="kHz" HorizontalAlignment="Left" Margin="55,135,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Label Content="Zoom width" HorizontalAlignment="Left" Margin="20,142,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="zoomWidthTextbox" HorizontalAlignment="Left" Height="24" Margin="23,165,0,0" Text="TextBox" VerticalAlignment="Top" Width="33" VerticalContentAlignment="Center" KeyDown="ZoomWidthTextbox_KeyDown"/>
+        <Label Content="kHz" HorizontalAlignment="Left" Margin="58,164,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
         <Button x:Name="OKbutton" Content="OK" HorizontalAlignment="Left" Margin="50,176,0,0" VerticalAlignment="Top" Width="75" Click="OKbutton_Click" Grid.Column="2"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="152,176,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click" Grid.ColumnSpan="3"/>
         <CheckBox x:Name="onTopCheckbox" Content="Windows always on top" HorizontalAlignment="Left" Margin="152,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-        <CheckBox x:Name="scrollModeCheckbox" Content="Use scroll mode" HorizontalAlignment="Left" Margin="22,171,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="scrollModeCheckbox" Content="Use scroll mode" HorizontalAlignment="Left" Margin="22,122,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
