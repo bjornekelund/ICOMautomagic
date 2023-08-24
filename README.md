@@ -35,12 +35,14 @@ With N1MM Logger+ you need to check the *Radio* box on the *Broadcast data* tab 
 N1MM Logger+'s Configuration panel. Also here, make sure the UDP port is the same 
 in both N1MM Logger+ and ICOM Automagic.
 
-The application does not query the radio for settings. 
-Any manual changes made using the radio's own controls are ignored and are consequently not saved. 
-To not interfer with manual adjustments, the application only updates the radio's settings on band or mode changes. 
+The application does not query the radio for settings so any manual changes made using 
+the radio's own controls are ignored and are consequently not saved. To not interfer with 
+manual adjustments, the application only updates the radio's settings on band or mode changes. 
 
-Please note that, contrary to DXLog.net, N1MM Logger+ only broadcasts the main receiver's frequency over UDP. 
-This means e.g. cross band SO2V is only supported with DXLog.net.
+ICOMAutoMagic only considers broadcast data for radio 1. Since N1MM reports the two VFOs in SO2V as 
+two separate radios, ICOMAutoMagic will not know the current operating frequency when focusing 
+"radio 2" in SO2V with N1MM. DXLog however reports physical radio 1 as radio 1 regardless of 
+operating technique.
 
 **This software controls radio transmitter hardware.** 
 Be aware that wrongly used or malfunctioning software can damage or destroy such hardware. 
