@@ -40,9 +40,8 @@ the radio's own controls are ignored and are consequently not saved. To not inte
 manual adjustments, the application only updates the radio's settings on band or mode changes. 
 
 ICOMAutoMagic only considers broadcast data for radio 1. Since N1MM reports the two VFOs in SO2V as 
-two separate radios, ICOMAutoMagic will not know the current operating frequency when focusing 
-"radio 2" in SO2V with N1MM. DXLog however reports physical radio 1 as radio 1 regardless of 
-operating technique.
+two separate radios, ICOMAutoMagic will only consider the main VFO in SO2V with N1MM. 
+DXLog reports physical radio 1 as radio 1 regardless of operating technique.
 
 **This software controls radio transmitter hardware.** 
 Be aware that wrongly used or malfunctioning software can damage or destroy such hardware. 
